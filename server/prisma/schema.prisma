@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// User model representing manager, writer, and admin
+model User {
+  id        Int    @id @default(autoincrement())
+  username  String
+  email     String   @unique
+  password  String
+  role      UserRole
+  profile   Profile?
+  orders    Order[]  // Orders assigned to the user (manager or writer)
+}
+
+
+// Role enum representing different roles (manager, writer, admin)
+enum UserRole {
+  MANAGER
+  WRITER
+  ADMIN
+}
+
+// Profile model representing additional information about the user
+model Profile {
+  id          Int     @id @default(autoincrement())
+  bio         String?
+  wallet      Int     @default(0)  // Wallet balance for writers
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int     @unique
+}
+
+// Order model representing the orders created by the manager
+model Order {
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  topic         String
+  typeofPaper   String
+  discipline    String
+  noOfPages     Int
+  deadline      DateTime
+  description   String?
+  attachment    String?
+  citation      String
+  service       String?
+  costPerPage   Int
+  totalCost     Int
+  status        OrderStatus  @default(PENDING)
+  assignedTo    User?     @relation(fields: [assignedToId], references: [id])  // Assigned writer for the order
+  assignedToId  Int?
+}
+
+// Order status enum representing different order statuses
+enum OrderStatus {
+  PENDING
+  ASSIGNED
+  COMPLETED
+  CANCELLED
+}
