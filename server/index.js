@@ -5,7 +5,7 @@ const cors = require("cors");
 const prisma = new PrismaClient();
 const app = express();
 
-var allowedOrigins = ["http://localhost:5173"];
+var allowedOrigins = ["https://crowwriter.vercel.app/"];
 
 var corsOptionsDelegate = (req, callback) => {
   var corsOptions;
