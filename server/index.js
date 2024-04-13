@@ -5,7 +5,7 @@ require("dotenv").config();
 const prisma = new PrismaClient();
 const app = express();
 
-var allowedOrigins = ["https://crowwriter.vercel.app/"];
+var allowedOrigins = ["https://crowwriter.vercel.app"];
 
 var corsOptionsDelegate = (req, callback) => {
   var corsOptions;
@@ -23,7 +23,7 @@ app.use(express.json());
 
 //testing server running
 app.get("/", (req, res)=>{
-res.send("connection success");
+res.json("connection success");
 })
 
 //orders route
