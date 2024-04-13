@@ -21,6 +21,11 @@ app.use(cors(corsOptionsDelegate));
 
 app.use(express.json());
 
+//testing server running
+app.get("/", (req, res)=>{
+res.send("connection success");
+})
+
 //orders route
 const orderRouter = require("./routes/OrdersRoute");
 app.use("/orders", orderRouter);
