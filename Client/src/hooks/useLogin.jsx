@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux'; // Import useDispatch from react-redux
-import { message } from 'antd';
+import { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
 import { setCredentials } from '../features/auth.js/authSlice';
 import { useLoginMutation } from '../features/auth.js/authApiSlice';
 
 const useLogin = () => {
     const [error, setError] = useState(null);
-    const dispatch = useDispatch(); // Use useDispatch instead of UseDispatch
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [login, { isLoading }] = useLoginMutation();
 
     useEffect(() => {
@@ -16,11 +13,11 @@ const useLogin = () => {
     }, []);
 
     const loginUser = async (values) => {
-        // event.preventDefault(); // Corrected from values.preventDefault()
         try {
             const { accessToken } = await login(values).unwrap();
             dispatch(setCredentials({ accessToken }));
-            // navigate('/');
+            values({ email: '', password: '' });
+            // navigate('/'); // Assuming you navigate from the component
         } catch (error) {
             if (!error.status) {
                 setError('No Server Response');
@@ -32,13 +29,9 @@ const useLogin = () => {
                 setError('Login Failed');
             }
         }
-
-        if(isLoading) {
-            message.loading('Logging in...');
-        }
     };
 
     return { loginUser, error };
 };
 
-export default useLogin;
+export default useLogin; // Export the hook as default

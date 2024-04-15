@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Dropdown, Menu, Typography, Flex, Spin } from 'antd';
 import { UserOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -10,24 +10,27 @@ const Signout = () => {
     const [loading, setLoading] = useState(false);
     const [sendLogout, { isSuccess, isError, error }] = useSendLogoutMutation();
 
+    // Handle logout action
+    const handleLogout = () => {
+        setLoading(true);
+        sendLogout();
+    };
+
+    // Redirect to login page after successful logout
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/login');
+        }
+    }, [isSuccess, navigate]);
+
     const handleMenuClick = (e) => {
         if (e.key === 'signout') {
-            setLoading(true);
-            setTimeout(() => {
-                sendLogout();
-            }, 2000); // Simulate a delay of 2 seconds
+            handleLogout();
         } else if (e.key === 'viewprofile') {
             // Handle view profile action
             console.log('User clicked View Profile');
         }
     };
-
-    // Redirect to login page after successful logout
-    if (isSuccess) {
-        setTimeout(() => {
-            navigate('/login');
-        }, 2000); // Redirect after 2 seconds
-    }
 
     const menu = (
         <Menu onClick={handleMenuClick}>

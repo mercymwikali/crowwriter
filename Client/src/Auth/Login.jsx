@@ -2,10 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Card, Flex, Typography, Form, Input, Button, Alert, Spin } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import RegisterImage from '../assets/RegisterImage.jpg';
-import useLogin from '../hooks/useLogin';
-
-
-
+import useLogin from '../hooks/useLogin.jsx';
 export const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
@@ -17,8 +14,8 @@ const [values, setValues] = useState({
 
     const navigate = useNavigate();
     // const
-    const handleLogin = async (values) => {
-        await loginUser(values);
+    const handleLogin = (values) => {
+        loginUser(values);
         navigate('/manager-dashboard/Order-requirements-details');
     }
     
@@ -92,3 +89,5 @@ const [values, setValues] = useState({
         </Card>
     )
 }
+
+export default Login
