@@ -1,45 +1,44 @@
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext.jsx"
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux'; // Import useDispatch from react-redux
 import { message } from 'antd';
-import { Navigate } from "react-router-dom";
-
+import { setCredentials } from '../features/auth.js/authSlice';
+import { useLoginMutation } from '../features/auth.js/authApiSlice';
 
 const useLogin = () => {
-    const { login } = useAuth();
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(null);
+    const dispatch = useDispatch(); // Use useDispatch instead of UseDispatch
+    const navigate = useNavigate();
+    const [login, { isLoading }] = useLoginMutation();
+
+    useEffect(() => {
+        setError(null);
+    }, []);
 
     const loginUser = async (values) => {
-
+        // event.preventDefault(); // Corrected from values.preventDefault()
         try {
-            setError(null);
-            setLoading(true);
-            const res = await fetch('http://localhost:3001/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(values),
-            });
-
-            const data = await res.json();
-            if (res.status === 200) {
-                message.success(data.message);
-                login(data.token, data.user)
-                Navigate('/manager-dashboard')
-            } else if (res.status === 404) {
-                setError(data.message);
-            } else {
-                message.error('Login Failed');
-            }
+            const { accessToken } = await login(values).unwrap();
+            dispatch(setCredentials({ accessToken }));
+            // navigate('/');
         } catch (error) {
-            message.error(error);
-        } finally {
-            setLoading(false);
+            if (!error.status) {
+                setError('No Server Response');
+            } else if (error.status === 400) {
+                setError('Missing Username or Password');
+            } else if (error.status === 401) {
+                setError('Unauthorized');
+            } else {
+                setError('Login Failed');
+            }
         }
 
+        if(isLoading) {
+            message.loading('Logging in...');
+        }
     };
-    return { loading, error, loginUser };
+
+    return { loginUser, error };
 };
 
 export default useLogin;

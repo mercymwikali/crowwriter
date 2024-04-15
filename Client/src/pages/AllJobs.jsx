@@ -59,7 +59,13 @@ const AllJobs = () => {
       // Simulating a delay for demonstration purposes
       setTimeout(async () => {
         // Make API call to fetch job orders
-        const response = await fetch('http://localhost:3001/orders/get-orders'); // Update the endpoint URL
+        const response = await fetch('http://localhost:3001/orders/get-orders',
+          { method: 'GET' },
+          { headers: { 'Content-Type': 'application/json' }},
+          { body: JSON.stringify({}) },
+          { credentials: 'include' }
+
+        ); // Update the endpoint URL
         if (!response.ok) {
           throw new Error('Failed to fetch job orders');
         }

@@ -3,7 +3,12 @@ const express = require('express');
 const{PrismaClient} = require('@prisma/client');
 
 const prisma = new PrismaClient();
+
 const router = express.Router();
+
+const verifyJwt = require('../middleware/verifyJwt');
+
+router.use(verifyJwt);
 
 // Route to create a new order
 router.post('/', async (req, res) => {

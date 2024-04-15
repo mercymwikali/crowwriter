@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useRef, useState } from 'react';
 import { Card, Flex, Typography, Form, Input, Button, Alert, Spin } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import RegisterImage from '../assets/RegisterImage.jpg';
 import useLogin from '../hooks/useLogin';
 
+
+
 export const Login = () => {
+    const userRef = useRef();
+    const errRef = useRef();
+const [values, setValues] = useState({
+    email: '',
+    password: '',
+})
     const { loading, error, loginUser } = useLogin();
 
-const navigate=useNavigate();
-    const handleLogin =async (values) => {
-      navigate('/manager-dashboard/Order-requirements-details');
+    const navigate = useNavigate();
+    // const
+    const handleLogin = async (values) => {
+        await loginUser(values);
+        navigate('/manager-dashboard/Order-requirements-details');
     }
+    
     return (
         <Card className='form-container mt-5'>
             <Flex gap="large" align='center'>
@@ -38,7 +49,7 @@ const navigate=useNavigate();
                                     message: 'The input is not valid Email'
                                 }
                             ]}>
-                            <Input size='large' placeholder='Enter your Email'></Input>
+                            <Input size='large' ref={userRef} placeholder='Enter your Email'></Input>
                         </Form.Item>
                         <Form.Item label='Password' name="password"
                             rules={[
@@ -47,7 +58,7 @@ const navigate=useNavigate();
                                     message: 'Please input your Password!',
                                 },
                             ]}>
-                            <Input.Password size='large' placeholder='Enter your Password' />
+                            <Input.Password size='large'  placeholder='Enter your Password' />
                         </Form.Item>
 
                         {
@@ -71,7 +82,7 @@ const navigate=useNavigate();
                         </Form.Item>
                         <Form.Item>
                             <Link to='/register'>
-                              Register Account.
+                                Register Account.
                             </Link>
 
                         </Form.Item>

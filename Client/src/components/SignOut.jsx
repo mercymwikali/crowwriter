@@ -1,22 +1,33 @@
-import React from 'react';
-import { Avatar, Dropdown, Menu,Typography ,Flex} from 'antd';
+import React, { useState } from 'react';
+import { Avatar, Dropdown, Menu, Typography, Flex, Spin } from 'antd';
 import { UserOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-const Signout = () => {
-    const { userData, logout } = useAuth();
-const navigate=useNavigate();
-    const handleMenuClick = async (e) => {
-        if (e.key === 'signout') {
-            // await logout(); // Call the logout function directly
-navigate('/login');
+import { useSendLogoutMutation } from '../features/auth.js/authApiSlice';
 
+const Signout = () => {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [sendLogout, { isSuccess, isError, error }] = useSendLogoutMutation();
+
+    const handleMenuClick = (e) => {
+        if (e.key === 'signout') {
+            setLoading(true);
+            setTimeout(() => {
+                sendLogout();
+            }, 2000); // Simulate a delay of 2 seconds
         } else if (e.key === 'viewprofile') {
             // Handle view profile action
             console.log('User clicked View Profile');
         }
     };
+
+    // Redirect to login page after successful logout
+    if (isSuccess) {
+        setTimeout(() => {
+            navigate('/login');
+        }, 2000); // Redirect after 2 seconds
+    }
 
     const menu = (
         <Menu onClick={handleMenuClick}>
@@ -34,10 +45,9 @@ navigate('/login');
         <Dropdown overlay={menu} placement="bottomRight">
             <Flex>
                 <Avatar size={50} icon={<UserOutlined />} />
-                <Typography.Title level={4} style={{color:'#fff', padding:8}}>Kevin</Typography.Title>
-
+                <Typography.Title level={4} style={{ color: '#fff', padding: 8 }}>Kevin</Typography.Title>
+                {loading && <Spin />}
             </Flex>
-
         </Dropdown>
     );
 };
