@@ -16,24 +16,34 @@ const useLogin = () => {
     }, []);
 
     const loginUser = async (values) => {
-        // event.preventDefault(); // Corrected from values.preventDefault()
+
         try {
-            const { accessToken } = await login(values).unwrap();
-            dispatch(setCredentials({ accessToken }));
-            // navigate('/');
-        } catch (error) {
-            if (!error.status) {
-                setError('No Server Response');
-            } else if (error.status === 400) {
-                setError('Missing Username or Password');
-            } else if (error.status === 401) {
-                setError('Unauthorized');
+            setError(null);
+            setLoading(true);
+            const res = await fetch('http://localhost:3001/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values),
+            });
+
+            const data = await res.json();
+            if (res.status === 200) {
+                message.success(data.message);
+                login(data.token, data.user)
+                Navigate('/manager-dashboard')
+            } else if (res.status === 404) {
+                setError(data.message);
             } else {
                 setError('Login Failed');
             }
         }
+        catch (error) {
+            console.log(error)
 
-        if(isLoading) {
+        }
+        if (isLoading) {
             message.loading('Logging in...');
         }
     };

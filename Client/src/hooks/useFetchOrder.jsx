@@ -10,7 +10,7 @@ const useFetchOrder = () => {
         try {
             setError(null);
             setLoading(true);
-            const res = await fetch('http://localhost:3001/orders/get-orders');
+            const res = await fetch('https://crowwriter-api.vercel.app/orders/get-orders');
             if (!res.ok) {
                 throw new Error('Failed to fetch orders');
             }

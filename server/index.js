@@ -1,19 +1,24 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
-require("dotenv").config();
-const {logger, logEvents} = require("./middleware/logger");
-const errorHandler = require("./middleware/errorHandler");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const corsOptions = require("./config/corsOptions");
+require("dotenv").config();
 const prisma = new PrismaClient();
 const app = express();
-console.log(process.env.NODE_ENV);
 
-//middlewares
-app.use(logger);
-app.use(cors(corsOptions));
-app.use(express.urlencoded({ extended: false }));
+var allowedOrigins = ["https://crowwriter.vercel.app/"];
+
+var corsOptionsDelegate = (req, callback) => {
+  var corsOptions;
+  if (allowedOrigins.indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true };
+  } else {
+    corsOptions = { origin: false };
+  }
+  callback(null, corsOptions);
+};
+
+app.use(cors(corsOptionsDelegate));
+
 app.use(express.json());
 app.use(cookieParser());
 
