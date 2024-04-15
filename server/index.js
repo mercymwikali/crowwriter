@@ -1,31 +1,31 @@
-const express = require("express");
-const { PrismaClient } = require("@prisma/client");
-const cors = require("cors");
 require("dotenv").config();
-const prisma = new PrismaClient();
+const express = require("express");
 const app = express();
+const path = require("path");
+const {logger, logEvents} = require("./middleware/logger");
+const errorHandler = require("./middleware/errorHandler");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
+const { PrismaClient } = require("@prisma/client");
 
-var allowedOrigins = ["https://crowwriter.vercel.app/"];
 
-var corsOptionsDelegate = (req, callback) => {
-  var corsOptions;
-  if (allowedOrigins.indexOf(req.header("Origin")) !== -1) {
-    corsOptions = { origin: true };
-  } else {
-    corsOptions = { origin: false };
-  }
-  callback(null, corsOptions);
-};
+const prisma = new PrismaClient();
 
-app.use(cors(corsOptionsDelegate));
+//middleware
+app.use(logger);
 
+app.use(cors(corsOptions));
 app.use(express.json());
+
 app.use(cookieParser());
 
-//routes
+//static files 
+app.use("/", express.static(path.join(__dirname, "public")));
+
 //testing server running
 app.get("/", (req, res)=>{
-res.json("connection success");
+res.send("connection success");
 })
 
 //orders route
@@ -36,10 +36,12 @@ app.use("/orders", orderRouter);
 const userRouter = require("./routes/UsersRoute");
 app.use("/users", userRouter);
 
-//auth route
-app.use("/auth", require("./routes/authRoutes"));
+const authRouter = require("./routes/authRoutes");
+app.use("/auth", authRouter);
+
 
 app.use(errorHandler);
+
 
 app.listen(process.env.PORT, () => {
   console.log("Server started on port:", process.env.PORT);

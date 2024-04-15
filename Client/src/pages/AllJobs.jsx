@@ -59,17 +59,7 @@ const AllJobs = () => {
       // Simulating a delay for demonstration purposes
       setTimeout(async () => {
         // Make API call to fetch job orders
-<<<<<<< HEAD
-        const response = await fetch('http://localhost:3001/orders/get-orders',
-          { method: 'GET' },
-          { headers: { 'Content-Type': 'application/json' }},
-          { body: JSON.stringify({}) },
-          { credentials: 'include' }
-
-        ); // Update the endpoint URL
-=======
         const response = await fetch('https://crowwriter-api.vercel.app/orders/get-orders'); // Update the endpoint URL
->>>>>>> de942fab001e6f9e68adfa7b45fb46bcaa1f92d3
         if (!response.ok) {
           throw new Error('Failed to fetch job orders');
         }
