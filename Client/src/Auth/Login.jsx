@@ -19,7 +19,6 @@ const [values, setValues] = useState({
     // const
     const handleLogin = async (values) => {
         await loginUser(values);
-        navigate('/manager-dashboard/Order-requirements-details');
     }
     
     return (
