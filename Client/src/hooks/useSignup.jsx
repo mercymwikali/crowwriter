@@ -16,7 +16,7 @@ const useSignup = () => {
         try {
             setError(null);
             setLoading(true);
-            const res = await fetch('https://crowwriter-api.vercel.app/users', {
+            const res = await fetch('http://localhost:3001/users/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -3,7 +3,7 @@ import { Avatar, Dropdown, Menu, Typography, Flex, Spin } from 'antd';
 import { UserOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
-import { useSendLogoutMutation } from '../features/auth.js/authApiSlice';
+import { useSendLogoutMutation } from '../Auth/authApiSlice';
 
 const Signout = () => {
     const navigate = useNavigate();
@@ -11,11 +11,11 @@ const Signout = () => {
     const [sendLogout, { isSuccess, isError, error }] = useSendLogoutMutation();
 
     const handleMenuClick = (e) => {
-        if (e.key === 'signout') {
+        if (e.key === '/signout') {
+            // Handle sign out action
             setLoading(true);
-            setTimeout(() => {
-                sendLogout();
-            }, 2000); // Simulate a delay of 2 seconds
+            sendLogout();
+            console.log('User clicked Sign Out');
         } else if (e.key === 'viewprofile') {
             // Handle view profile action
             console.log('User clicked View Profile');
@@ -24,10 +24,9 @@ const Signout = () => {
 
     // Redirect to login page after successful logout
     if (isSuccess) {
-        setTimeout(() => {
-            navigate('/login');
-        }, 2000); // Redirect after 2 seconds
+        navigate('/login');
     }
+   
 
     const menu = (
         <Menu onClick={handleMenuClick}>
@@ -35,7 +34,7 @@ const Signout = () => {
                 View Profile
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="signout" icon={<LogoutOutlined />} danger>
+            <Menu.Item key="/signout" icon={<LogoutOutlined />} danger>
                 Sign Out
             </Menu.Item>
         </Menu>

@@ -22,6 +22,7 @@ model User {
   email     String   @unique
   password  String
   role      UserRole
+  active    String
   profile   Profile?
   orders    Order[]  // Orders assigned to the user (manager or writer)
 }
@@ -48,6 +49,7 @@ model Order {
   id            Int       @id @default(autoincrement())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  OrderId        Int       @unique
   topic         String
   typeofPaper   String
   discipline    String

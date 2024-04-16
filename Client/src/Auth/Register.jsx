@@ -33,6 +33,14 @@ const Register = () => {
             }>
               <Input size='large' placeholder='Enter your full name'></Input>
             </Form.Item>
+            <Form.Item label='active' name="active" rules={
+              [{
+                required: true,
+                message: 'Please input youractive!',
+              }]
+            }>
+              <Input size='large' placeholder='Enter your active'></Input>
+            </Form.Item>
             <Form.Item label='Email' name="email"
               rules={[
                 {

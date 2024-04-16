@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux'; // Import useDispatch from react-redux
 import { message } from 'antd';
-import { setCredentials } from '../features/auth.js/authSlice';
-import { useLoginMutation } from '../features/auth.js/authApiSlice';
+import { setCredentials } from '../Auth/authSlice';
+import { useLoginMutation } from '../Auth/authApiSlice';
 
 const useLogin = () => {
     const [error, setError] = useState(null);
@@ -20,7 +20,7 @@ const useLogin = () => {
         try {
             const { accessToken } = await login(values).unwrap();
             dispatch(setCredentials({ accessToken }));
-            // navigate('/');
+            navigate('/');
         } catch (error) {
             if (!error.status) {
                 setError('No Server Response');

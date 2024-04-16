@@ -9,10 +9,11 @@ import useLogin from '../hooks/useLogin';
 export const Login = () => {
     const userRef = useRef();
     const errRef = useRef();
-const [values, setValues] = useState({
-    email: '',
-    password: '',
-})
+    const [persist  , setPersist] = useState();
+    const [values, setValues] = useState({
+        email: '',
+        password: '',
+    })
     const { loading, error, loginUser } = useLogin();
 
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const [values, setValues] = useState({
     const handleLogin = async (values) => {
         await loginUser(values);
     }
-    
+
     return (
         <Card className='form-container mt-5'>
             <Flex gap="large" align='center'>
@@ -57,9 +58,9 @@ const [values, setValues] = useState({
                                     message: 'Please input your Password!',
                                 },
                             ]}>
-                            <Input.Password size='large'  placeholder='Enter your Password' />
+                            <Input.Password size='large' placeholder='Enter your Password' />
                         </Form.Item>
-
+                       
                         {
                             error && (
                                 <Alert
@@ -79,12 +80,22 @@ const [values, setValues] = useState({
                                 {loading ? <Spin /> : 'Sign In'}
                             </Button>
                         </Form.Item>
+                       <div className="d-flex justify-content-between">
+                       <label htmlFor='persist' className='persist'>
+                            <input
+                            type="checkbox"
+                            onchange={(e) => setPersist(e.target.checked)}
+                            checked={persist}
+                            />
+                            <span className='px-2'>Remember me</span>
+                        </label>
                         <Form.Item>
                             <Link to='/register'>
                                 Register Account.
                             </Link>
 
                         </Form.Item>
+                       </div>
                     </Form>
                 </Flex>
             </Flex>
