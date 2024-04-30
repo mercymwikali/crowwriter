@@ -13,63 +13,174 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 // User model representing manager, writer, and admin
 model User {
-  id        Int    @id @default(autoincrement())
-  username  String
-  email     String   @unique
-  password  String
-  role      UserRole
-  active    String
-  profile   Profile?
-  orders    Order[]  // Orders assigned to the user (manager or writer)
+  id               String           @id @default(uuid())
+  username         String
+  email            String           @unique
+  password         String           @unique
+  role             Role             @default(writer)
+  active           Boolean          @default(true)
+  profile          Profile?
+  orders           Order[]
+  bids             Bid[]
+  submittedOrders  SubmittedOrder[]
+  paymentRequests  PaymentRequest[]
+  payments         Payment[]
+  fines            Fine[]
+  notifications   Notification[]
 }
 
-
-// Role enum representing different roles (manager, writer, admin)
-enum UserRole {
-  MANAGER
-  WRITER
-  ADMIN
+// Payment status enum representing different payment statuses
+enum Role {
+  admin
+  manager
+  writer
 }
 
 // Profile model representing additional information about the user
 model Profile {
-  id          Int     @id @default(autoincrement())
-  bio         String?
-  wallet      Int     @default(0)  // Wallet balance for writers
-  user        User    @relation(fields: [userId], references: [id])
-  userId      Int     @unique
+  id       String    @id @default(uuid())
+  bio      String?
+  wallet   Float     @default(0)
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String    @unique
+  Payments Payment[]
 }
 
 // Order model representing the orders created by the manager
 model Order {
-  id            Int       @id @default(autoincrement())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  OrderId        Int       @unique
-  topic         String
-  typeofPaper   String
-  discipline    String
-  noOfPages     Int
-  deadline      DateTime
-  description   String?
-  attachment    String?
-  citation      String
-  service       String?
-  costPerPage   Int
-  totalCost     Int
-  status        OrderStatus  @default(PENDING)
-  assignedTo    User?     @relation(fields: [assignedToId], references: [id])  // Assigned writer for the order
-  assignedToId  Int?
+  id              String       @id @default(uuid())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  orderId         String       @unique
+  topic           String
+  discipline     String
+  service         String
+  description   String         // New field: Description
+  format          String
+  noOfPages       Int
+  costPerPage     Float        @default(0.00)
+  fullAmount      Float        @default(0.00)
+  deadline        DateTime
+  remainingTime   String
+  status          OrderStatus  @default(PENDING)
+  writer          User?         @relation(fields: [writerId], references: [id])
+  writerId        String?
+  submittedOrders SubmittedOrder[]
+  bids            Bid[]
+  payments        Payment[]
+  paymentRequests PaymentRequest[]
+  fines           Fine[]
+
+  @@index([orderId, topic])
 }
 
-// Order status enum representing different order statuses
+// Order status enum
 enum OrderStatus {
   PENDING
   ASSIGNED
   COMPLETED
   CANCELLED
 }
+
+// Bid model representing bids made by writers on orders
+model Bid {
+  id       String    @id @default(uuid())
+  order    Order     @relation(fields: [orderId], references: [id])
+  orderId  String
+  writer   User      @relation(fields: [writerId], references: [id])
+  writerId String
+  status   BidStatus @default(PENDING)
+}
+
+// Bid status enum representing different bid statuses
+enum BidStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+// SubmittedOrder model representing orders submitted by writers
+model SubmittedOrder {
+  id             String   @id @default(uuid())
+  order          Order    @relation(fields: [orderId], references: [id])
+  orderId        String
+  submittedBy    User     @relation(fields: [submittedById], references: [id])
+  submittedById  String
+  submissionDate DateTime
+  status         OrderStatus
+
+  @@index([orderId, submittedById])
+}
+
+// PaymentRequest model representing payment requests made by writers
+model PaymentRequest {
+  id               String               @id @default(uuid())
+  order            Order                @relation(fields: [orderId], references: [id])
+  orderId          String
+  requestedBy      User                 @relation(fields: [requestedById], references: [id])
+  requestedById    String
+  amount           Int
+  paymentStatus    PaymentRequestStatus @default(PENDING)
+
+  @@index([requestedById])
+}
+
+// Payment request status enum representing different payment request statuses
+enum PaymentRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Payment model representing payments made to writers for completed orders
+model Payment {
+  id            String         @id @default(uuid())
+  order         Order          @relation(fields: [orderId], references: [id])
+  orderId       String
+  paidTo        User           @relation(fields: [paidToId], references: [id])
+  paidToId      String
+  amount        Int
+  status        PaymentStatus  @default(UNPAID)
+  orderStatus   OrderStatus
+  wallet        Profile        @relation(fields: [walletId], references: [id])
+  walletId      String
+ 
+  @@index([paidToId, orderStatus])
+}
+
+// Payment status enum representing different payment statuses
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+// Fine model representing fines applied to orders
+model Fine {
+  id        String @id @default(uuid())
+  order     Order  @relation(fields: [orderId], references: [id])
+  orderId   String
+  finedTo   User   @relation(fields: [finedToId], references: [id])
+  finedToId String
+  amount    Int
+  reason    String
+}
+
+model Notification {
+  id          String     @id @default(uuid())
+  createdAt   DateTime   @default(now())
+  type        NotificationType
+  message     String
+  recipient   User       @relation(fields: [recipientId], references: [id])
+  recipientId String
+  read        Boolean    @default(false)
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  ERROR
+  CUSTOM
+}
+

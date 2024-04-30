@@ -1,130 +1,138 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Skeleton, message } from 'antd';
-import Table from '../components/Table';
-import EditJob from '../components/EditJob';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Skeleton, Tooltip, message, Button, Modal, Pagination } from 'antd';
+import { DeleteFilled, EditFilled } from '@ant-design/icons';
+import { listOrders } from '../actions/orderActions';
 
-const AllJobs = () => {
-  const [modal, setModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const [editJobDetails, setEditJobDetails] = useState(null);
+const Allorders = () => {
+  const dispatch = useDispatch();
 
-  const [columns, setColumns] = useState([
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'Topic',
-      dataIndex: 'topic',
-      key: 'topic',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description'
-    },
-    {
-      title: 'No. of Pages',
-      dataIndex: 'pages',
-      key: 'pages',
-    },
-    {
-      title: 'Cost Per Page',
-      dataIndex: 'costPerPage',
-      key: 'costPerPage',
-    },
-    {
-      title: 'Total Cost',
-      dataIndex: 'totalCost',
-      key: 'totalCost',
-    },
-    {
-      title: 'Deadline',
-      dataIndex: 'deadline',
-      key: 'deadline',
-    },
-  ]);
+  const ordersList = useSelector(state => state.ordersList)
+  const { loading, error, orders } = ordersList
 
-  const [rows, setRows] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedorder, setSelectedorder] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 25; // Display 25 rows per page
 
   useEffect(() => {
-    fetchData(); // Fetch data when component mounts
-  }, []);
+    dispatch(listOrders());
+  }, [dispatch]);
 
-  const fetchData = async () => {
+  const deleteorder = async (id) => {
     try {
-      // Simulating a delay for demonstration purposes
-      setTimeout(async () => {
-        // Make API call to fetch job orders
-        const response = await fetch('http://localhost:3001/orders/get-all-orders'); // Update the endpoint URL
-        if (!response.ok) {
-          throw new Error('Failed to fetch job orders');
-        }
-        const data = await response.json();
-        setRows(data.orders);
-        setLoading(false); // Set loading to false after data is fetched
-      }, 2000); // Simulated delay of 2 seconds
-    } catch (error) {
-      console.error('Error fetching job orders:', error.message);
-      // Handle error
-    }
-  };
-  const deleteJob = async (id) => {
-    try {
-      // Make API call to delete job
+      // Make API call to delete order
       const deleteResponse = await fetch(`https://crowwriter-api.vercel.app/orders/delete-order/${id}`, {
         method: 'DELETE',
       });
-  
+
       if (!deleteResponse.ok) {
-        throw new Error('Failed to delete job');
+        throw new Error('Failed to delete order');
       }
-  
-      // If deletion is successful, remove the deleted job from the rows state
-      setRows((prevRows) => prevRows.filter((job) => job.id !== id));
-      message.success(`Job ${id} deleted successfully`);
-      console.log(`Job ${id} deleted successfully`);
+
+      // If deletion is successful, fetch the updated list of orders
+      dispatch(listOrders());
+      message.success(`order ${id} deleted successfully`);
     } catch (error) {
-      console.error('Error deleting job:', error.message);
+      console.error('Error deleting order:', error.message);
       // Handle error
     }
   };
-  const editJob = (job) => {
-    setModal(true);
-    // Set the job details in the EditJob component
-    setEditJobDetails(job);
-  };
-  
 
-  const changeStatus = (id, newStatus) => {
-    // Implement status change logic
-    console.log(`Changing status of job ${id} to ${newStatus}`);
+  const editorder = (order) => {
+    setSelectedorder(order);
+    setModalVisible(true);
   };
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
+
+  // Pagination change handler
+  const onPageChange = (page, pageSize) => {
+    setCurrentPage(page);
+  };
+
+  // Calculate the start and end index for current page
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
 
   return (
     <>
-      <h1 className='text-success'>Listed Jobs</h1>
+      <h1 className='text-success'>Listed orders</h1>
       <div className="d-block d-md-flex gap-4 justify-content-between align-items-center">
-        <Link className='btn my-3 btn-success' type='button' onClick={() => navigate('/Order-requirements-details')}>Create Job</Link>
-        {/* <button className='btn btn-success' type='button' onClick={() => navigate('/Create-order')}>Download List</button> */}
+        <h4><Link className='btn btn-success' to="/Order-requirements-details" type='button'>Create New Order</Link></h4>
       </div>
       {loading ? (
         <Skeleton active />
+      ) : error ? (
+        <p>{error}</p>
       ) : (
-        <Table
-          columns={columns}
-          rows={rows}
-          deleteRow={deleteJob}
-          editRow={editJob}
-          changeStatus={changeStatus}
-        />
+        <>
+          <table className="table table-hover table-responsive">
+            <thead>
+              <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>OrderId</th>
+                <th scope='col'>Topic</th>
+                <th scope='col'>Discipline</th>
+                <th scope='col'>No of Pages</th>
+                <th scope='col'>Cost Per Page</th>
+                <th scope='col'>Full Amount</th>
+                <th scope='col'>Deadline</th>
+                <th scope='col'>Remaining Time</th>
+                <th scope='col'>Status</th>
+                <th scope='col'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders && orders.length > 0 && orders.slice(startIndex, endIndex).map((order, index) => (
+                <tr key={order.id}>
+                  <td>{startIndex + index + 1}</td>
+                  <td>{order.orderId}</td>
+                  <td>{order.topic}</td>
+                  <td>{order.discipline}</td>
+                  <td>{order.noOfPages}</td>
+                  <td>{order.costPerPage}</td>
+                  <td>{order.fullAmount}</td>
+                  <td>{new Date(order.deadline).toLocaleDateString()}</td>
+                  <td>{order.remainingTime}</td>
+                  <td>{order.status}</td>
+                  <td>
+                    <Tooltip title="Edit">
+                      <Button type="primary" icon={<EditFilled />} onClick={() => editorder(order)} />
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <Button type="danger" icon={<DeleteFilled />} onClick={() => deleteorder(order.id)} />
+                    </Tooltip>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Pagination
+            current={currentPage}
+            total={orders.length}
+            pageSize={pageSize}
+            onChange={onPageChange}
+            showSizeChanger={false}
+          />
+        </>
       )}
-{modal && <EditJob job={editJobDetails} setOpenModal={setModal} handleSubmit={fetchData} />}
+      {/* Edit order Modal */}
+      <Modal
+        title="Edit order"
+        visible={modalVisible}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        {selectedorder && (
+          <p>Implement your edit order form here</p>
+        )}
+      </Modal>
     </>
   );
 };
 
-export default AllJobs;
+export default Allorders;

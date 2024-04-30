@@ -1,32 +1,39 @@
-import React, { useState } from 'react';
-import { Avatar, Dropdown, Menu, Typography, Flex, Spin } from 'antd';
+import React, { useEffect } from 'react';
+import { Avatar, Dropdown, Menu, Typography, Spin, Alert } from 'antd';
 import { UserOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import {login, logout } from '../actions/userActions';
 import { useNavigate } from 'react-router-dom';
 
-import { useSendLogoutMutation } from '../Auth/authApiSlice';
-
 const Signout = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [sendLogout, { isSuccess, isError, error }] = useSendLogoutMutation();
 
-    const handleMenuClick = (e) => {
+    const userDetails = useSelector((state) => state.userDetails);
+    const { loading, error, user } = userDetails
+
+    useEffect(() => {
+        if (error) {
+            // Handle error here, such as displaying error message
+            console.error('Error:', error);
+        }
+    }, [error]);
+
+    const handleMenuClick = async (e) => {
         if (e.key === '/signout') {
-            // Handle sign out action
-            setLoading(true);
-            sendLogout();
-            console.log('User clicked Sign Out');
+            try {
+                // Dispatch the logout action
+                await dispatch(logout());
+                // Redirect to login page after successful logout
+                navigate('/login');
+            } catch (error) {
+                // Handle logout error here, such as displaying error message
+                console.error('Logout Error:', error);
+            }
         } else if (e.key === 'viewprofile') {
-            // Handle view profile action
             console.log('User clicked View Profile');
         }
     };
-
-    // Redirect to login page after successful logout
-    if (isSuccess) {
-        navigate('/login');
-    }
-   
 
     const menu = (
         <Menu onClick={handleMenuClick}>
@@ -42,11 +49,12 @@ const Signout = () => {
 
     return (
         <Dropdown overlay={menu} placement="bottomRight">
-            <Flex>
+            <div>
                 <Avatar size={50} icon={<UserOutlined />} />
-                <Typography.Title level={4} style={{ color: '#fff', padding: 8 }}>Kevin</Typography.Title>
+                <Typography.Text>{user?.username}</Typography.Text>
                 {loading && <Spin />}
-            </Flex>
+                {error && <Alert message={error} type="error" />}
+            </div>
         </Dropdown>
     );
 };

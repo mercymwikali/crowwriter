@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { CreditCardOutlined, DotChartOutlined, EditTwoTone, HourglassOutlined, MenuFoldOutlined, MenuUnfoldOutlined, MutedOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { CreditCardOutlined,  EditTwoTone, HourglassOutlined,  MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { FaBriefcase, FaCheckCircle, FaClock, FaRegFolderOpen, FaUsers } from "react-icons/fa";
 import { GiCancel, GiProgression } from "react-icons/gi";
-import { IoDocumentAttach, IoDocumentText, IoSendSharp } from "react-icons/io5";
 import { RiFolderWarningLine } from "react-icons/ri";
-import { MdCancel, MdOutlineCancelPresentation } from "react-icons/md";
+import {  MdOutlineCancelPresentation } from "react-icons/md";
 import { Bs0SquareFill, BsCashCoin, BsDashCircleFill } from "react-icons/bs";
 import Signout from '../components/SignOut';
 
@@ -15,36 +14,27 @@ import Signout from '../components/SignOut';
 const { Header, Content, Footer, Sider } = Layout;
 
 const Manager = () => {
-    const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
-    const [openKeys, setOpenKeys] = useState([]);
+    const [openKeys, setOpenKeys] = useState(['/']);
+    const navigate = useNavigate();
 
     const rootSubmenuKeys = [
+        '/Order-requirements-details',
         '/Manage-Jobs',
         '/Payments',
         '/Manage Writers',
     ];
 
-    // const onOpenChange = (openKeys) => {
-    //     const currentOpenKey = openKeys.find((key) => stateOpenKeys.indexOf(key) === -1);
-    //     // open
-    //     if (currentOpenKey !== undefined) {
-    //       const repeatIndex = openKeys
-    //         .filter((key) => key !== currentOpenKey)
-    //         .findIndex((key) => levelKeys[key] === levelKeys[currentOpenKey]);
-    //       setStateOpenKeys(
-    //         openKeys
-    //           // remove repeat key
-    //           .filter((_, index) => index !== repeatIndex)
-    //           // remove current level all child
-    //           .filter((key) => levelKeys[key] <= levelKeys[currentOpenKey]),
-    //       );
-    //     } else {
-    //       // close
-    //       setStateOpenKeys(openKeys);
-    //     }
-    //   };
-
+    const onOpenChange = (keys) => {
+        const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+        setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+        if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+            setOpenKeys(keys);
+            setCollapsed(true)
+        } else {
+            setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+        }
+    }
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -69,13 +59,9 @@ const Manager = () => {
                     theme="dark"
                     mode="inline"
                     defaultSelectedKeys={['/Order-requirements-details']}
-                    selectedKeys={[window.location.pathname]}
-                    // openKeys={[]}
-                    //  openKeys={openKeys}
-                    // defaultOpenKeys={[window.location.pathname]}
-                    // openKeys={openKeys}
-                    // onOpenChange={onOpenChange}
-                    defaultOpenKeys={["Manage-Jobs"]}
+                    defaultOpenKeys={['/Order-requirements-details']}
+                    openKeys={openKeys}
+                    onOpenChange={onOpenChange}
                     onClick={({ key }) => { navigate(key) }}
                     style={{
                         backgroundColor: 'transparent',
@@ -88,32 +74,32 @@ const Manager = () => {
                     }}
                     items={[
                         {
-                            key: '/Order-requirements-details',
+                            key: 'Order-requirements-details',
                             icon: <EditTwoTone />,
                             label: 'Create New Order',
                         },
                         {
-                            key: 'Manage-Jobs',
+                            key: '/Manage-Jobs',
                             icon: <FaBriefcase />,
                             label: 'Manage Jobs',
                             children: [
                                 {
-                                    key: '/All-Jobs',
+                                    key: 'All-Jobs',
                                     icon: <GiProgression />,
                                     label: 'All Jobs',
                                 },
                                 {
-                                    key: '/Bids-List',
+                                    key: 'Bids-List',
                                     icon: <FaCheckCircle />,
                                     label: 'Bids List',
                                 },
                                 {
-                                    key: '/Pending-Jobs',
+                                    key: 'Pending-Jobs',
                                     icon: <HourglassOutlined />,
                                     label: 'Pending Jobs',
                                 },
                                 {
-                                    key: '/Cancelled-Jobs',
+                                    key: 'Cancelled-Jobs',
                                     icon: <MdOutlineCancelPresentation />,
                                     label: 'Cancelled Jobs',
                                 },
@@ -121,44 +107,44 @@ const Manager = () => {
                             ]
                         },
                         {
-                            key: 'Payments',
+                            key: '/Payments',
                             icon: <CreditCardOutlined />,
                             label: 'Payments',
                             children: [
                                 {
-                                    key: '/Paid-Orders',
+                                    key: 'Paid-Orders',
                                     icon: <BsCashCoin />,
                                     label: 'Paid Orders',
                                 },
                                 {
-                                    key: '/Unpaid-Orders',
+                                    key: 'Unpaid-Orders',
                                     icon: <BsDashCircleFill />,
                                     label: 'Unpaid Orders',
                                 },
                                 {
-                                    key: '/Fined-Orders',
+                                    key: 'Fined-Orders',
                                     icon: <RiFolderWarningLine />,
                                     label: 'Fined Orders',
                                 }
                             ]
                         },
                         {
-                            key: 'Manage Writers',
+                            key: '/Manage Writers',
                             icon: <UserOutlined />,
                             label: 'Manage Writers',
                             children: [
                                 {
-                                    key: '/All Writers',
+                                    key: 'writers-list',
                                     icon: <FaUsers size={20} />,
                                     label: 'All Writers',
                                 },
                                 {
-                                    key: '/Pending Writers',
+                                    key: 'Pending Writers',
                                     icon: <Bs0SquareFill />,
                                     label: 'Pending Writers',
                                 },
                                 {
-                                    key: '/Rejected Writers',
+                                    key: 'Rejected Writers',
                                     icon: <GiCancel />,
                                     label: 'Rejected Writers',
                                 }

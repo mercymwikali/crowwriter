@@ -1,224 +1,199 @@
+const asyncHandler = require("express-async-handler");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
+const { OrderStatus } = require("@prisma/client");
 
-// Get all orders (private route)
-const getAllOrder = async (req, res) => {
+// Get all orders
+const getAllOrders = asyncHandler(async (req, res) => {
   try {
-    const orders = await prisma.order.findMany();
+    const orders = await prisma.order.findMany({
+      // where: { status: { not: "deleted" } },
+      // orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        orderId: true,
+        topic: true,
+        discipline: true,
+        service: true,
+        description: true,
+        format: true,
+        noOfPages: true,
+        costPerPage: true,
+        fullAmount: true,
+        deadline: true,
+        remainingTime: true,
+        status: true,
+      }
+    });
 
-    if (!orders.length) {
+    //if no orders  return 404 status error
+    if (!orders) {
       return res.status(404).json({ error: "No orders found" });
     }
-
-    const ordersWithDetails = await Promise.all(
-      orders.map(async (order) => {
-        const writer = await prisma.user.findUnique({
-          where: {
-            id: order.writerId,
-          },
-        });
-        return { ...order, writerName: writer.username };
-      })
-    );
-
-    res.status(200).json(ordersWithDetails);
+    res.status(200).json(orders);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error retrieving orders" });
   }
-};
+});
 
-// Create an order// Create an order
-const createOrder = async (req, res) => {
-    try {
-      const {
-        OrderId,
-        topic,
-        typeofPaper,
-        discipline,
-        noOfPages,
-        deadline,
-        description,
-        attachment,
-        citation,
-        service,
-        costPerPage,
-        totalCost,
-        OrderStatus, // Corrected field name
-        assignedToId,
-        writerId,
-      } = req.body;
-  
-    //   // Confirm required fields
-    //   if (
-    //     !OrderId ||
-    //     !topic ||
-    //     !noOfPages ||
-    //     !deadline ||
-    //     !costPerPage ||
-    //     !totalCost ||
-    //     !OrderStatus // Corrected field name
-    //   ) {
-    //     return res.status(400).json({ error: "All fields are required" });
-    //   }
-  
-      // Check for duplicate order
-      const existingOrder = await prisma.order.findUnique({
-        where: {
-          OrderId,
-        },
-      });
-  
-      if (existingOrder) {
-        return res.status(409).json({ error: "Order already exists" });
-      }
-  
-      // Create new order
-      const newOrder = await prisma.order.create({
-        data: {
-          OrderId,
-          topic,
-          typeofPaper,
-          discipline,
-          noOfPages,
-          deadline,
-          description,
-          attachment,
-          citation,
-          service,
-          costPerPage,
-          totalCost,
-          OrderStatus, // Corrected field name
-          assignedToId,
-          writerId,
-        },
-      });
-  
-      // Send response
-      if (newOrder) {
-        return res
-          .status(201)
-          .json({ message: "Order created successfully", data: newOrder });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Error creating order" });
-    }
-  };
-  
-// Update order
-const updateOrder = async (req, res) => {
+// Create an order
+const createOrder = asyncHandler(async (req, res) => {
   try {
-    const { id } = req.params;
-    const {  OrderId,
-        topic,
-        typeofPaper,
-        discipline,
-        noOfPages,
-        deadline,
-        description,
-        attachment,
-        citation,
-        service,
-        costPerPage,
-        totalCost,
-        OrderStatus, // Corrected field name
-        assignedToId,
-        writerId } = req.body;
+    const newOrder = req.body;
+    // const {status}=req.
 
-      const order = await prisma.order.findUnique({
-      where: {
-        id: Number(id),
-      },
+    // // Check for required fields
+    const {
+      orderId,
+      topic,
+      discipline,
+      service,
+      format,
+      noOfPages,
+      costPerPage,
+      fullAmount,
+      deadline,
+      remainingTime,
+      status,
+    } = newOrder;
+    if (
+      !orderId ||
+      !topic ||
+      !discipline ||
+      !service ||
+      !format ||
+      !noOfPages ||
+      !costPerPage ||
+      !fullAmount ||
+      !deadline ||
+      !remainingTime
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Please fill in all required fields" });
+    }
+
+    const existingOrder = await prisma.order.findUnique({
+      where: { orderId },
+    });
+    if (existingOrder) {
+      return res.status(400).json({ error: "Order already exists" });
+    }
+
+    // Create new order
+    const createdOrder = await prisma.order.create({ data: newOrder });
+
+    res
+      .status(201)
+      .json({ message: "Order created successfully", data: createdOrder });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error creating order" });
+  }
+});
+
+// Update an order
+const updateOrder = asyncHandler(async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    //check if the order exists
+    const existingOrder = await prisma.order.findUnique({
+      where: { id: orderId },
     });
 
-    // If order not found, return error
-    if (!order) {
+    if (!existingOrder) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-   const updatedOrder = await prisma.order.update({
-      where: {
-        id: Number(id),
-      },
+    const updatedOrder = await prisma.order.update({
+      where: { id: orderId },
       data: {
-        OrderId,
-        topic,
-        typeofPaper,
-        discipline,
-        noOfPages,
-        deadline,
-        description,
-        attachment,
-        citation,
-        service,
-        costPerPage,
-        totalCost,
-        OrderStatus, // Corrected field name
-        assignedToId,
-        writerId,
+        ...req.body,
       },
-
-   })
-
-   if (updatedOrder) {
-    return res.status(200).json({ message: "Order updated successfully", data: updatedOrder });
-    
-   }
+    });
+    if (updatedOrder) {
+      return res
+        .status(200)
+        .json({ message: "Order updated successfully", data: updatedOrder });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error updating order" });
   }
-};
+});
 
-// Delete order
-const deleteOrder = async (req, res) => {
+// Delete an order
+const deleteOrder = asyncHandler(async (req, res) => {
   try {
-    const { id } = req.params;
-    const order = await prisma.order.findUnique({
-      where: {
-        id: Number(id),
-      },
+    const orderId = req.params.id;
+
+    // Check if the order exists
+    const existingOrder = await prisma.order.findUnique({
+      where: { id: orderId },
     });
-    if (!order) {
+
+    // If no order found, return 404 status error
+    if (!existingOrder) {
       return res.status(404).json({ error: "Order not found" });
     }
-    await prisma.order.delete({
-      where: {
-        id: Number(id),
+
+    // If the order is assigned, return an error message
+    if (existingOrder.status === "assigned") {
+      return res.status(400).json({ error: "Cannot delete assigned order" });
+    }
+
+    // Check if a reason is provided for deleting the order
+    const { reason } = req.body;
+    if (!reason) {
+      return res
+        .status(400)
+        .json({ error: "Please provide a reason for deleting the order" });
+    }
+
+    // Update the notification table with the reason
+    const newNotification = await prisma.notification.create({
+      data: {
+        type: "INFO",
+        message: `Order with ID ${existingOrder.orderId} has been deleted by manager. Reason: ${reason}`,
+        recipientId: existingOrder.assignedToId, // Assuming there's a field for the user who was assigned the order
       },
     });
-    res.status(200).json({ message: "Order deleted successfully" });
+
+    // Delete the order
+    await prisma.order.delete({ where: { id: parseInt(id) } });
+
+    res.status(200).json({
+      message: "Order deleted successfully",
+      notification: newNotification,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error deleting order" });
   }
-};
+});
 
-// Get all orders without details
-const getAllOrdersWithoutDetails = async (req, res) => {
+//import the orderstatus enum values from the prisma schema
+
+//get the orderstatus enum values from the database
+//get the orderstatus enum values from the database
+const statuses = asyncHandler(async (req, res) => {
   try {
-    const orders = await prisma.order.findMany();
-
-    if (!orders.length) {
-      return res.status(404).json({ error: "No orders found" });
-    }
-
-    res.status(200).json({
-      orders: orders,
-      message: "Orders retrieved successfully",
-    });
+    // Get all values of the OrderStatus enum
+    const orderStatuses = Object.values(OrderStatus);
+    res.json(orderStatuses);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error retrieving orders" });
+    res.status(500).json({ error: "Error retrieving order statuses" });
   }
-};
+});
+
 
 module.exports = {
-  getAllOrder,
-  getAllOrdersWithoutDetails,
+  getAllOrders,
   createOrder,
   updateOrder,
   deleteOrder,
+  statuses,
 };

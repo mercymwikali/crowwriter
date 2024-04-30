@@ -33,11 +33,14 @@ const orderRouter = require("./routes/OrdersRoute");
 app.use("/orders", orderRouter);
 
 //users route
-const userRouter = require("./routes/UsersRoute");
-app.use("/users", userRouter);
+const usersRoute= require("./routes/UsersRoute")
+app.use("/users", usersRoute)
 
 const authRouter = require("./routes/authRoutes");
 app.use("/auth", authRouter);
+
+const uploadDocumentRoute = require("./routes/uploadsRoutes");
+app.use("/uploadFile", uploadDocumentRoute);
 
 
 app.use(errorHandler);

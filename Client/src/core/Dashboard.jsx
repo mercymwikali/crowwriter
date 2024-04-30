@@ -73,44 +73,44 @@ const Dashboard = () => {
          }}
           items={[
             {
-              key: '/Jobs-Pools',
+              key: 'Jobs-Pools',
               icon: <FaBriefcase />,
               label: 'Jobs Pools',
             },
             {
-              key: '/My-Jobs',
+              key: 'My-Jobs',
               icon: <DotChartOutlined />,
               label: 'My Jobs',
               children: [
                 {
-                  key: '/Jobs-Onprogress',
+                  key: 'Jobs-Onprogress',
                   icon: <FaRegFolderOpen />,
                   label: 'On Progress',
                 },
                 {
-                  key: '/Completed-Jobs',
+                  key: 'Completed-Jobs',
                   icon: <IoSendSharp />,
                   label: 'Completed',
                 },
                 {
-                  key: '/Rejected',
+                  key: 'Rejected',
                   icon: <RiFolderWarningLine />,
                   label: 'Rejected',
                 }
               ]
             },
             {
-              key: '/My-Wallet',
+              key: 'My-Wallet',
               icon: <CreditCardOutlined />,
               label: 'My Wallet',
               children: [
                 {
-                  key: '/Paid-Transactions',
+                  key: 'Paid-Transactions',
                   icon: <BsCashCoin className='text-red' />,
                   label: 'Paid Transactions',
                 },
                 {
-                  key: '/Pending-Payments',
+                  key: 'Pending-Payments',
                   icon: <FaClock className='text-red' />,
                   label: 'Pending Payments',
                 },
