@@ -17,7 +17,7 @@ import { message } from "antd";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "./userActions";
 
-const API = "http://localhost:3001";
+const API = "https://crowwriter.vercel.app/";
 
 export const createBid = (orderId, writerId) => async (dispatch, getState) => {
   try {

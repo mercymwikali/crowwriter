@@ -15,7 +15,7 @@ import {
   USER_DELETE_SUCCESS,
 } from "../constants/userConstants";
 
-const API = "http://localhost:3001";
+const API = "https://crowwriter.vercel.app/";
 
 export const createWriter = (writer) => async (dispatch, getState) => {
   try {

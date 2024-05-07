@@ -12,7 +12,7 @@ import {
 } from "../constants/ordersConstants";
 import { message } from "antd";
 
-const API = "http://localhost:3001";
+const API = "https://crowwriter.vercel.app/";
 
 export const createdOrder = (order) => async (dispatch, getState) => {
   try {
