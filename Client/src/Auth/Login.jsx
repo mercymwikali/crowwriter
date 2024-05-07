@@ -10,8 +10,8 @@ import { jwtDecode } from 'jwt-decode';
 
 export const Login = () => {
     const userRef = useRef();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('test@email.com');
+    const [password, setPassword] = useState('test123');
     
 
     const dispatch = useDispatch();
