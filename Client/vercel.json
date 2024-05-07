@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
         {
-            "src": "*.js", 
+            "src": "*.js/jsx", 
             "use": "@vercel/node"
             
         }
@@ -10,7 +10,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "*.js"
+            "dest": "*.js/jsx"
         }
     ]
     
