@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Skeleton, Tooltip, message, Button, Modal, Pagination } from 'antd';
+import { Skeleton, Tooltip, message, Button, Modal, Pagination, Form, Input, DatePicker } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { listOrders } from '../actions/orderActions';
+import { listOrders, updateOrder } from '../actions/orderActions';
+import moment from 'moment';
+
+const { TextArea } = Input;
 
 const Allorders = () => {
   const dispatch = useDispatch();
@@ -11,14 +14,17 @@ const Allorders = () => {
   const ordersList = useSelector(state => state.ordersList)
   const { loading, error, orders } = ordersList
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, seteditModalVisible] = useState(false);
   const [selectedorder, setSelectedorder] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 25; // Display 25 rows per page
 
+  const editOrder = useSelector(state => state.editOrder);
+  const { success: successEdit } = editOrder;
+
   useEffect(() => {
     dispatch(listOrders());
-  }, [dispatch]);
+  }, [dispatch, successEdit]);
 
   const deleteorder = async (id) => {
     try {
@@ -42,12 +48,25 @@ const Allorders = () => {
 
   const editorder = (order) => {
     setSelectedorder(order);
-    setModalVisible(true);
+    seteditModalVisible(true);
   };
 
   const handleCancel = () => {
-    setModalVisible(false);
+    setSelectedorder(null);
+    seteditModalVisible(false);
   };
+
+  const handleEditSubmit = async () => {
+    console.log("Selected order:", selectedorder);
+
+    if (selectedorder && selectedorder.id) {
+      await dispatch(updateOrder(selectedorder.id, selectedorder));
+     await dispatch(listOrders()); // Fetch the updated list of orders
+    } else {
+      console.error("Selected order or order ID is null");
+    }
+    handleCancel();
+  }
 
   // Pagination change handler
   const onPageChange = (page, pageSize) => {
@@ -62,12 +81,12 @@ const Allorders = () => {
     <>
       <h1 className='text-success'>Listed orders</h1>
       <div className="d-block d-md-flex gap-4 justify-content-between align-items-center">
-        <h4><Link className='btn btn-success' to="/Order-requirements-details" type='button'>Create New Order</Link></h4>
+        <h4><Link className='btn btn-success' to="/" type='button'>Create New Order</Link></h4>
       </div>
       {loading ? (
         <Skeleton active />
       ) : error ? (
-        <p>{error}</p>
+        message.error(error)
       ) : (
         <>
           <table className="table table-hover table-responsive">
@@ -76,7 +95,6 @@ const Allorders = () => {
                 <th scope='col'>#</th>
                 <th scope='col'>OrderId</th>
                 <th scope='col'>Topic</th>
-                <th scope='col'>Discipline</th>
                 <th scope='col'>No of Pages</th>
                 <th scope='col'>Cost Per Page</th>
                 <th scope='col'>Full Amount</th>
@@ -92,7 +110,6 @@ const Allorders = () => {
                   <td>{startIndex + index + 1}</td>
                   <td>{order.orderId}</td>
                   <td>{order.topic}</td>
-                  <td>{order.discipline}</td>
                   <td>{order.noOfPages}</td>
                   <td>{order.costPerPage}</td>
                   <td>{order.fullAmount}</td>
@@ -101,10 +118,10 @@ const Allorders = () => {
                   <td>{order.status}</td>
                   <td>
                     <Tooltip title="Edit">
-                      <Button type="primary" icon={<EditFilled />} onClick={() => editorder(order)} />
+                      <Button type="ghost" icon={<EditFilled style={{ color: 'blue' }}/>} onClick={() => editorder(order)} />
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <Button type="danger" icon={<DeleteFilled />} onClick={() => deleteorder(order.id)} />
+                      <Button type="danger" icon={<DeleteFilled style={{ color: 'red' }} />} onClick={() => deleteorder(order.id)} />
                     </Tooltip>
                   </td>
                 </tr>
@@ -123,12 +140,149 @@ const Allorders = () => {
       {/* Edit order Modal */}
       <Modal
         title="Edit order"
-        visible={modalVisible}
+        visible={editModalVisible}
         onCancel={handleCancel}
         footer={null}
+        destroyOnClose
+        maskClosable
+        width={800}
+        onOk={handleEditSubmit}
+        okText="Update"
+        cancelText="Cancel"
+        centered
+        style={{ top: 20, maxHeight: '90vh', overflow: 'auto' }}
       >
         {selectedorder && (
-          <p>Implement your edit order form here</p>
+          <Form>
+            <Form.Item label="Order ID">
+              <Input
+                value={selectedorder.orderId}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    orderId: e.target.value,
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Topic">
+              <Input
+                value={selectedorder.topic}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    topic: e.target.value,
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Discipline">
+              <Input
+                value={selectedorder.discipline}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    discipline: e.target.value,
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Service">
+              <Input
+                value={selectedorder.service}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    service: e.target.value,
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Description">
+              <TextArea
+                value={selectedorder.description}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    description: e.target.value,
+                  })
+                }
+                rows={8}
+              />
+            </Form.Item>
+            <Form.Item label="No of Pages">
+              <Input
+                type="number"
+                value={selectedorder.noOfPages}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    noOfPages: parseInt(e.target.value),
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Cost Per Page">
+              <Input
+                type="number"
+                value={selectedorder.costPerPage}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    costPerPage: parseFloat(e.target.value),
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Full Amount">
+              <Input
+                type="number"
+                value={selectedorder.fullAmount}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    fullAmount: parseFloat(e.target.value),
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Deadline">
+              <DatePicker
+                value={selectedorder.deadline ? moment(selectedorder.deadline) : null}
+                onChange={(date, dateString) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    deadline: dateString,
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Remaining Time">
+              <Input
+                value={selectedorder.remainingTime}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    remainingTime: e.target.value,
+                  })
+                }
+              />
+            </Form.Item>
+            <Form.Item label="Status">
+              <Input
+                value={selectedorder.status}
+                onChange={(e) =>
+                  setSelectedorder({
+                    ...selectedorder,
+                    status: e.target.value,
+                  })
+                }
+              />
+            </Form.Item>
+            <Button type="primary" onClick={handleEditSubmit} htmlType="submit">
+              Save Changes
+            </Button>
+          </Form>
         )}
       </Modal>
     </>

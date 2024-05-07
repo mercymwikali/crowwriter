@@ -1,23 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Avatar, Dropdown, Menu, Typography, Spin, Alert } from 'antd';
 import { UserOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import {login, logout } from '../actions/userActions';
+import { logout } from '../actions/userActions';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const Signout = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const userDetails = useSelector((state) => state.userDetails);
-    const { loading, error, user } = userDetails
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
 
-    useEffect(() => {
-        if (error) {
-            // Handle error here, such as displaying error message
-            console.error('Error:', error);
-        }
-    }, [error]);
+    // Extracting username from the decoded token
+    let decodedToken = null;
+    if (userInfo && typeof userInfo.accessToken === 'string') decodedToken = jwtDecode(userInfo.accessToken);
+    const username = decodedToken.UserInfo.username;
 
     const handleMenuClick = async (e) => {
         if (e.key === '/signout') {
@@ -49,11 +48,9 @@ const Signout = () => {
 
     return (
         <Dropdown overlay={menu} placement="bottomRight">
-            <div>
+            <div className='d-flex align-items-center gap-3 justify-content-center cursor-pointer'>
                 <Avatar size={50} icon={<UserOutlined />} />
-                <Typography.Text>{user?.username}</Typography.Text>
-                {loading && <Spin />}
-                {error && <Alert message={error} type="error" />}
+                <h6 style={{ color: 'white' }}>{username}</h6>
             </div>
         </Dropdown>
     );

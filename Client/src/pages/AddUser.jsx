@@ -1,7 +1,8 @@
-import { Card, Form, Typography, Input, Select, Button, message } from 'antd';
 import React, { useState } from 'react';
+import { Card, Form, Typography, Input, Select, Button, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { createUser } from '../actions/userActions';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -9,6 +10,8 @@ const AddUser = () => {
     const dispatch = useDispatch();
     const userCreate = useSelector((state) => state.userCreate);
     const { loading, success, error } = userCreate;
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         username: '',
@@ -46,6 +49,7 @@ const AddUser = () => {
     // Display loading message while submitting
     if (loading) {
         message.loading({ content: 'Creating user...', key: 'loading' });
+
     } else {
         // Close loading message if not loading
         message.destroy('loading');
@@ -91,6 +95,7 @@ const AddUser = () => {
                             type="password"
                             id="password"
                             value={formData.password}
+                            autoComplete='off'
                             onChange={(e) => handleChange('password', e.target.value)}
                         />
                     </div>

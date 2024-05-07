@@ -1,72 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Col, DatePicker, Form, Input, InputNumber } from 'antd';
+import React from 'react';
+import { Modal, Input, Form, Button } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 
-const ViewJob = ({ rowData, closeModal }) => {
-  const [formState, setFormState] = useState({
-    topic: '',
-    description: '',
-    pages: 0,
-    costPerPage: 0,
-    deadline: null,
-  });
+const { TextArea } = Input;
 
-  useEffect(() => {
-    if (rowData) {
-      setFormState({
-        topic: rowData.topic,
-        description: rowData.description,
-        pages: rowData.pages,
-        costPerPage: rowData.costPerPage,
-        deadline: rowData.deadline,
-      });
-    }
-  }, [rowData]);
-
-  const handleSubmit = () => {
-    // Handle submit logic here
-    closeModal();
-  };
-
-  const { TextArea } = Input;
-
+const JobViewModal = ({ visible, onCancel, selectedJob }) => {
   return (
-    <div className="modal" tabIndex="-1" role="dialog">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">View Job</h5>
-            <button type="button" className="close" onClick={closeModal}>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            <Form onFinish={handleSubmit} layout="vertical">
-              <Form.Item label="Topic :" name="topic" rules={[{ required: true, message: 'Please input your Topic!' }]}>
-                <Input value={formState.topic} disabled />
-              </Form.Item>
-              <Form.Item label="Description :" name="description" rules={[{ required: true, message: 'Please input your Description!' }]}>
-                <TextArea value={formState.description} disabled />
-              </Form.Item>
-              <Form.Item label="Pages :" name="pages" rules={[{ required: true, message: 'Please input your Pages!' }]}>
-                <InputNumber value={formState.pages} disabled />
-              </Form.Item>
-              <Form.Item label="Cost Per Page :" name="costPerPage" rules={[{ required: true, message: 'Please input your Cost Per Page!' }]}>
-                <InputNumber value={formState.costPerPage} disabled />
-              </Form.Item>
-              <Form.Item label="Deadline :" name="deadline" rules={[{ required: true, message: 'Please input your Deadline!' }]}>
-                <DatePicker value={formState.deadline} disabled />
-              </Form.Item>
-            </Form>
-          </div>
-          <div className="modal-footer">
-            <Button type="button" className="btn btn-secondary" onClick={closeModal}>
-              Close
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Modal
+      title="Order Details"
+      visible={visible}
+      onCancel={onCancel}
+      width={1000}
+      footer={[
+        <Button key="close" onClick={onCancel}>
+          Close
+        </Button>
+      ]}
+    >
+      {selectedJob && (
+        <>
+          <Form>
+            <Form.Item label="Order ID">
+              <Input value={selectedJob.orderId} readOnly />
+            </Form.Item>
+            <Form.Item label="Topic">
+              <Input value={selectedJob.topic} readOnly />
+            </Form.Item>
+            <Form.Item label="Service">
+              <Input value={selectedJob.service} readOnly />
+            </Form.Item>
+            <Form.Item label="Discipline">
+              <Input value={selectedJob.discipline} readOnly />
+            </Form.Item>
+            <Form.Item label="Number of Pages">
+              <Input value={selectedJob.noOfPages} readOnly />
+            </Form.Item>
+            <Form.Item label="Cost Per Page">
+              <Input value={selectedJob.costPerPage} readOnly />
+            </Form.Item>
+            <Form.Item label="Full Amount">
+              <Input value={selectedJob.fullAmount} readOnly />
+            </Form.Item>
+            <Form.Item label="Deadline">
+              <Input value={new Date(selectedJob.deadline).toLocaleDateString()} readOnly />
+            </Form.Item>
+            <Form.Item label="Remaining Time">
+              <Input value={selectedJob.remainingTime} readOnly />
+            </Form.Item>
+            <Form.Item label="Description">
+              <TextArea rows={13} value={selectedJob.description} readOnly />
+            </Form.Item>
+            <Form.Item className='justify-content-center d-flex align-items-center'>
+              <Button type="primary" icon={<DownloadOutlined />} style={{ marginTop: '16px' }} block>Download Attachment</Button>
+            </Form.Item>
+          </Form>
+        </>
+      )}
+    </Modal>
   );
 };
 
-export default ViewJob;
+export default JobViewModal;

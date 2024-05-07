@@ -42,6 +42,9 @@ app.use("/auth", authRouter);
 const uploadDocumentRoute = require("./routes/uploadsRoutes");
 app.use("/uploadFile", uploadDocumentRoute);
 
+const bidsRoute = require("./routes/bidsRoute");
+app.use("/bids", bidsRoute);
+
 
 app.use(errorHandler);
 

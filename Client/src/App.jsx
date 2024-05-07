@@ -4,8 +4,6 @@ import './App.css';
 import Register from './Auth/Register';
 import { Login } from './Auth/Login';
 import Dashboard from './core/Dashboard.jsx';
-// import { useAuth } from './context/AuthContext';
-// import PrivateRoute from './Auth/PrivateRoute.jsx';
 import Manager from './core/Manager.jsx';
 import NewOrder from './pages/NewOrder.jsx';
 import BidsList from './pages/BidsList.jsx';
@@ -18,50 +16,47 @@ import RequestPayment from './pages/RequestPayment.jsx';
 import AssignedJobs from './pages/AssignedJobs.jsx';
 import CancelledJobs from './pages/CancelledJobs.jsx';
 import AllJobs from './pages/AllJobs.jsx';
-// import PersistLogin from './Auth/PersistLogin.jsx';
-
-import { ROLES } from './config/role.js';
 import WriterList from './pages/WriterList.jsx';
 import AddUser from './pages/AddUser.jsx';
+import WriterBidList from './pages/WriterBidList.jsx';
+import PrivateRoute from './Auth/PrivateRoute.jsx'; // Import PrivateRoute
+import { ROLES } from './config/role.js';
 
 const App = () => {
-  // const { isAuthenticated } = useAuth();
-
   return (
     <Router>
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        {/* protected routes */}
 
-        {/* <Route element={<PersistLogin />}> */}
-          {/* <Route element={<PrivateRoute allowedRoles={[ROLES.WRITER]} />}> */}
-            <Route path="/dashboard" element={<Dashboard />}>
-              <Route path="Jobs-Pools" element={<JobsPool />} />
-              <Route path='Jobs-Onprogress' element={<WritersOnProgressJob />} />
-              <Route path='Completed-Jobs' element={<CompletedJobs />} />
-              <Route path='Rejected' element={<RejectedJobs />} />
-              <Route path='Paid-Transactions' element={<WritersTransactions />} />
-              <Route path='Pending-Payments' element={<RequestPayment />} />
-            </Route>
-          {/* </Route> */}
-          {/* Update child route paths by prepending the parent route path */}
-          {/* <Route element={<PrivateRoute allowedRoles={[ROLES.ADMIN, ROLES.MANAGER]} />}> */}
-
-            <Route path="" element={<Manager />}>
-              <Route path="/Order-requirements-details" element={<NewOrder />} />
-              <Route path="/All-Jobs" element={<AllJobs />} />
-              <Route path="/Bids-List" element={<BidsList />} />
-              <Route path='/Pending-Jobs' element={<AssignedJobs />} />
-              <Route path='/Cancelled-Jobs' element={<CancelledJobs />} />
-              <Route path='/writers-list' element={<WriterList/>}/>
-              <Route path='/add-users' element={<AddUser/>}/>
-
-{/* <Route path='/writers-list' element={<Lisw />} /> */}
-            </Route>
-          {/* </Route> */}
-        {/* </Route> */}
-        {/* Add a catch-all route for invalid paths */}
+        {/* Private routes */}
+        <Route
+          path="/dashboard/*"
+          element={<PrivateRoute allowedRoles={[ROLES.WRITER]} element={<Dashboard />} />}
+        >
+          {/* Index page for Jobs Pool */}
+          <Route index element={<JobsPool />} />
+          <Route path="jobs-onprogress" element={<WritersOnProgressJob />} />
+          <Route path="completed-jobs" element={<CompletedJobs />} />
+          <Route path="rejected" element={<RejectedJobs />} />
+          <Route path="paid-transactions" element={<WritersTransactions />} />
+          <Route path="pending-payments" element={<RequestPayment />} />
+          <Route path="writer-bids-list" element={<WriterBidList />} />
+        </Route>
+        <Route
+          path="/manager/*"
+          element={<PrivateRoute allowedRoles={[ROLES.MANAGER]} element={<Manager />} />}
+        >
+          {/* Index page for Order Requirements */}
+          <Route index element={<NewOrder />} />
+          <Route path="all-jobs" element={<AllJobs />} />
+          <Route path="bids-list" element={<BidsList />} />
+          <Route path="pending-jobs" element={<AssignedJobs />} />
+          <Route path="cancelled-jobs" element={<CancelledJobs />} />
+          <Route path="writers-list" element={<WriterList />} />
+          <Route path="add-users" element={<AddUser />} />
+        </Route>
+        {/* Default route */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

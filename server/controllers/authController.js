@@ -26,6 +26,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const accessToken = jwt.sign(
       {
         "UserInfo": {
+          "id": user.id,
           "email": user.email,
           "username": user.username,
           "roles": user.role,
@@ -38,6 +39,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const refreshToken = jwt.sign(
       {
         "UserInfo": {
+          "id": user.id,
           "email": user.email,
           "username": user.username,
           "roles": user.role,
@@ -76,11 +78,12 @@ const refreshToken = asyncHandler(async (req, res) => {
           return res.status(403).json({ error: "Token is not valid" });
         }
 
-        const { email, username, roles } = decoded.UserInfo; // Destructure UserInfo from decoded object
+        const { id,email, username, roles } = decoded.UserInfo; // Destructure UserInfo from decoded object
 
         const newAccessToken = jwt.sign(
           {
             UserInfo: {
+              id,
               email,
               username,
               roles,

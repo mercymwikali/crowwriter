@@ -1,45 +1,43 @@
-// import { useSelector } from "react-redux";
-// import { selectCurrentToken } from "../Auth/authSlice";
-// import {jwtDecode} from 'jwt-decode'; // Corrected import statement
+import { useSelector } from "react-redux";
+import { jwtDecode } from 'jwt-decode';
 
-// const useAuth = () => {
-//   const token = useSelector(selectCurrentToken);
-//   let isManager = false;
-//   let isAdmin = false;
-//   let status = "writer";
+const useAuth = () => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-//   if (token) {
-//     try {
-//       const decoded = jwtDecode(token);
-//       const { username, roles } = decoded.UserInfo; // Changed from `roles` to `role`
+  if (!userInfo || typeof userInfo.accessToken !== 'string') {
+    // Return default state indicating user is not authenticated
+    return {
+      username: "",
+      roles: [],
+           status: "inactive"
+    };
+  }
 
-//       isManager = roles.includes("manager");
-//       isAdmin = roles.includes("admin");
 
-//       if (isManager) status = "manager";
-//       else if (isAdmin) status = "admin";
 
-//       return {
-//         username,
-//         roles, // Corrected the key to `role`
-//         isManager,
-//         isAdmin,
-//         status
-//       }
-//     } catch (error) {
-//       console.error("Error decoding token:", error);
-//       // Handle token decoding error
-      
-//     }
-//   }
+  try {
+    const decoded = jwtDecode(userInfo.accessToken);
+    const { username, roles } = decoded.UserInfo;
 
-//   return {
-//     username: " ",
-//     roles: [], // Ensure that role is initialized as an array
-//     isManager,
-//     isAdmin,
-//     status
-//   };
-// };
+  
 
-// export default useAuth;
+    return {
+      username,
+      roles,
+     
+      status
+    };
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    // Return default state indicating user is not authenticated
+    return {
+      username: "",
+      roles: [],
+     
+      status: "inactive"
+    };
+  }
+};
+
+export default useAuth;

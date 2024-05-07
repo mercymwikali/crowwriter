@@ -1,6 +1,6 @@
 import {
-    GET_ORDER_STATUS_ENUMS_FAIL,
-    GET_ORDER_STATUS_ENUMS_REQUEST,
+  GET_ORDER_STATUS_ENUMS_FAIL,
+  GET_ORDER_STATUS_ENUMS_REQUEST,
   GET_ORDER_STATUS_ENUMS_RESET,
   GET_ORDER_STATUS_ENUMS_SUCCESS,
   LIST_ORDERS_FAIL,
@@ -10,6 +10,10 @@ import {
   ORDER_CREATE_FAIL,
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
+  ORDER_UPDATE_FAIL,
+  ORDER_UPDATE_REQUEST,
+  ORDER_UPDATE_RESET,
+  ORDER_UPDATE_SUCCESS,
 } from "../constants/ordersConstants";
 
 export const orderCreateReducer = (state = {}, action) => {
@@ -25,33 +29,51 @@ export const orderCreateReducer = (state = {}, action) => {
   }
 };
 
-export const orderStatusListReducer = (state = { orderstatuses: [] }, action) => {
-    switch (action.type) {
+export const orderStatusListReducer = (
+  state = { orderstatuses: [] },
+  action
+) => {
+  switch (action.type) {
     case GET_ORDER_STATUS_ENUMS_REQUEST:
       return { loading: true };
     case GET_ORDER_STATUS_ENUMS_SUCCESS:
       return { loading: false, orderstatuses: action.payload };
     case GET_ORDER_STATUS_ENUMS_FAIL:
       return { loading: false, error: action.payload };
-      case GET_ORDER_STATUS_ENUMS_RESET:
-        return { orderstatuses: [] };
+    case GET_ORDER_STATUS_ENUMS_RESET:
+      return { orderstatuses: [] };
     default:
       return state;
   }
 };
 
 export const ordersListReducer = (state = { orders: [] }, action) => {
-    switch (action.type) {
-        case LIST_ORDERS_REQUEST:
-            return { loading: true };
-        case LIST_ORDERS_SUCCESS:
-            return { loading: false, orders: action.payload };
-        case LIST_ORDERS_FAIL:
-            return { loading: false, error: action.payload };
-            case LIST_ORDERS_RESET:
-            return { users: [] };
-        default:
-            return state;
-    }
-}
+  switch (action.type) {
+    case LIST_ORDERS_REQUEST:
+      return { loading: true };
+    case LIST_ORDERS_SUCCESS:
+      return { loading: false, orders: action.payload };
+    case LIST_ORDERS_FAIL:
+      return { loading: false, error: action.payload };
+    case LIST_ORDERS_RESET:
+      return { users: [] };
+    default:
+      return state;
+  }
+};
 
+//update order reducer
+export const orderUpdateReducer = (state = { order: {} }, action) => {
+  switch (action.type) {
+    case ORDER_UPDATE_REQUEST:
+      return { loading: true };
+    case ORDER_UPDATE_SUCCESS:
+      return { loading: false, success: true, order: action.payload };
+    case ORDER_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case ORDER_UPDATE_RESET:
+      return { order: {} };
+    default:
+      return state;
+  }
+};

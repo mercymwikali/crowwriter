@@ -151,12 +151,26 @@ sidemenu{
   
 }
 
-.table th{
+.admin-table th{
   /* text-align: center !important; */
 background-color: #00142b !important;
 padding:0.9em !important;
 color:#fff !important;
 }
+
+.writer-table th{
+  text-align: center !important;
+padding:0.9em !important;
+color:#001b27 !important;
+border: 1px solid #001b27 !important;
+}
+
+.writer-table td {
+  border-left: 1.9px solid #fff !important;
+  border-right: 1.9px solid #fff !important;
+  text-align: center; /* Center the content horizontally */
+}
+
 .label-Pending{
   background-color: #ffc107 !important;
 

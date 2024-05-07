@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { CreditCardOutlined, DotChartOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { FaBriefcase, FaCheckCircle, FaClock, FaRegFolderOpen } from "react-icons/fa";
-import { GiProgression } from "react-icons/gi";
 import { IoSendSharp } from "react-icons/io5";
 import { RiFolderWarningLine } from "react-icons/ri";
-import { BsCashCoin, BsDashCircleFill } from "react-icons/bs";
+import { BsCashCoin, BsList } from "react-icons/bs";
 import Signout from '../components/SignOut';
 import { Outlet, useNavigate } from 'react-router-dom';
 
@@ -17,7 +16,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const rootSubmenuKeys = [
-    '/Jobs-Pools',
+    '/',
     '/My-Jobs',
     '/My-Wallet',
     '/My Profile',
@@ -27,152 +26,150 @@ const Dashboard = () => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      setOpenKeys(keys);
-      setCollapsed(true)
+        setOpenKeys(keys);
+        setCollapsed(true)
     } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+        setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     }
-  }
+}
+const handleMenuClick = (key) => {
+  navigate(`/dashboard/${key}`);
+};
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
   return (
     <Layout>
       <Sider
-       breakpoint="md"
-       collapsedWidth={collapsed ? 80 : 250}
-       trigger={null}
-       inlinecollapsed={collapsed}
-       collapsible collapsed={collapsed}
-       className='sidemenu'
-       onBreakpoint={(broken) => {
-           console.log(broken);
-       }}
-       onCollapse={(collapsed, type) => {
-           console.log(collapsed, type);
-       }}
+        breakpoint="md"
+        collapsedWidth={collapsed ? 80 : 250}
+        trigger={null}
+        inlinecollapsed={collapsed}
+        collapsible collapsed={collapsed}
+        className='sidemenu'
+        onBreakpoint={(broken) => {
+            console.log(broken);
+        }}
+        onCollapse={(collapsed, type) => {
+            console.log(collapsed, type);
+        }}
       >
-        {/* <h1 className='logo'>Wekc</h1> */}
         <Menu
          theme="dark"
          mode="inline"
-         defaultSelectedKeys={['/Jobs-Pools']}
+         defaultSelectedKeys={['/jobs-pool']}
          openKeys={openKeys}
          onOpenChange={onOpenChange}
-         onClick={({ key }) => {
-          navigate(`/dashboard${key}`);
-        }}
-                 style={{
-             backgroundColor: 'transparent',
-             height: '100%',
-             color: '#fff',
-             paddingTop: '70px',
-             paddingBottom: '90px',
-             overflowY: 'scroll',
-             transition: '0.2s ease',
-         }}
+         onClick={({ key }) => handleMenuClick(key)}
+          style={{
+            backgroundColor: 'transparent',
+            height: '100%',
+            color: '#fff',
+            paddingTop: '70px',
+            paddingBottom: '90px',
+            overflowY: 'scroll',
+            transition: '0.2s ease',
+          }}
           items={[
             {
-              key: 'Jobs-Pools',
+              key: '/',
               icon: <FaBriefcase />,
               label: 'Jobs Pools',
             },
             {
-              key: 'My-Jobs',
+              key: '/My-Jobs',
               icon: <DotChartOutlined />,
               label: 'My Jobs',
               children: [
                 {
-                  key: 'Jobs-Onprogress',
+                  key: 'writer-bids-list',
+                  icon: <BsList />,
+                  label: 'Bid List',
+                },
+                {
+                  key: 'jobs-onprogress',
                   icon: <FaRegFolderOpen />,
                   label: 'On Progress',
                 },
                 {
-                  key: 'Completed-Jobs',
+                  key: 'completed-jobs',
                   icon: <IoSendSharp />,
                   label: 'Completed',
                 },
                 {
-                  key: 'Rejected',
+                  key: 'rejected',
                   icon: <RiFolderWarningLine />,
                   label: 'Rejected',
                 }
               ]
             },
             {
-              key: 'My-Wallet',
+              key: '/My-Wallet',
               icon: <CreditCardOutlined />,
               label: 'My Wallet',
               children: [
                 {
-                  key: 'Paid-Transactions',
+                  key: 'paid-transactions',
                   icon: <BsCashCoin className='text-red' />,
                   label: 'Paid Transactions',
                 },
                 {
-                  key: 'Pending-Payments',
+                  key: 'pending-payments',
                   icon: <FaClock className='text-red' />,
                   label: 'Pending Payments',
                 },
-                // {
-                //   key: '/Unpaid-Transactions',
-                //   icon: <BsDashCircleFill className='text-red' />,
-                //   label: 'Unpaid Transactions',
-                // }
               ]
             },
             {
-              key: 'My Profile',
+              key: 'my-profile',
               icon: <UserOutlined />,
               label: 'My Profile',
             },
           ]}
-        />      </Sider>
+        />
+      </Sider>
       <Layout>
-      <Header
-                    style={{
-                        padding: 18,
-                        backgroundColor: '#002329',
-                        zIndex: 1
-                    }}
-                    className='header'>
-                    <div>
-                        <Button
-                            type="text"
-                            icon={collapsed ? <MenuFoldOutlined /> : <MenuFoldOutlined />}
-                            onClick={() => setCollapsed(!collapsed)}
-                            style={{
-                                fontSize: '22px',
-                                width: 64,
-                                height: 64,
-                                color: '#fff'
-                            }}
-                        // className='d-sm-none d-md-block'
-                        />
-                    </div>
-
-                    <Signout className='d-none d-sm-block cursor-pointer' />
-                </Header>
-                <Content
-                    className='contentStyle'
-                    style={{
-                        marginLeft: collapsed ? 80 : 230,
-                        transition: 'all 0.2s',
-                        marginTop: '20px',
-                        padding: 14,
-                        background: colorBgContainer,
-
-                    }}>
-
-                    <div
-                        style={{
-                            padding: 24,
-                            minHeight: 360,
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
-            <Outlet/>
+        <Header
+          style={{
+            padding: 18,
+            backgroundColor: '#002329',
+            zIndex: 1
+          }}
+          className='header'>
+          <div>
+            <Button
+              type="text"
+              icon={collapsed ? <MenuFoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: '22px',
+                width: 64,
+                height: 64,
+                color: '#fff'
+              }}
+            />
+          </div>
+          <Signout className='d-none d-sm-block cursor-pointer' />
+        </Header>
+        <Content
+          className='contentStyle'
+          style={{
+            marginLeft: collapsed ? 80 : 230,
+            transition: 'all 0.2s',
+            marginTop: '20px',
+            padding: 14,
+            background: colorBgContainer,
+          }}>
+          <div
+            style={{
+              padding: 24,
+              minHeight: 360,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            <Outlet />
           </div>
         </Content>
         <Footer
@@ -180,10 +177,11 @@ const Dashboard = () => {
             textAlign: 'center',
           }}
         >
-Crowwriters.com © {new Date().getFullYear()} Created by MayfairDev
+          Crowwriters.com © {new Date().getFullYear()} Created by MayfairDev
         </Footer>
       </Layout>
     </Layout>
   );
 };
+
 export default Dashboard;

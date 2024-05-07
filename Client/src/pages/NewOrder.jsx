@@ -10,7 +10,7 @@ const { Option } = Select;
 const NewOrder = () => {
   const dispatch = useDispatch();
   const orderCreate = useSelector(state => state.orderCreate);
-  const { loading, error, success } = orderCreate;
+  const { loading, error, success, order } = orderCreate;
 
   const orderStatus = useSelector(state => state.orderStatus);
   const { orderstatuses } = orderStatus;

@@ -9,7 +9,11 @@ import {
   UPDATE_WRITER_FAIL,
 } from "../constants/writersDetails";
 import { message } from "antd"; // Import message from 'antd'
-import { USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS } from "../constants/userConstants";
+import {
+  USER_DELETE_FAIL,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+} from "../constants/userConstants";
 
 const API = "http://localhost:3001";
 
@@ -32,6 +36,7 @@ export const createWriter = (writer) => async (dispatch, getState) => {
       writer,
       config
     );
+    
   } catch (error) {}
 };
 
@@ -61,9 +66,11 @@ export const listWriters = () => async (dispatch, getState) => {
     // Dispatch action to indicate request success
     dispatch({ type: LIST_WRITER_SUCCESS, payload: data });
   } catch (error) {
+   
     // Dispatch action to indicate request failure
     dispatch({ type: LIST_WRITER_FAIL, payload: error.message });
-  }
+message.error(error.response.data.message);
+}
 };
 export const UpdateWriter = (id, updatedUser) => async (dispatch, getState) => {
   try {
@@ -101,40 +108,40 @@ export const UpdateWriter = (id, updatedUser) => async (dispatch, getState) => {
       type: UPDATE_WRITER_FAIL,
       payload: message,
     });
+
+    message.error(message);
   }
 };
 
-
-
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: USER_DELETE_REQUEST});
+    dispatch({ type: USER_DELETE_REQUEST });
 
     // Get userInfo from the state
     const {
       userLogin: { userInfo },
     } = getState();
 
-      const config = {
-          headers: {
-              Authorization: `Bearer ${userInfo.accessToken}`,
-          },
-      }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`,
+      },
+    };
 
-      await axios.delete(`${API}/users/deleteUser/${id}`, config)
+    await axios.delete(`${API}/users/deleteUser/${id}`, config);
 
-      dispatch({ type: USER_DELETE_SUCCESS })
+    dispatch({ type: USER_DELETE_SUCCESS });
   } catch (error) {
-      const message =
-          error.response && error.response.data.message
-              ? error.response.data.message
-              : error.message
-      if (message === 'Not authorized, token failed') {
-          dispatch(logout())
-      }
-      dispatch({
-          type: USER_DELETE_FAIL,
-          payload: message,
-      })
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: USER_DELETE_FAIL,
+      payload: message,
+    });
   }
-}
+};

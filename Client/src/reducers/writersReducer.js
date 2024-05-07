@@ -27,7 +27,7 @@ export const writerUpdateReducer = (state = {user: {}}, action) => {
         case UPDATE_WRITER_FAIL:
             return { loading: false, error: action.payload };
             case UPDATE_WRITER_RESET:
-            return {};
+            return {user: {} };
         default:
             return state;
     }

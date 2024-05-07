@@ -36,7 +36,7 @@ const FileUpload = () => {
     try {
       setUploading(true);
       // Simulate a delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 2400));
 
       const config = {
         headers: {

@@ -1,106 +1,107 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, DatePicker } from 'antd';
-import { Tooltip } from 'antd';
-import { DeleteFilled, DollarCircleOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import EditJob from '../components/EditJob';
-import { JobContext, useJobContext } from '../context/JobContext';
-import useFetchOrder from '../hooks/useFetchOrder';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { listOrders} from '../actions/orderActions';
+import { Skeleton, message, Button, Tooltip, Modal, Input, Space, Form } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { createBid } from '../actions/bidActions';
+import { login } from '../actions/userActions';
+import JobViewModal from '../components/viewJob';
+import BidJobModal from '../components/BidJob';
+
+const { TextArea } = Input;
 
 const JobsPool = () => {
-  const {sortedJobs}=useJobContext();
-  const {loading, error, fetchOrders} = useFetchOrder();
-  const [orders, setOrders]=useState([]);
-  const [openModal, setOpenModal] = useState(false);
+  const dispatch = useDispatch();
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [viewModal, setViewModal] = useState(false);
+  const [bidJob, setBidJob] = useState(null);
+  const [viewBidModal, setViewBidModal] = useState(false);
 
-useEffect(() => {
-  fetchOrders();
-}, []);
+  const listedJobs = useSelector((state) => state.ordersList);
+  const { loading, error, orders } = listedJobs;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo} = userLogin;
 
-useEffect(() => {
-  setOrders(sortedJobs);
+  useEffect(() => {
+    dispatch(listOrders());
+  }, [dispatch]);
 
-}, [sortedJobs]);
+  const handleViewJob = (job) => {
+    setSelectedJob(job);
+    setViewModal(true);
+  }
 
-  const handleModal = (job) => {
-    setOpenModal(true);
+  const handleCloseModal = () => {
+    setViewModal(false);
+    setViewBidModal(false);
+  }
+
+  // Frontend handleBid Function
+  const handleBid = (job) => {
+    setBidJob(job);
+    setViewBidModal(true);
+  
   };
-
-  const closeModal = () => {
-    setOpenModal(false);
-  };
-
-  const handleSubmit = () => {
-    // Handle submit logic here
-    closeModal();
-  };
-
-
-
-
+  
   return (
     <>
-      <div className='table-title'>
-        <div className='row'>
-          <div className='col-sm-6'>
-            <h2>Jobs Pool</h2>
-          </div>
-          <div className='col-sm-6'>
-            <button className='btn btn-success' onClick={handleModal}>Add Job</button>
-          </div>
-        </div>
-      </div>
-      {/* Table */}
-      <table className='table table-hover table-responsive'>
-        <thead>
-          <tr>
-            <th scope='col'>Topic</th>
-            <th scope='col'>Description</th>
-            <th scope='col'>Pages</th>
-            <th scope='col'>Deadline</th>
-            <th scope='col'>Cost Per Page</th>
-            <th scope='col'>Total Cost</th>
-            <th scope='col'>Status</th>
-            <th scope='col' className='text-center'>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Map through orders and display each order in a table row */}
-          {orders.map((order, index) => (
-            <tr key={index}>
-              <td>{order.topic}</td>
-              <td>{order.description}</td>
-              <td>{order.noOfPages}</td>
-              <td>{new Date(order.deadline).toLocaleDateString()}</td>
-              <td>{order.costPerPage}</td>
-              <td>{order.totalCost}</td>
-              <td>{order.status}</td>
-              <td>
-                <div className="d-flex gap-3 align-items-center justify-content-center">
-                  {/* Action buttons */}
-                  <Tooltip placement='bottom' title='View Job'>
-                    <button className='btn btn-primary' onClick={() => handleViewJob(order)}>
-                      <EyeOutlined />
-                      <span className='px-1'>View Job</span>
-                    </button>
-                  </Tooltip>
-                  <Tooltip placement='bottom' title='Bid Job'>
-                    <button className='btn btn-success'>
-                      <DollarCircleOutlined />
-                      <span className='px-1'>Bid Job</span>
-                    </button>
-                  </Tooltip>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {/* Modal */}
-      {openModal && (
-        <div className="modal" tabIndex="-1" role="dialog">
-          {/* Modal content */}
-        </div>
+      <h1 style={{ textAlign: 'start', color: 'Green', textDecorationLine: 'underline' }}>New Jobs</h1>
+      {loading ? (
+        <Skeleton active />
+      ) : error ? (
+        message.error(error)
+      ) : (
+        <>
+          <table className="table writer-table table-hover table-responsive">
+            <thead>
+              <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>OrderId</th>
+                <th scope='col'>Topic</th>
+                <th scope='col'>Discipline</th>
+                <th scope='col'>No of Pages</th>
+                <th scope='col'>Cost Per Page</th>
+                <th scope='col'>Full Amount</th>
+                <th scope='col'>Deadline</th>
+                <th scope='col'>Remaining Time</th>
+                <th scope='col'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders && orders.length > 0 && orders.map((order, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{order._id}</td>
+                  <td>{order.topic}</td>
+                  <td>{order.discipline}</td>
+                  <td>{order.pages}</td>
+                  <td>{order.costPerPage}</td>
+                  <td>{order.fullAmount}</td>
+                  <td>{new Date(order.deadline).toLocaleDateString()}</td>
+                  <td>{order.remainingTime}</td>
+                  <td>
+                    <div className="d-flex gap-3">
+                      <Tooltip title="View Details">
+                        <Button  className="view-job-btn bg-warning" onClick={() => handleViewJob(order)}>
+                          View
+                        </Button>
+                      </Tooltip>
+                      <Tooltip title="Bid Job">
+                        <Button type="primary" className="bid-job-btn" onClick={() => handleBid(order)}>
+                          Bid
+                        </Button>
+                      </Tooltip>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <JobViewModal visible={viewModal} onCancel={handleCloseModal} selectedJob={selectedJob} />
+          <BidJobModal visible={viewBidModal} onCancel= {handleCloseModal} bidJob={bidJob} />
+
+        </>
       )}
     </>
   );

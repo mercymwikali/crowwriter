@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { CreditCardOutlined,  EditTwoTone, HourglassOutlined,  MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { CreditCardOutlined,  EditTwoTone, HourglassOutlined,  MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined, UserAddOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { FaBriefcase, FaCheckCircle, FaClock, FaRegFolderOpen, FaUsers } from "react-icons/fa";
 import { GiCancel, GiProgression } from "react-icons/gi";
@@ -19,10 +19,11 @@ const Manager = () => {
     const navigate = useNavigate();
 
     const rootSubmenuKeys = [
-        '/Order-requirements-details',
+        '/',
         '/Manage-Jobs',
         '/Payments',
         '/Manage Writers',
+
     ];
 
     const onOpenChange = (keys) => {
@@ -35,6 +36,11 @@ const Manager = () => {
             setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
         }
     }
+
+    
+const handleMenuClick = (key) => {
+    navigate(`/manager/${key}`);
+  };
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -62,7 +68,7 @@ const Manager = () => {
                     defaultOpenKeys={['/Order-requirements-details']}
                     openKeys={openKeys}
                     onOpenChange={onOpenChange}
-                    onClick={({ key }) => { navigate(key) }}
+                    onClick={({ key }) => handleMenuClick(key)}
                     style={{
                         backgroundColor: 'transparent',
                         height: '100%',
@@ -74,7 +80,7 @@ const Manager = () => {
                     }}
                     items={[
                         {
-                            key: 'Order-requirements-details',
+                            key: '/',
                             icon: <EditTwoTone />,
                             label: 'Create New Order',
                         },
@@ -133,6 +139,11 @@ const Manager = () => {
                             icon: <UserOutlined />,
                             label: 'Manage Writers',
                             children: [
+                                {
+                                    key: 'add-users',
+                                    icon: <UserAddOutlined size={20} />,
+                                    label: 'New Writer',
+                                },
                                 {
                                     key: 'writers-list',
                                     icon: <FaUsers size={20} />,

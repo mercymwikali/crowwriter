@@ -16,9 +16,10 @@ import {
   USER_CREATE_SUCCESS,
 } from "../constants/userConstants";
 import { message } from "antd";
+import {jwtDecode} from 'jwt-decode'
 
-const API = "http://localhost:3001";
-export const login = (email, password) => async (dispatch) => {
+const API = "http://localhost:3001";export const login = (email, password) => async (dispatch) => {
+
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
@@ -41,9 +42,10 @@ export const login = (email, password) => async (dispatch) => {
       payload: data,
     });
 
-    console.log(data);
+    const userInfo = jwtDecode(data.accessToken);
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
   } catch (error) {
-    //console.log()
     dispatch({
       type: USER_LOGIN_FAIL,
       payload:
@@ -53,7 +55,6 @@ export const login = (email, password) => async (dispatch) => {
     });
   }
 };
-
 export const logout = () => async (dispatch, getState) => {
   try {
     const {
@@ -145,6 +146,7 @@ export const getUserDetails = (user) => async (dispatch, getState) => {
       type: USER_DETAILS_SUCCESS,
       payload: data,
     });
+
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -160,3 +162,6 @@ export const getUserDetails = (user) => async (dispatch, getState) => {
     });
   }
 };
+
+
+

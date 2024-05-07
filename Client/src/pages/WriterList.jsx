@@ -81,12 +81,13 @@ const WriterList = () => {
         <>
             <h2 className='table-title text-success'>Writers List</h2>
             <div className="d-block d-flex justify-content-end align-items-center my-1">
-                <h4><Link className='btn btn-success' to="/add-users" type='button'>Add User</Link></h4>
+                <h4>
+                    <Link className='btn btn-success' to={'/manager/add-users'} type='button'>Add User</Link></h4>
             </div>
             {loading ? (
                 <Skeleton active />
             ) : error ? (
-                null
+                message.error(error)
             ) : users ? (
                 <table className="table table-hover table-responsive">
                     <thead>
