@@ -10517,3 +10517,5 @@
 20240507	23:17:04	2a4a5274-77c3-4a3d-98cf-3c9b30d6b651	POST	/auth/login	https://crowwriter.vercel.app
 20240507	23:17:06	2b958942-4694-49d8-a51d-c81ba3bfa2aa	OPTIONS	/orders/order-Status	https://crowwriter.vercel.app
 20240507	23:17:06	28cf7c63-bd46-45b9-8ea3-4b8115194c5c	GET	/orders/order-Status	https://crowwriter.vercel.app
+20240507	23:18:41	7e37fcb2-cad7-4543-a336-ebc07353f1d5	OPTIONS	/auth/logout	https://crowwriter.vercel.app
+20240507	23:18:41	4122cfb3-8bed-4ac0-abb1-b492e8964520	POST	/auth/logout	https://crowwriter.vercel.app
