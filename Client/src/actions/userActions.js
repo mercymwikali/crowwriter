@@ -29,6 +29,8 @@ const API = "https://crowwriter-api.vercel.app";export const login = (email, pas
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
+
     };
 
     const { data } = await axios.post(
@@ -65,6 +67,8 @@ export const logout = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accesstoken}`,
       },
+      withCredentials: true,
+
     };
 
     // Send POST request to clear token
@@ -134,6 +138,7 @@ export const getUserDetails = (user) => async (dispatch, getState) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.accesstoken}`,
       },
+      withCredentials: true,  
     };
 
     const { data } = await axios.get(

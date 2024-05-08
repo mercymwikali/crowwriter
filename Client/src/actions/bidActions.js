@@ -31,6 +31,8 @@ export const createBid = (orderId, writerId) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
+      withCredentials: true,
+
     };
 
     // Pass orderId and writerId as separate parameters to the backend
@@ -72,6 +74,8 @@ export const listBids = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
+      withCredentials: true,
+
     };
 
     const { data } = await axios.get(`${API}/bids/get-bids`, config);
@@ -117,6 +121,8 @@ export const listWritersBids = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
+      withCredentials: true,
+
     };
 
     // Decode the JWT token to extract userId

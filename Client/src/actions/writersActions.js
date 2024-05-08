@@ -29,6 +29,8 @@ export const createWriter = (writer) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
+      withCredentials: true,
+
     };
 
     const { data } = await axios.post(
@@ -55,6 +57,7 @@ export const listWriters = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
       },
+      withCredentials: true,
     };
 
     // Send GET request to fetch-All-writers endpoint
@@ -84,6 +87,8 @@ export const UpdateWriter = (id, updatedUser) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
+      withCredentials: true,
+
     };
 
     const { data } = await axios.patch(
@@ -126,6 +131,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
+      withCredentials: true,
     };
 
     await axios.delete(`${API}/users/deleteUser/${id}`, config);

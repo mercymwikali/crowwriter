@@ -26,6 +26,8 @@ export const createdOrder = (order) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
+      withCredentials: true,
+
     };
 
     const { data } = await axios.post(
@@ -69,6 +71,8 @@ export const listOrderstatusEnums = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
+      withCredentials: true,
+
     };
 
     const { data } = await axios.get(`${API}/orders/order-Status`, config);
@@ -100,6 +104,8 @@ export const listOrders = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
       },
+      withCredentials: true,
+
     };
 
     // Send GET request to fetch-All-writers endpoint
@@ -131,6 +137,8 @@ export const updateOrder = ( id,order) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
       },
+      withCredentials: true,
+
     };
 
     const { data } = await axios.patch(
