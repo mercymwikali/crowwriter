@@ -5,22 +5,24 @@ const path = require("path");
 const {logger, logEvents} = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
-const cors = require("cors");
 const { PrismaClient } = require("@prisma/client");
 
 
 const prisma = new PrismaClient();
 
-//middleware
+// Middleware
 app.use(logger);
-
-app.use(cors({
-  origin: ['https://crowwriter.vercel.app'],
-  credentials: true,
-}));
 app.use(express.json());
-
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://crowwriter.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+
 
 //static files 
 app.use("/", express.static(path.join(__dirname, "public")));
