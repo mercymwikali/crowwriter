@@ -15,7 +15,7 @@ import {
   USER_DELETE_SUCCESS,
 } from "../constants/userConstants";
 
-const API = "https://crowwriter-api.vercel.app";
+const API = "https://crowwriter-api.vercel.app/"
 
 export const createWriter = (writer) => async (dispatch, getState) => {
   try {
@@ -27,7 +27,7 @@ export const createWriter = (writer) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
       withCredentials: true,
 
