@@ -6,7 +6,6 @@ const {logger, logEvents} = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const corsOptions= require("./config/corsOptions")
 const { PrismaClient } = require("@prisma/client");
 
 
