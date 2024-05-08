@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
 app.use(logger);
 
 app.use(cors({
-  origin: 'https://crowwriter.vercel.app',
+  origin: ['https://crowwriter.vercel.app'],
   credentials: true,
 }));
 app.use(express.json());
