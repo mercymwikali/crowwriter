@@ -1,7 +1,7 @@
-const allowedOrigins = [
-    'http://localhost:5173',
-   'https://crowwriter.vercel.app/',
-    'https://crowwriter-git-clientupdates-mercymwikalis-projects.vercel.app',
+const allowedOrigins = [  
+   'https://crowwriter.vercel.app',
+   'http://localhost:5173/',
+   
   
     
 ]
