@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
 //middleware
 app.use(logger);
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptions))
 app.use(express.json());
 
 app.use(cookieParser());
