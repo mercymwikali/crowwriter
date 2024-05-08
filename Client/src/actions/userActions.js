@@ -18,7 +18,7 @@ import {
 import { message } from "antd";
 import {jwtDecode} from 'jwt-decode'
 
-const API = "https://crowwriter-api.vercel.app/"
+const API = "https://crowwriter-api.vercel.app"
 
 export const login = (email, password) => async (dispatch) => {
 
