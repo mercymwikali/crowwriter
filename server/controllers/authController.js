@@ -97,7 +97,7 @@ const refreshToken = asyncHandler(async (req, res) => {
           secure: true,
           sameSite: "none",
           maxAge: 7 * 24 * 60 * 60 * 1000,
-          // httpOnly: true,
+          httpOnly: true,
         });
 
         res.json({ accessToken: newAccessToken });
