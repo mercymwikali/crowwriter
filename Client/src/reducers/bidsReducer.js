@@ -9,6 +9,10 @@ import {
   BID_DELETE_FAIL,
   BID_DELETE_REQUEST,
   BID_DELETE_SUCCESS,
+  BID_DETAILS_FAIL,
+  BID_DETAILS_REQUEST,
+  BID_DETAILS_RESET,
+  BID_DETAILS_SUCCESS,
   WRITER_BIDS_LIST_FAIL,
   WRITER_BIDS_LIST_REQUEST,
   WRITER_BIDS_LIST_RESET,
@@ -70,3 +74,21 @@ export const bidListReducer = (state = { orders: [] }, action) => {
       return state;
   }
 };
+
+
+export const bidListDetailsReducer = (state = { bids: []}, action) => {
+  switch (action.type) {
+    case BID_DETAILS_REQUEST:
+      return { loading: true };
+      case BID_DETAILS_SUCCESS:
+        return { loading: false, bids: action.payload };
+    case BID_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+      case BID_DETAILS_RESET:
+        return { bids: [] };
+      
+    default:
+      return state;
+  }
+  
+}

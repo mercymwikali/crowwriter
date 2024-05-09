@@ -1,23 +1,33 @@
 import { EyeOutlined, DeleteFilled } from '@ant-design/icons';
 import { Skeleton, Tooltip, message } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { listBids } from '../actions/bidActions';
+import ViewBidModal from '../components/ViewBidModal';
 
 const BidsList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [viewBids, setViewBids] = useState(false);
+  const [selectedBid, setSelectedBid] = useState(null);
 
   const bidsList = useSelector(state => state.bidsList);
   const { loading, error, orders } = bidsList;
 
-  console.log(orders);
-
   useEffect(() => {
     dispatch(listBids());
-    console.log(orders);
   }, [dispatch]);
+
+  const handleViewBids = (order) => {
+    setSelectedBid(order); // Set the selected order directly
+    setViewBids(true); // Open the modal
+  }
+  
+  const handleCancel = () => {
+    setSelectedBid(null);
+    setViewBids(false);
+  }
   
   return (
     <>
@@ -59,7 +69,7 @@ const BidsList = () => {
                     <td>
                       <div className="d-flex justify-content-space-around align-items-center gap-3">
                         <Tooltip title="View">
-                          <EyeOutlined className='fs-5 text-primary' onClick={() => navigate(`/View-bid/${order.id}`)} style={{ marginRight: '8px' }} />
+                          <EyeOutlined className='fs-5 text-primary' onClick={() => handleViewBids(order)} style={{ marginRight: '8px' }} />
                         </Tooltip>
                         <Tooltip title="Delete">
                           <DeleteFilled className='fs-5 text-danger' />
@@ -75,6 +85,7 @@ const BidsList = () => {
               )}
             </tbody>
           </table>
+          <ViewBidModal visible={viewBids} onCancel={handleCancel} selectedBid={selectedBid} />
         </div>
       )}
     </>

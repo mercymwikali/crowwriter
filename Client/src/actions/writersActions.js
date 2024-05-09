@@ -15,7 +15,8 @@ import {
   USER_DELETE_SUCCESS,
 } from "../constants/userConstants";
 
-const API = "https://crowwriter-api.vercel.app"
+import { API_URL as API } from "../../config";
+
 
 export const createWriter = (writer) => async (dispatch, getState) => {
   try {

@@ -61,7 +61,7 @@ sidemenu{
   top: 0;
   height: 64 !important;
   line-height: 64px;
-  z-index: 999;
+  z-index: 99999;
 }
 .auth-image {
   width: 100%;

@@ -55,11 +55,60 @@ const createBid = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get all bids for a particular order
+// @route   GET /api/bids/:orderId
+// @access  Private (only accessible to authenticated users)
+const getAllBidsForOrder = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
 
-// @desc    Get all bids
+    // Retrieve all bids for the specified order
+    const bids = await prisma.bid.findMany({
+      where: {
+        orderId: id // Filter bids based on orderId
+      },
+      include: {
+        order: {
+          select: {
+            id: true,
+            orderId: true,
+            topic: true,
+            costPerPage: true,
+            deadline: true,
+            remainingTime: true,
+            status: true,
+            fullAmount: true,
+          },
+        },
+        writer: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            active: true,
+          },
+        },
+      },
+    });
+
+    // Check if any bids were found for the specified order
+    if (!bids || bids.length === 0) {
+      return res.status(404).json({ message: "Bids not found for the specified order" });
+    }
+
+    // Return the list of bids for the specified order
+    res.json(bids);
+  } catch (error) {
+    console.error("Error getting bids for order:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
+/// @desc    Get all bids with counts and writers
 // @route   GET /api/bids
 // @access  Private (only accessible to authenticated users)
-const getAllBids = asyncHandler(async (req, res) => {
+const getAllBidsWithCountsAndWriters = asyncHandler(async (req, res) => {
   try {
     const bids = await prisma.bid.findMany({
       include: {
@@ -85,55 +134,36 @@ const getAllBids = asyncHandler(async (req, res) => {
         },
       },
     });
-    res.json(bids);
 
-    if (!bids) {
-      res.status(404);
-      throw new Error("Bids not found");
-    }
-  } catch (error) {
-    console.error("Error getting bids:", error);
-    res.status(500).json({ message: "Server Error" });
-  }
-});
-
-// @desc    Get all bids with counts
-// @route   GET /api/bids
-// @access  Private (only accessible to authenticated users)
-const getAllBidsWithCounts = asyncHandler(async (req, res) => {
-  try {
-    const bids = await prisma.bid.findMany({
-      include: {
-        order: {
-          select: {
-            id: true,
-            orderId: true,
-            topic: true,
-            costPerPage: true,
-            deadline: true,
-            remainingTime: true,
-            status: true,
-            fullAmount: true,
-          },
-        },
-      },
-    });
-
-    // Initialize an object to store unique orders with their bid counts
+    // Initialize an object to store unique orders with their bid counts and writers
     const uniqueOrders = {};
 
-    // Iterate over all bids to count bids for each order
+    // Iterate over all bids to count bids for each order and track writers
     bids.forEach(bid => {
       const orderId = bid.order.id;
       // Check if the order already exists in uniqueOrders
       if (orderId in uniqueOrders) {
         // If yes, increment the count for that order
         uniqueOrders[orderId].bidCount++;
+        // Track writers who bid on this order
+        const writerInfo = {
+          id: bid.writer.id,
+          username: bid.writer.username,
+          email: bid.writer.email,
+        };
+        if (!uniqueOrders[orderId].writers.some(w => w.id === writerInfo.id)) {
+          uniqueOrders[orderId].writers.push(writerInfo);
+        }
       } else {
         // If not, add the order to uniqueOrders with count 1
         uniqueOrders[orderId] = {
           ...bid.order,
           bidCount: 1,
+          writers: [{
+            id: bid.writer.id,
+            username: bid.writer.username,
+            email: bid.writer.email,
+          }],
         };
       }
     });
@@ -143,10 +173,11 @@ const getAllBidsWithCounts = asyncHandler(async (req, res) => {
 
     res.json({ orders: uniqueOrderList });
   } catch (error) {
-    console.error("Error getting bids:", error);
+    console.error("Error getting bids with counts and writers:", error);
     res.status(500).json({ message: "Server Error" });
   }
 });
+
 
 
 // @desc    Get a single bid by ID
@@ -285,4 +316,45 @@ const getBidsByWriterId = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createBid, getAllBids, getBidById, deleteBid, getBidsByWriterId, deleteBidByWriterId , getAllBidsWithCounts };
+// @desc    Get all bids
+// @route   GET /api/bids
+// @access  Private (only accessible to authenticated users)
+const getAllBids = asyncHandler(async (req, res) => {
+  try {
+    const bids = await prisma.bid.findMany({
+      include: {
+        order: {
+          select: {
+            id: true,
+            orderId: true,
+            topic: true,
+            costPerPage: true,
+            deadline: true,
+            remainingTime: true,
+            status: true,
+            fullAmount: true,
+          },
+        },
+        writer: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            active: true,
+          },
+        },
+      },
+    });
+    res.json(bids);
+
+    if (!bids) {
+      res.status(404);
+      throw new Error("Bids not found");
+    }
+  } catch (error) {
+    console.error("Error getting bids:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+module.exports = { createBid, getAllBids, getAllBidsForOrder, getBidById, deleteBid, getBidsByWriterId, deleteBidByWriterId , getAllBidsWithCountsAndWriters };

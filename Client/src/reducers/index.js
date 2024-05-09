@@ -16,7 +16,7 @@ import {
   orderUpdateReducer,
   ordersListReducer,
 } from "./orderReducer";
-import { bidCreateReducer, bidListReducer, deleteBidReducer, writersBidListReducer } from "./bidsReducer";
+import { bidCreateReducer, bidListDetailsReducer, bidListReducer, deleteBidReducer, writersBidListReducer } from "./bidsReducer";
 
 export const rootReducer = combineReducers({
   userLogin: userLoginReducer,
@@ -34,5 +34,6 @@ export const rootReducer = combineReducers({
   writerBidList:writersBidListReducer,
   deleteBid:deleteBidReducer,
   bidsList:bidListReducer,
+  bidlistDetails:bidListDetailsReducer,
 
 });

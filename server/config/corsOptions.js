@@ -9,6 +9,8 @@ const corsOptions = {
         }
     },
     methods:['GET', 'POST', 'PATCH', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['Authorization', 'Content-Type', 'X-CSRF-Token'],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 

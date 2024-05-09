@@ -9,6 +9,9 @@ import {
   BID_DELETE_FAIL,
   BID_DELETE_REQUEST,
   BID_DELETE_SUCCESS,
+  BID_DETAILS_FAIL,
+  BID_DETAILS_REQUEST,
+  BID_DETAILS_SUCCESS,
   WRITER_BIDS_LIST_FAIL,
   WRITER_BIDS_LIST_REQUEST,
   WRITER_BIDS_LIST_SUCCESS,
@@ -17,7 +20,8 @@ import { message } from "antd";
 import { jwtDecode } from "jwt-decode";
 import { logout } from "./userActions";
 
-const API = "https://crowwriter-api.vercel.app"
+import { API_URL as API } from "../../config";
+
 
 
 export const createBid = (orderId, writerId) => async (dispatch, getState) => {
@@ -122,7 +126,6 @@ export const listWritersBids = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
-      withCredentials: true,
 
     };
 
@@ -155,6 +158,47 @@ export const listWritersBids = () => async (dispatch, getState) => {
     message.error(error.response.data.message);
   }
 };
+
+// actions/bidActions.js
+
+export const listBidsWithDetails = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: BID_DETAILS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`,
+      },
+    };
+
+    const { data } = await axios.get(`${API}/bids/listBids/${id}`, config);
+
+    dispatch({
+      type:BID_DETAILS_SUCCESS,
+      payload: data,
+    });
+
+    console.log(data);
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Unauthorized Access") {
+      dispatch(logout());
+    }
+
+    dispatch({
+      type:BID_DETAILS_FAIL,
+      payload: message,
+    });
+  }
+};
+
 
 export const deleteBid = (bidId) => async (dispatch, getState) => {
   try {

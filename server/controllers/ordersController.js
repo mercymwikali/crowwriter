@@ -42,9 +42,8 @@ const getAllOrders = asyncHandler(async (req, res) => {
 const createOrder = asyncHandler(async (req, res) => {
   try {
     const newOrder = req.body;
-    // const {status}=req.
 
-    // // Check for required fields
+    // Check for required fields
     const {
       orderId,
       topic,
@@ -57,7 +56,9 @@ const createOrder = asyncHandler(async (req, res) => {
       deadline,
       remainingTime,
       status,
+      assignedWriterId // New field: Assigned writer ID
     } = newOrder;
+
     if (
       !orderId ||
       !topic ||
@@ -75,15 +76,22 @@ const createOrder = asyncHandler(async (req, res) => {
         .json({ error: "Please fill in all required fields" });
     }
 
-    const existingOrder = await prisma.order.findUnique({
-      where: { orderId },
+    // Check if the assigned writer exists
+    const assignedWriter = await prisma.user.findUnique({
+      where: { id: assignedWriterId },
     });
-    if (existingOrder) {
-      return res.status(400).json({ error: "Order already exists" });
+
+    if (!assignedWriter || assignedWriter.role !== "writer") {
+      return res.status(404).json({ error: "Assigned writer not found" });
     }
 
     // Create new order
-    const createdOrder = await prisma.order.create({ data: newOrder });
+    const createdOrder = await prisma.order.create({
+      data: {
+        ...newOrder,
+        writer: { connect: { id: assignedWriterId } }, // Connect the order to the assigned writer
+      },
+    });
 
     res
       .status(201)

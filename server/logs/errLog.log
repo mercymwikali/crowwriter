@@ -1,0 +1,119 @@
+20240415	18:51:42	67d55f64-14d5-4ce3-8121-1b6c6af34c0e	Error: Not allowed by CORS	OPTIONS	/auth	https://crowwriter-git-clientupdates-mercymwikalis-projects.vercel.app
+20240416	11:57:03	c2444046-66a8-4fc2-b82b-379b0e7b514d	Too Many Requests: POST	/	http://localhost:5173
+20240416	11:59:35	8ffaeee9-f963-4453-bb75-c45f734ab5bd	Too Many Requests: POST	/	http://localhost:5173
+20240416	12:02:02	3553a149-8f73-475a-8281-d433156a347b	Too Many Requests: POST	/	http://localhost:5173
+20240416	18:05:16	e5f8096d-4874-41f1-a6f5-1110c8e5065b	SyntaxError: Expected double-quoted property name in JSON at position 378 (line 15 column 1)	POST	/orders/create-order	undefined
+20240416	20:45:11	125d1daa-4955-4d32-a710-7ae22ac01418	SyntaxError: Unexpected non-whitespace character after JSON at position 697 (line 19 column 10)	PATCH	/orders/update-order/2	undefined
+20240421	00:49:46	8b360b01-9267-4a75-a91b-800a5268659a	PrismaClientInitializationError: 
+Invalid `prisma.user.findFirst()` invocation in
+C:\Users\mwika\Desktop\Doc\server\controllers\authController.js:124:38
+
+  121 const registerUser = asyncHandler(async (req, res) => {
+  122   const { username, email, password, role, active } = req.body;
+  123 
+→ 124   const findUser = await prisma.user.findFirst(
+Can't reach database server at `viaduct.proxy.rlwy.net`:`31169`
+
+Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31169`.	POST	/auth/register-user	undefined
+20240421	00:52:23	b433b8e9-3ff9-4cbb-b860-634cd7cd1d10	SyntaxError: Expected double-quoted property name in JSON at position 63 (line 4 column 1)	POST	/auth/	undefined
+20240421	01:49:01	69b0d0d8-d1a6-4b58-a267-e987e5eb62b5	PrismaClientInitializationError: 
+Invalid `prisma.user.findFirst()` invocation in
+C:\Users\mwika\Desktop\Doc\server\controllers\authController.js:124:38
+
+  121 const registerUser = asyncHandler(async (req, res) => {
+  122   const { username, email, password, role, active } = req.body;
+  123 
+→ 124   const findUser = await prisma.user.findFirst(
+Can't reach database server at `viaduct.proxy.rlwy.net`:`31169`
+
+Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31169`.	POST	/auth/register-user	undefined
+20240421	17:26:46	e97a9b99-85fc-4ec6-a1ed-e044c3924a56	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:26:49	dfc0f25b-8aa8-44a2-a330-2351b407f502	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:27:10	c598774d-f28d-4a22-a6b1-49f5a6aa8301	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:28:13	5663eb9f-c1d3-46bc-826e-cb233b0cf016	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:28:48	511cb4a6-3c47-410b-80c9-9868b0e2cb3e	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:29:17	be98d178-ed01-4d59-b78d-55a089ac30b8	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:29:20	6dda69ed-1861-44dd-afe9-de597e1cef69	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:29:21	ad3012b9-63d6-466b-8995-617e22bdbc48	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:29:21	f2edf88e-ea37-4460-b8e8-2285c4b04595	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:29:21	315e266d-8e0d-42a2-ae72-2d6968e2e325	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:29:58	0dcd875b-c5d6-40b4-ae67-8331e2a5b282	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:29:59	5a8c362a-16c2-4e77-8608-5b9a788de4e2	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:40:23	8b38a54a-7d3f-49d4-b9cc-0b0fb0b2faf4	Error: Error fetching writers	GET	/users/fetch-All-writers	undefined
+20240421	17:40:55	871d83f4-3c13-4a06-a157-02b535cb3466	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:40:56	d25ec1c3-9c8d-49da-a69b-e2d107f2a60a	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:40:57	c7882d23-a750-4616-be84-fc59b17aa723	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:40:58	cf42aa33-90af-4ec1-867e-f45eb850362b	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:40:58	3ac566c9-b087-4e5f-877c-aaab3aed2c5c	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:40:59	7c22a98f-8fc4-46b8-b405-dca8ad67354e	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:41:00	c78e1f13-815e-4f01-904d-438338d4d8d3	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240421	17:41:00	6fb8b43c-029b-47cd-a46d-6a58f37edb5d	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240422	11:24:44	db27aba6-684a-4f4a-8a0d-d76a3f39915b	SyntaxError: Unexpected non-whitespace character after JSON at position 177 (line 7 column 6)	PATCH	/users/updateUser/d2359d2d-9fb9-4b31-a1b3-02523ca92caf	undefined
+20240424	10:20:08	8aaf0d5b-a2d1-477f-832c-fb472bdbdbdd	RangeError: Invalid status code: { message: 'Forbidden' }	GET	/users/fetch-All-Users	undefined
+20240424	10:30:12	9d55d0f9-3132-4b80-ad4c-d05639caf4b6	TypeError: Cannot read properties of undefined (reading 'UserInfo')	GET	/users/fetch-All-Users	undefined
+20240424	10:34:37	addc908c-70bb-4581-bed6-10e43f6d94a4	TypeError: Cannot read properties of undefined (reading 'UserInfo')	GET	/users/fetch-All-Users	undefined
+20240424	10:40:17	d850c87e-72fc-48d9-99ff-6934a9b91160	TypeError: Cannot read properties of undefined (reading 'UserInfo')	GET	/users/fetch-All-Users	undefined
+20240424	10:41:15	52aa251f-a32f-4489-8388-ea6e76992316	TypeError: Cannot read properties of undefined (reading 'UserInfo')	GET	/users/fetch-All-Users	undefined
+20240424	10:42:21	24b9f1dc-7bdd-4958-ae1a-da952ee94f79	TypeError: Cannot read properties of undefined (reading 'UserInfo')	GET	/users/fetch-All-Users	undefined
+20240424	16:33:40	3e9c78da-e8eb-4f96-8fd6-77a4ada6633e	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240424	22:32:31	cbac91be-a0a3-455c-8ff7-8887b80e7380	PrismaClientKnownRequestError: 
+Invalid `prisma.user.findFirst()` invocation in
+C:\Users\mwika\Desktop\Doc\server\controllers\authController.js:126:38
+
+  123 const registerUser = asyncHandler(async (req, res) => {
+  124   const { username, email, password, role, active } = req.body;
+  125 
+→ 126   const findUser = await prisma.user.findFirst(
+Can't reach database server at `viaduct.proxy.rlwy.net`:`31169`
+
+Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31169`.	POST	/auth/register-user	http://localhost:5173
+20240424	22:38:17	e8b66b8b-5327-4478-8570-db16b3b098a2	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240430	13:24:48	0854ec46-a7f6-4bfb-b8d0-429200ab9a83	ReferenceError: orderId is not defined	POST	/orders/create-order	undefined
+20240430	17:16:12	f4ce6bde-bd11-4417-bb8f-022681c7bec4	ReferenceError: status is not defined	GET	/orders/order-Status	undefined
+20240430	20:05:34	b9921004-1473-4931-80f8-38299eedd93c	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240430	20:05:39	f48b4bc0-2c6c-454c-bc87-149cd8c46620	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240430	20:05:44	30e58ab4-0ca6-41a5-ac0e-0842bef77aca	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240430	20:05:49	5a3a780f-c57b-4f68-8371-f05d4389b292	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240501	09:42:59	13567baf-e1ff-44de-b658-83f638e19663	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240501	09:43:04	3fd12463-ebfa-4102-8919-cf3af08fae1b	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240501	09:43:09	a3f92f3d-fea0-43f7-b79c-d80a715b0bbb	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240501	09:43:14	dc23cb3e-c24e-4ecc-bb46-cba5865eeea2	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240501	10:21:25	fc2058cc-4f12-4e45-a638-266a25997e55	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240501	11:02:57	8845bc8b-ab95-4062-9eef-fe39ca963d62	PrismaClientValidationError: 
+Invalid `prisma.user.create()` invocation in
+C:\Users\mwika\Desktop\Doc\server\controllers\authController.js:137:39
+
+  134 const hashedPassword = await bcrypt.hash(password, 10);
+  135 
+  136 // Create the user with the hashed password
+→ 137 const newUser = await prisma.user.create({
+        data: {
+          username: "test",
+          email: "wee@hom.co,",
+          password: "$2b$10$nKKgvCwZdipqczjSZMe8Y.Otr2ZkJBKtNAmDNF8/YvDsWo6IPewhO",
+          role: "PARTICIPANT",
+                ~~~~~~~~~~~~~
+          active: true
+        }
+      })
+
+Invalid value for argument `role`. Expected Role.	POST	/auth/register-user	http://localhost:5173
+20240501	18:17:10	2f6900aa-c808-44b4-97d0-85ff294e40d3	TypeError: Cannot destructure property 'orderId' of 'req.q' as it is undefined.	POST	/bids/create-bid	http://localhost:5173
+20240505	12:23:31	27a22893-2b68-447d-a3bd-dc755b8ed893	Error: writerId is required	POST	/bids/create-bid	http://localhost:5173
+20240505	12:25:12	0ceb734f-99d5-482c-a363-b2ed91e34a37	Error: writerId is required	POST	/bids/create-bid	http://localhost:5173
+20240505	13:07:55	51993df5-cb18-4419-a55f-4baa461432de	Error: writerId is required	POST	/bids/create-bid	http://localhost:5173
+20240505	13:10:19	60c0c402-5f02-4a29-838e-f29b6eba3efb	Error: writerId is required	POST	/bids/create-bid	http://localhost:5173
+20240505	14:15:51	244cf510-27b1-4234-ab09-67f971313553	Error: Cannot set headers after they are sent to the client	POST	/bids/create-bid	http://localhost:5173
+20240505	14:15:58	f4ad4149-d6ad-4623-b329-e329ec0a3b14	Error: Cannot set headers after they are sent to the client	POST	/bids/create-bid	http://localhost:5173
+20240505	14:16:05	32edf434-b4eb-4209-a755-8e0efb6929f3	Error: Cannot set headers after they are sent to the client	POST	/bids/create-bid	http://localhost:5173
+20240505	14:16:12	65a8214a-f1bc-40ff-9be3-0f178e5282a4	Error: Cannot set headers after they are sent to the client	POST	/bids/create-bid	http://localhost:5173
+20240508	00:02:19	c35a50fe-995c-46cb-8ca1-586acf1ab7c6	Error: Not allowed by CORS	OPTIONS	/auth/logout	https://crowwriter.vercel.app
+20240508	00:02:20	f135d256-6b92-4162-b876-9cb6152e6a67	Error: Not allowed by CORS	OPTIONS	/orders/order-Status	https://crowwriter.vercel.app
+20240508	00:02:27	c6d5f04e-6808-41b8-be5e-ebf30d42252f	Error: Not allowed by CORS	OPTIONS	/auth/logout	https://crowwriter.vercel.app
+20240508	00:02:27	7e2339a7-f1ea-4be3-a1e6-685c04f216c0	Error: Not allowed by CORS	OPTIONS	/orders/order-Status	https://crowwriter.vercel.app
+20240508	00:02:50	9e6cd1bb-43e9-4bf9-beb1-e36914060fae	Error: Not allowed by CORS	OPTIONS	/auth/login	https://crowwriter.vercel.app
+20240508	00:02:52	a8e2d693-dc27-48ba-87ea-325146d283c5	Error: Not allowed by CORS	OPTIONS	/auth/login	https://crowwriter.vercel.app
+20240508	00:02:54	ac46b705-a0b7-441e-9319-f69806e89256	Error: Not allowed by CORS	OPTIONS	/auth/login	https://crowwriter.vercel.app
+20240508	00:03:16	42005545-643d-4d8f-99be-78499849e954	Error: Not allowed by CORS	OPTIONS	/auth/login	https://crowwriter.vercel.app
+20240508	00:03:18	fb991825-7491-4107-b03a-f1b2bb755078	Error: Not allowed by CORS	OPTIONS	/auth/login	https://crowwriter.vercel.app
+20240509	14:00:23	c67fa259-03a5-44de-a93f-9755190b43ad	Error: Not allowed by CORS	OPTIONS	/auth/login	http://localhost:5173
