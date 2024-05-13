@@ -117,3 +117,47 @@ Invalid value for argument `role`. Expected Role.	POST	/auth/register-user	http:
 20240508	00:03:16	42005545-643d-4d8f-99be-78499849e954	Error: Not allowed by CORS	OPTIONS	/auth/login	https://crowwriter.vercel.app
 20240508	00:03:18	fb991825-7491-4107-b03a-f1b2bb755078	Error: Not allowed by CORS	OPTIONS	/auth/login	https://crowwriter.vercel.app
 20240509	14:00:23	c67fa259-03a5-44de-a93f-9755190b43ad	Error: Not allowed by CORS	OPTIONS	/auth/login	http://localhost:5173
+20240510	14:57:18	bbe378dd-f10a-4071-ba48-813713828a98	SyntaxError: Expected double-quoted property name in JSON at position 470 (line 15 column 1)	POST	/orders/create-order	undefined
+20240510	15:10:27	7a680153-ccc1-4202-bea3-d8f5cc6354b5	Error: Cannot set headers after they are sent to the client	GET	/bids/get-bids	undefined
+20240510	15:17:04	350d8ecd-e8f5-499a-aeda-ab3a3675d869	PrismaClientInitializationError: 
+Invalid `prisma.user.findFirst()` invocation in
+C:\Users\mwika\Desktop\Doc\server\controllers\authController.js:129:38
+
+  126 const registerUser = asyncHandler(async (req, res) => {
+  127   const { username, email, password, role, active } = req.body;
+  128 
+→ 129   const findUser = await prisma.user.findFirst(
+Can't reach database server at `viaduct.proxy.rlwy.net`:`31169`
+
+Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31169`.	POST	/auth/register-user	undefined
+20240512	14:10:22	bae4817b-e6fc-4004-98a6-f70c046f773f	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240512	14:11:44	f0a6ba90-ada7-44ac-b120-f925b671cf5a	SyntaxError: Expected ',' or '}' after property value in JSON at position 142 (line 6 column 7)	PATCH	/users/updateUser/796b39a7-5079-4319-ba8d-7a4b06d6ab5a	undefined
+20240512	16:59:40	85fe6b6f-ba34-49c7-96fe-9adfbee093fc	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:41	64463028-b4cd-4632-8bff-d18cc4c4cb2c	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:41	85936e85-22b5-4b12-bca3-0702cb652c56	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:41	03a59f4a-5840-454a-8010-128a7d793de6	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:41	7a1d6a93-b1a8-4a5d-88ca-bedd34f7f578	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:41	856b9b09-a08a-4064-9808-d11c37389431	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:48	0598f9ca-9b78-49a4-82d6-d2f7b696bbd2	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:48	fef6ecac-f331-4633-8c70-853b275ec969	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:48	c04fa33d-43e1-4b12-af8e-265cd86d0d71	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:48	06123b41-abf3-4b23-93f2-062b47f6892a	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:48	65cabe25-8816-43c8-92aa-497939722d06	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:48	36cb81d4-3f1c-4393-9fd6-272b64f7a62d	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:53	78cf1c1f-30fb-4a1b-aba1-7335618765b4	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:53	2147e6cb-5f55-4a05-b7fd-180b6f5beb33	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:53	14c1a732-7c10-4014-b038-fd99646a8be0	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:53	72b06124-9730-41b8-92a8-921e7e4438d1	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:53	609150fa-e7cb-47c0-b7b2-32f4f2f8aea3	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	16:59:53	92e89d52-5680-4366-8498-b67c237f31db	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240512	20:29:25	e36aa5e5-8cec-406a-89f0-6abdc526e87d	Error: Error fetching writers	GET	/users/fetch-All-writers	undefined
+20240512	20:29:33	28eeec49-4aac-4ea3-bb20-6f291146e47a	Error: Error fetching writers	GET	/users/fetch-All-writers	undefined
+20240512	20:30:41	b54fa44a-dc0d-4031-adba-5a4ae2dcc163	Error: Error Fetching List	GET	/users/fetch-All-Users	undefined
+20240512	20:40:40	99c6a613-8f16-4461-9f65-7acb61f04b20	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240512	20:40:45	b93c1e16-2f4d-40ea-86a5-029f18569d50	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240512	20:51:24	205b980a-b38b-4583-8965-9d9560be27f9	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240512	20:51:29	0e8d6ba5-1640-45d0-b822-889afb25032a	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240513	21:00:31	f1734cd9-60cb-4b13-9827-5d1ed00aec2a	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240513	21:46:32	a5990582-e564-4560-ab01-31994c2899a4	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240513	22:11:50	57973e84-6da6-4980-a6f3-5bd4f3f70bad	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240513	22:12:44	4a3b8a55-a5c2-4581-a24d-83ac87a64ef2	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173

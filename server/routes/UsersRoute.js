@@ -4,7 +4,7 @@ const userController = require('../controllers/UsersController');
 const { verifyJwt, adminRoute } = require('../middleware/verifyJwt'); // Import the middleware functions correctly
 
 // Middleware to verify JWT token for specific routes
-router.use(verifyJwt);
+// router.use(verifyJwt);
 
 // Fetching the users list
 router.get("/fetch-All-Users", userController.getAllUsers);

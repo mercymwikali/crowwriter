@@ -8,8 +8,6 @@ const { OrderStatus } = require("@prisma/client");
 const getAllOrders = asyncHandler(async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
-      // where: { status: { not: "deleted" } },
-      // orderBy: { createdAt: "desc" },
       select: {
         id: true,
         orderId: true,
@@ -24,13 +22,29 @@ const getAllOrders = asyncHandler(async (req, res) => {
         deadline: true,
         remainingTime: true,
         status: true,
+        writer: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            active: true,
+          },
+        },
+      },
+    });
+
+    // Iterate over orders to update status if there is no signed user
+    orders.forEach((order) => {
+      if (!order.writer) {
+        order.status = "PENDING"; // Set status to "PENDING" if no signed user
       }
     });
 
-    //if no orders  return 404 status error
-    if (!orders) {
+    // If no orders, return 404 status error
+    if (!orders || orders.length === 0) {
       return res.status(404).json({ error: "No orders found" });
     }
+
     res.status(200).json(orders);
   } catch (error) {
     console.error(error);
@@ -38,6 +52,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
   }
 });
 
+// Create an order
 // Create an order
 const createOrder = asyncHandler(async (req, res) => {
   try {
@@ -56,7 +71,6 @@ const createOrder = asyncHandler(async (req, res) => {
       deadline,
       remainingTime,
       status,
-      assignedWriterId // New field: Assigned writer ID
     } = newOrder;
 
     if (
@@ -76,20 +90,12 @@ const createOrder = asyncHandler(async (req, res) => {
         .json({ error: "Please fill in all required fields" });
     }
 
-    // Check if the assigned writer exists
-    const assignedWriter = await prisma.user.findUnique({
-      where: { id: assignedWriterId },
-    });
-
-    if (!assignedWriter || assignedWriter.role !== "writer") {
-      return res.status(404).json({ error: "Assigned writer not found" });
-    }
+   
 
     // Create new order
     const createdOrder = await prisma.order.create({
       data: {
         ...newOrder,
-        writer: { connect: { id: assignedWriterId } }, // Connect the order to the assigned writer
       },
     });
 
@@ -101,6 +107,7 @@ const createOrder = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Error creating order" });
   }
 });
+
 
 // Update an order
 const updateOrder = asyncHandler(async (req, res) => {
@@ -197,6 +204,52 @@ const statuses = asyncHandler(async (req, res) => {
   }
 });
 
+// Get all assigned orders
+const getAssignedOrders = asyncHandler(async (req, res) => {
+  try {
+    // Fetch orders where writerId is not null
+    const assignedOrders = await prisma.order.findMany({
+      where: {
+        writerId: { not: null },
+      },
+      include: {
+        writer: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            active: true,
+          },
+        },
+      },
+      orderBy: [{ deadline: "asc" }, { id: "asc" }],
+    });
+
+    res.status(200).json(assignedOrders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error retrieving assigned orders" });
+  }
+});
+
+// Get orders assigned to a specific writer
+const getWriterAssignedOrders = asyncHandler(async (req, res) => {
+  try {
+    const writerId = req.params.writerId;
+
+    // Fetch orders assigned to the specified writer
+    const writerAssignedOrders = await prisma.order.findMany({
+      where: {
+        writerId: writerId,
+      },
+    });
+
+    res.status(200).json(writerAssignedOrders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error retrieving writer assigned orders" });
+  }
+});
 
 module.exports = {
   getAllOrders,
@@ -204,4 +257,6 @@ module.exports = {
   updateOrder,
   deleteOrder,
   statuses,
+  getAssignedOrders,
+  getWriterAssignedOrders,
 };

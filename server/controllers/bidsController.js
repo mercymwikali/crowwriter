@@ -48,6 +48,12 @@ const createBid = asyncHandler(async (req, res) => {
       },
     });
 
+    // Update the order status to "PENDING" when a bid is created
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status: "PENDING" }
+    });
+
     res.status(201).json({ message: "Bid created successfully", data: bid });
   } catch (error) {
     console.error("Error creating bid:", error);
@@ -62,10 +68,11 @@ const getAllBidsForOrder = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Retrieve all bids for the specified order
+    // Retrieve all bids for the specified order excluding the "assigned" status
     const bids = await prisma.bid.findMany({
       where: {
-        orderId: id // Filter bids based on orderId
+        orderId: id, // Filter bids based on orderId
+        status: { not: "ASSIGNED" },
       },
       include: {
         order: {
@@ -105,12 +112,15 @@ const getAllBidsForOrder = asyncHandler(async (req, res) => {
 });
 
 
-/// @desc    Get all bids with counts and writers
+// @desc    Get all bids with counts and writers
 // @route   GET /api/bids
 // @access  Private (only accessible to authenticated users)
 const getAllBidsWithCountsAndWriters = asyncHandler(async (req, res) => {
   try {
     const bids = await prisma.bid.findMany({
+      where: {
+        status: "PENDING" // Only include bids with status "PENDING"
+      },
       include: {
         order: {
           select: {
@@ -134,6 +144,11 @@ const getAllBidsWithCountsAndWriters = asyncHandler(async (req, res) => {
         },
       },
     });
+
+    // If there are no bids, return an empty array with a message
+    if (!bids || bids.length === 0) {
+      return res.status(404).json({ message: "No bids found" });
+    }
 
     // Initialize an object to store unique orders with their bid counts and writers
     const uniqueOrders = {};
@@ -177,7 +192,6 @@ const getAllBidsWithCountsAndWriters = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
-
 
 
 // @desc    Get a single bid by ID

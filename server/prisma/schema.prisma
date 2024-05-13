@@ -6,8 +6,8 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["relationJoins", "driverAdapters", "metrics"]
 }
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -22,14 +22,17 @@ model User {
   role             Role             @default(writer)
   active           Boolean          @default(true)
   profile          Profile?
-  orders           Order[]
+  orders           Order[]          // Remove the single relation and add an array of orders
   bids             Bid[]
   submittedOrders  SubmittedOrder[]
   paymentRequests  PaymentRequest[]
   payments         Payment[]
   fines            Fine[]
-  notifications   Notification[]
+  notifications    Notification[]
+    assignments Assignment[] // Add a field to store assignments
+
 }
+
 
 // Payment status enum representing different payment statuses
 enum Role {
@@ -55,9 +58,9 @@ model Order {
   updatedAt       DateTime     @updatedAt
   orderId         String       @unique
   topic           String
-  discipline     String
+  discipline      String
   service         String
-  description   String         // New field: Description
+  description     String       // New field: Description
   format          String
   noOfPages       Int
   costPerPage     Float        @default(0.00)
@@ -65,16 +68,18 @@ model Order {
   deadline        DateTime
   remainingTime   String
   status          OrderStatus  @default(PENDING)
-  writer          User?         @relation(fields: [writerId], references: [id])
-  writerId        String?
+  writer          User[]       // Change to array of users
   submittedOrders SubmittedOrder[]
   bids            Bid[]
   payments        Payment[]
   paymentRequests PaymentRequest[]
   fines           Fine[]
+    assignments     Assignment[] // Add a field to store assignments
+
 
   @@index([orderId, topic])
 }
+
 
 // Order status enum
 enum OrderStatus {
@@ -91,14 +96,17 @@ model Bid {
   orderId  String
   writer   User      @relation(fields: [writerId], references: [id])
   writerId String
-  status   BidStatus @default(PENDING)
+  status   OrderStatus 
 }
 
-// Bid status enum representing different bid statuses
-enum BidStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
+// Assignment model representing the assignment of orders to users
+model Assignment {
+  id       String    @id @default(uuid())
+  order    Order     @relation(fields: [orderId], references: [id])
+  orderId  String
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String
+  createdAt DateTime  @default(now())
 }
 
 // SubmittedOrder model representing orders submitted by writers
