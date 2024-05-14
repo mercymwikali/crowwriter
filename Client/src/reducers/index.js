@@ -11,6 +11,8 @@ import {
   writerUpdateReducer,
 } from "./writersReducer";
 import {
+  assignOrderReducer,
+  assignedOrdersListReducer,
   orderCreateReducer,
   orderStatusListReducer,
   orderUpdateReducer,
@@ -35,5 +37,7 @@ export const rootReducer = combineReducers({
   deleteBid:deleteBidReducer,
   bidsList:bidListReducer,
   bidlistDetails:bidListDetailsReducer,
+  assignOrder:assignOrderReducer,
+  assignedOrdersList:assignedOrdersListReducer,
 
 });

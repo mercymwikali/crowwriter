@@ -1,35 +1,23 @@
-import { Button, Form, Input, Modal, Typography, message } from 'antd';
+import { Button, Form, Input, Modal, Typography } from 'antd';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBid } from '../actions/bidActions';
-import { jwtDecode } from 'jwt-decode'; // Make sure this import is correct
+import useAuth from '../hooks/useAuth'; // Import the useAuth hook
 
 const BidJobModal = ({ visible, onCancel, bidJob }) => {
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { loading, success } = useSelector((state) => state.bidJob);
 
-  const decoded = jwtDecode(userInfo.accessToken);
-//   console.log('Decoded token:', decoded);
+  // Use the useAuth hook to extract user information
+  const userInfo = useAuth();
 
-//   // Access UserInfo from the decoded object
-//   const { UserInfo } = decoded;
-//   console.log( UserInfo);
-  
-  const { loading, success, error } = useSelector((state) => state.bidJob);
 
-  useEffect(() => {
-    if (success) {
-      onCancel(); // Close the modal after successful bid creation
-    }
-
-    if (error) {
-        onCancel(); // Close the modal if there's an error
-    }
-  }, [success, onCancel, error]);
   
   const handleBid = () => {    
-    dispatch(createBid(bidJob.id, decoded.UserInfo.id));
+    // Ensure user information is available before attempting to access it
+    if (userInfo) {
+      dispatch(createBid(bidJob.id, userInfo.UserInfo.id)); // Pass user ID as a parameter
+    }
   };
 
   return (
@@ -47,7 +35,7 @@ const BidJobModal = ({ visible, onCancel, bidJob }) => {
           <Form>
             <Form.Item>
               <p>Are you sure you want to bid on this job?</p>
-                <Typography.Text type="primary" strong >Order ID:</Typography.Text>
+              <Typography.Text type="primary" strong >Order ID:</Typography.Text>
               <Input value={bidJob.orderId} readOnly />
             </Form.Item>
             <Form.Item>
@@ -55,10 +43,9 @@ const BidJobModal = ({ visible, onCancel, bidJob }) => {
               <Input value={bidJob.topic} readOnly />
             </Form.Item>
             <Form.Item>
-              <Typography.Text ttype="primary" strong >Full Amount (ksh)</Typography.Text>
+              <Typography.Text type="primary" strong >Full Amount (ksh)</Typography.Text>
               <Input value={bidJob.fullAmount} readOnly />
             </Form.Item>
-         
           </Form>
         </>
       )}

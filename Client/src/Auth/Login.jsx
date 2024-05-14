@@ -18,7 +18,7 @@ export const Login = () => {
     const navigate = useNavigate(); // Move useNavigate inside the functional component
 
     const userLogin = useSelector((state) => state.userLogin);
-    const { loading, error, userInfo, success } = userLogin;
+    const { loading, error, userInfo } = userLogin;
 
       // Decode token only if userInfo exists and accessToken is a string
     let decoded = null;

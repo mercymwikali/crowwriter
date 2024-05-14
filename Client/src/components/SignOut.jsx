@@ -1,22 +1,18 @@
 import React from 'react';
-import { Avatar, Dropdown, Menu, Typography, Spin, Alert } from 'antd';
+import { Avatar, Dropdown, Menu, Typography } from 'antd';
 import { UserOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../actions/userActions';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import useAuth from '../hooks/useAuth'; // Import the useAuth hook
 
 const Signout = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo } = userLogin;
-
-    // Extracting username from the decoded token
-    let decodedToken = null;
-    if (userInfo && typeof userInfo.accessToken === 'string') decodedToken = jwtDecode(userInfo.accessToken);
-    const username = decodedToken.UserInfo.username;
+    // Use the useAuth hook to extract user information
+    const userInfo = useAuth();
+    const username = userInfo ? userInfo.username : null;
 
     const handleMenuClick = async (e) => {
         if (e.key === '/signout') {
@@ -34,15 +30,19 @@ const Signout = () => {
         }
     };
 
+    // Define menu items
+    const menuItems = [
+        { key: 'viewprofile', icon: <ProfileOutlined />, text: 'View Profile' },
+        { key: '/signout', icon: <LogoutOutlined />, text: 'Sign Out', danger: true }
+    ];
+
     const menu = (
         <Menu onClick={handleMenuClick}>
-            <Menu.Item key="viewprofile" icon={<ProfileOutlined />}>
-                View Profile
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Item key="/signout" icon={<LogoutOutlined />} danger>
-                Sign Out
-            </Menu.Item>
+            {menuItems.map(item => (
+                <Menu.Item key={item.key} icon={item.icon} danger={item.danger}>
+                    {item.text}
+                </Menu.Item>
+            ))}
         </Menu>
     );
 

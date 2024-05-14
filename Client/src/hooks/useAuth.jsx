@@ -1,43 +1,15 @@
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 import { jwtDecode } from 'jwt-decode';
 
 const useAuth = () => {
+  // Select user information from Redux store
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  if (!userInfo || typeof userInfo.accessToken !== 'string') {
-    // Return default state indicating user is not authenticated
-    return {
-      username: "",
-      roles: [],
-           status: "inactive"
-    };
-  }
+  // Decode the JWT token if user information is available
+  const decodedUserInfo = userInfo ? jwtDecode(userInfo.accessToken) : null;
 
-
-
-  try {
-    const decoded = jwtDecode(userInfo.accessToken);
-    const { username, roles } = decoded.UserInfo;
-
-  
-
-    return {
-      username,
-      roles,
-     
-      status
-    };
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    // Return default state indicating user is not authenticated
-    return {
-      username: "",
-      roles: [],
-     
-      status: "inactive"
-    };
-  }
+  return decodedUserInfo; // Return the decoded user information
 };
 
 export default useAuth;

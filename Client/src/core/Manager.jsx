@@ -100,9 +100,9 @@ const handleMenuClick = (key) => {
                                     label: 'Bids List',
                                 },
                                 {
-                                    key: 'Pending-Jobs',
+                                    key: 'Assigned-Jobs',
                                     icon: <HourglassOutlined />,
-                                    label: 'Pending Jobs',
+                                    label: 'Assigned Jobs',
                                 },
                                 {
                                     key: 'Cancelled-Jobs',

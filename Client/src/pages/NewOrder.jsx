@@ -3,6 +3,7 @@ import { Button, DatePicker, Form, Input, InputNumber, Select, Typography, messa
 import { useDispatch, useSelector } from 'react-redux';
 import { createdOrder, listOrderstatusEnums } from '../actions/orderActions';
 import FileUpload from '../components/FileUpload';
+import AssignButton from '../components/AssignButton';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -130,7 +131,7 @@ const NewOrder = () => {
 
 
           <Form.Item label="Remaining Time" name="remainingTime">
-            <Input size="large" value={newOrder.remainingTime} readOnly />
+            <Input size="large" value={newOrder.remainingTime} onChange={(e) => handleChange('remainingTime', e.target.value)} disabled readOnly />
           </Form.Item>
           <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Please input the Status!' }]}>
             <Select
@@ -149,6 +150,9 @@ const NewOrder = () => {
           <div className="div my-3">
             <FileUpload />
           </div>
+         <Form.Item label="Select Writer">
+          <AssignButton/>
+          </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" loading={loading}>

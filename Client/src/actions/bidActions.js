@@ -96,7 +96,7 @@ export const listBids = () => async (dispatch, getState) => {
       payload: orders, // Pass the 'orders' array directly as payload
     });
 
-    console.log(orders);
+    // console.log(orders);
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -182,7 +182,6 @@ export const listBidsWithDetails = (id) => async (dispatch, getState) => {
       payload: data,
     });
 
-    console.log(data);
   } catch (error) {
     const message =
       error.response && error.response.data.message

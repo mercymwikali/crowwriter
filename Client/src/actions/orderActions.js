@@ -1,5 +1,10 @@
 import axios from "axios";
 import {
+  ASSIGNED_ORDER_LIST_FAIL,
+  ASSIGNED_ORDER_LIST_SUCCESS,
+  ASSIGN_WRITER_FAIL,
+  ASSIGN_WRITER_REQUEST,
+  ASSIGN_WRITER_SUCCESS,
   GET_ORDER_STATUS_ENUMS_REQUEST,
   LIST_ORDERS_FAIL,
   LIST_ORDERS_REQUEST,
@@ -14,8 +19,6 @@ import { message } from "antd";
 
 import { API_URL as API } from "../../config";
 
-
-
 export const createdOrder = (order) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_CREATE_REQUEST });
@@ -29,7 +32,6 @@ export const createdOrder = (order) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
       withCredentials: true,
-
     };
 
     const { data } = await axios.post(
@@ -38,12 +40,18 @@ export const createdOrder = (order) => async (dispatch, getState) => {
       config
     );
 
-    dispatch({
-      type: ORDER_CREATE_SUCCESS,
-      payload: data.response && data.response,
-    });
+    // Ensure that the response contains the expected 'data' property
+    if (data && data.data) {
+      dispatch({
+        type: ORDER_CREATE_SUCCESS,
+        payload: data.data, // Use 'data.data' instead of 'data.response'
+      });
 
-    message.success(data.message);
+      message.success(data.message);
+    } else {
+      // Handle the case where the response does not contain the expected data
+      throw new Error("Invalid response format");
+    }
   } catch (error) {
     dispatch({
       type: ORDER_CREATE_FAIL,
@@ -53,7 +61,7 @@ export const createdOrder = (order) => async (dispatch, getState) => {
           : error.message,
     });
 
-    message.error(error.response.data.message);
+    message.error(error.response.data.message || "Failed to create order");
   }
 };
 
@@ -74,7 +82,6 @@ export const listOrderstatusEnums = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
       withCredentials: true,
-
     };
 
     const { data } = await axios.get(`${API}/orders/order-Status`, config);
@@ -107,7 +114,6 @@ export const listOrders = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
       },
       withCredentials: true,
-
     };
 
     // Send GET request to fetch-All-writers endpoint
@@ -128,7 +134,52 @@ export const listOrders = () => async (dispatch, getState) => {
   }
 };
 
-export const updateOrder = ( id,order) => async (dispatch, getState) => {
+//assign an order
+export const assignOrder = (orderId, userId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ASSIGN_WRITER_REQUEST }); // Dispatch action to indicate request initiation
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
+      },
+      withCredentials: true,
+    };
+
+    const { data } = await axios.post(
+      `${API}/orders/assign-order`,
+      { orderId, userId },
+      config
+    );
+    dispatch({ type: ASSIGN_WRITER_SUCCESS, payload: data });
+    message.success(data.message);
+
+    console.log(data);
+  } catch (error) {
+    let errorMessage = error.message; // Default error message
+
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.error === "Order already assigned"
+    ) {
+      // If the error is "Order already assigned"
+      errorMessage = error.response.data.error;
+    }
+
+    dispatch({
+      type: ASSIGN_WRITER_FAIL,
+      payload: errorMessage,
+    });
+    // Throw the error to be caught in the component
+    throw new Error(errorMessage);
+  }
+};
+
+export const updateOrder = (id, order) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_UPDATE_REQUEST }); // Dispatch action to indicate request initiation
     const {
@@ -140,7 +191,6 @@ export const updateOrder = ( id,order) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
       },
       withCredentials: true,
-
     };
 
     const { data } = await axios.patch(
@@ -152,7 +202,7 @@ export const updateOrder = ( id,order) => async (dispatch, getState) => {
     dispatch({ type: ORDER_UPDATE_REQUEST, payload: data });
     message.success(data.message);
   } catch (error) {
-   const message =
+    const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
@@ -166,4 +216,38 @@ export const updateOrder = ( id,order) => async (dispatch, getState) => {
 
     message.error(message);
   }
-}
+};
+
+export const assignedOrderList = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ASSIGNED_ORDER_LIST_SUCCESS }); // Dispatch action to indicate request initiation
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
+      },
+    };
+
+    const { data } = await axios.get(`${API}/orders/assigned-Orders-list`, config);
+
+    dispatch({ type: ASSIGNED_ORDER_LIST_SUCCESS, payload: data });
+    console.log(data);
+
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type:ASSIGNED_ORDER_LIST_FAIL,
+      payload: message,
+    });
+    console.error(message);
+  }
+};

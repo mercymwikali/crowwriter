@@ -1,4 +1,11 @@
 import {
+  ASSIGNED_ORDER_LIST_FAIL,
+  ASSIGNED_ORDER_LIST_REQUEST,
+  ASSIGNED_ORDER_LIST_RESET,
+  ASSIGNED_ORDER_LIST_SUCCESS,
+  ASSIGN_WRITER_FAIL,
+  ASSIGN_WRITER_REQUEST,
+  ASSIGN_WRITER_SUCCESS,
   GET_ORDER_STATUS_ENUMS_FAIL,
   GET_ORDER_STATUS_ENUMS_REQUEST,
   GET_ORDER_STATUS_ENUMS_RESET,
@@ -28,6 +35,20 @@ export const orderCreateReducer = (state = {}, action) => {
       return state;
   }
 };
+
+
+export const assignOrderReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ASSIGN_WRITER_REQUEST:
+      return { loading: true };
+    case ASSIGN_WRITER_SUCCESS:
+      return { loading: false, success: true, order: action.payload };
+    case ASSIGN_WRITER_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+}
 
 export const orderStatusListReducer = (
   state = { orderstatuses: [] },
@@ -77,3 +98,19 @@ export const orderUpdateReducer = (state = { order: {} }, action) => {
       return state;
   }
 };
+
+//assigned orders reducer
+export const assignedOrdersListReducer = (state = { orders: [] }, action) => {
+  switch (action.type) {
+    case ASSIGNED_ORDER_LIST_REQUEST:
+      return { loading: true };
+    case ASSIGNED_ORDER_LIST_SUCCESS:
+      return { loading: false, orders: action.payload };
+    case  ASSIGNED_ORDER_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case ASSIGNED_ORDER_LIST_RESET:
+      return { users: [] };
+    default:
+      return state;
+  }
+}

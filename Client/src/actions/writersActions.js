@@ -65,7 +65,7 @@ export const listWriters = () => async (dispatch, getState) => {
     const { data } = await axios.get(`${API}/users/fetch-All-writers/`, config);
 
     // Log the received data
-    console.log("Received data:", data);
+    // console.log("Received data:", data);
 
     // Dispatch action to indicate request success
     dispatch({ type: LIST_WRITER_SUCCESS, payload: data });

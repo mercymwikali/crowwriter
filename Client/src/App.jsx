@@ -21,6 +21,7 @@ import AddUser from './pages/AddUser.jsx';
 import WriterBidList from './pages/WriterBidList.jsx';
 import PrivateRoute from './Auth/PrivateRoute.jsx'; // Import PrivateRoute
 import { ROLES } from './config/role.js';
+import AssignedJobsList from './pages/AssignedJobsList.jsx';
 
 const App = () => {
   return (
@@ -51,7 +52,7 @@ const App = () => {
           <Route index element={<NewOrder />} />
           <Route path="all-jobs" element={<AllJobs />} />
           <Route path="bids-list" element={<BidsList />} />
-          <Route path="pending-jobs" element={<AssignedJobs />} />
+          <Route path="Assigned-jobs" element={<AssignedJobsList />} />
           <Route path="cancelled-jobs" element={<CancelledJobs />} />
           <Route path="writers-list" element={<WriterList />} />
           <Route path="add-users" element={<AddUser />} />
