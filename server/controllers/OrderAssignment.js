@@ -17,6 +17,11 @@ const assignOrder = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
+    // Check if the order is already assigned
+    if (orderExists.status === "ASSIGNED") {
+      return res.status(400).json({ error: "Order already assigned" });
+    }
+
     // Check if the user exists
     const userExists = await prisma.user.findUnique({
       where: { id: userId },
@@ -34,7 +39,13 @@ const assignOrder = asyncHandler(async (req, res) => {
       },
     });
 
-    res.status(201).json({ message: "Order assigned successfully", data: assignment });
+    // Update order status to ASSIGNED
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { status: 'ASSIGNED' },
+    });
+
+    res.status(201).json({ message: `Order assigned successfully to ${userExists.username}`, data: assignment });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error assigning order" });
@@ -43,21 +54,37 @@ const assignOrder = asyncHandler(async (req, res) => {
 
 // Fetch all assigned orders
 const getAssignedOrders = asyncHandler(async (req, res) => {
-  try {
-    const assignedOrders = await prisma.assignment.findMany({
-      include: {
-        order: true,
-        user: true,
-      },
-    });
-
-    res.status(200).json(assignedOrders);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error fetching assigned orders" });
-  }
-});
-
+    try {
+      const assignedOrders = await prisma.assignment.findMany({
+        include: {
+          order: {
+            select: {
+              id: true,
+              orderId: true,
+              topic: true,
+              costPerPage: true,
+              fullAmount: true,
+              deadline: true,
+              remainingTime: true,
+              status: true,
+            },
+          },
+          user: {
+            select: {
+              username: true,
+              email: true,
+            },
+          },
+        },
+      });
+  
+      res.status(200).json(assignedOrders);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error fetching assigned orders" });
+    }
+  });
+  
 module.exports = {
   assignOrder,
   getAssignedOrders,

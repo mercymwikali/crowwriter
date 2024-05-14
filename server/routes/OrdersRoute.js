@@ -14,7 +14,7 @@ router.post('/create-order', orderController.createOrder);
 router.patch('/update-order/:id', orderController.updateOrder);
 router.delete('/delete-order/:id', orderController.deleteOrder);
 router.get('/order-Status', orderController.statuses);
-router.get("/assigned-orders", orderController.getAssignedOrders);
+router.get("/assigned-Orders-list", assignedOrdersController.getAssignedOrders)
 router.get("/writer-assigned-orders/:writerId", orderController.getWriterAssignedOrders);
 
 
