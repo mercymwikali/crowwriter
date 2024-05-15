@@ -4,7 +4,7 @@ const bidController = require("../controllers/bidsController");
 const { verifyJwt } = require("../middleware/verifyJwt"); // Import the verifyJwt middleware function
 
 // Apply verifyJwt middleware to protected routes
-// router.use(verifyJwt);
+router.use(verifyJwt);
 
 router.route("/create-bid").post(bidController.createBid);
 router.route("/get-bids").get(bidController.getAllBidsWithCountsAndWriters);
