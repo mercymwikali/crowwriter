@@ -5,7 +5,7 @@ const assignedOrdersController = require('../controllers/OrderAssignment')
 const { verifyJwt } = require('../middleware/verifyJwt'); // Import the verifyJwt middleware function
 
 // Apply verifyJwt middleware to protected routes
-// router.use(verifyJwt);
+router.use(verifyJwt);
 
 
 router.route('/get-writers-orders').get(orderController.getAllOrders);
