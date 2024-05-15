@@ -41,7 +41,7 @@ const upload = multer({
   },
 });
 
-// router.use(verifyJwt);
+router.use(verifyJwt);
 // Define the route for uploading a document to the server it will be stored in the 'uploads/documents' folder and the single file will be stored in the 'file' key
 router.post("/upload", upload.single('file'), uploadController.uploadDocument);
 //fetch documents
