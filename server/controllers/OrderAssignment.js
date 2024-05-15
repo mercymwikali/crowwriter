@@ -42,10 +42,15 @@ const assignOrder = asyncHandler(async (req, res) => {
     // Update order status to ASSIGNED
     await prisma.order.update({
       where: { id: orderId },
-      data: { status: 'ASSIGNED' },
+      data: { status: "ASSIGNED" },
     });
 
-    res.status(201).json({ message: `Order assigned successfully to ${userExists.username}`, data: assignment });
+    res
+      .status(201)
+      .json({
+        message: `Order assigned successfully to ${userExists.username}`,
+        data: assignment,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error assigning order" });
@@ -54,38 +59,78 @@ const assignOrder = asyncHandler(async (req, res) => {
 
 // Fetch all assigned orders
 const getAssignedOrders = asyncHandler(async (req, res) => {
-    try {
-      const assignedOrders = await prisma.assignment.findMany({
-        include: {
-          order: {
-            select: {
-              id: true,
-              orderId: true,
-              topic: true,
-              costPerPage: true,
-              fullAmount: true,
-              deadline: true,
-              remainingTime: true,
-              status: true,
-            },
-          },
-          user: {
-            select: {
-              username: true,
-              email: true,
-            },
+  try {
+    const assignedOrders = await prisma.assignment.findMany({
+      include: {
+        order: {
+          select: {
+            id: true,
+            orderId: true,
+            topic: true,
+            costPerPage: true,
+            fullAmount: true,
+            deadline: true,
+            remainingTime: true,
+            status: true,
           },
         },
-      });
-  
-      res.status(200).json(assignedOrders);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Error fetching assigned orders" });
-    }
-  });
-  
+        user: {
+          select: {
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json(assignedOrders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching assigned orders" });
+  }
+});
+
+//get assigned orders with writer id
+//get assigned orders with writer id
+const getAssignedOrdersWithWriterId = asyncHandler(async (req, res) => {
+  try {
+    const writerId = req.params.writerId;
+    const assignedOrders = await prisma.assignment.findMany({
+      where: {
+        userId: writerId,
+      },
+      include: {
+        order: {
+          select: {
+            id: true,
+            orderId: true,
+            topic: true,
+            costPerPage: true,
+            fullAmount: true,
+            deadline: true,
+            remainingTime: true,
+            status: true,
+          },
+        },
+        user: {
+          select: {
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
+    
+    res.status(200).json(assignedOrders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error fetching assigned orders for the writer" });
+  }
+});
+
+
 module.exports = {
   assignOrder,
   getAssignedOrders,
+  getAssignedOrdersWithWriterId,
 };

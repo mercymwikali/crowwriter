@@ -7,6 +7,9 @@ import {
   UPDATE_WRITER_REQUEST,
   UPDATE_WRITER_SUCCESS,
   UPDATE_WRITER_FAIL,
+  MY_JOBS_REQUEST,
+  MY_JOBS_SUCCESS,
+  MY_JOBS_FAIL,
 } from "../constants/writersDetails";
 import { message } from "antd"; // Import message from 'antd'
 import {
@@ -16,7 +19,7 @@ import {
 } from "../constants/userConstants";
 
 import { API_URL as API } from "../../config";
-
+import useAuth from "../hooks/useAuth";
 
 export const createWriter = (writer) => async (dispatch, getState) => {
   try {
@@ -31,7 +34,6 @@ export const createWriter = (writer) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
       withCredentials: true,
-
     };
 
     const { data } = await axios.post(
@@ -39,7 +41,6 @@ export const createWriter = (writer) => async (dispatch, getState) => {
       writer,
       config
     );
-    
   } catch (error) {}
 };
 
@@ -70,11 +71,10 @@ export const listWriters = () => async (dispatch, getState) => {
     // Dispatch action to indicate request success
     dispatch({ type: LIST_WRITER_SUCCESS, payload: data });
   } catch (error) {
-   
     // Dispatch action to indicate request failure
     dispatch({ type: LIST_WRITER_FAIL, payload: error.message });
-message.error(error.response.data.message);
-}
+    message.error(error.response.data.message);
+  }
 };
 export const UpdateWriter = (id, updatedUser) => async (dispatch, getState) => {
   try {
@@ -89,7 +89,6 @@ export const UpdateWriter = (id, updatedUser) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.accessToken}`,
       },
       withCredentials: true,
-
     };
 
     const { data } = await axios.patch(
@@ -152,3 +151,42 @@ export const deleteUser = (id) => async (dispatch, getState) => {
     });
   }
 };
+
+//my jobs
+export const myJobs = (writerId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: MY_JOBS_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`,
+      },
+      withCredentials: true,
+    };
+
+    // Include the writerId in the API endpoint URL
+    const { data } = await axios.get(`${API}/orders/my-jobs/${writerId}`, config);
+
+    dispatch({ type: MY_JOBS_SUCCESS, payload: data });
+
+    console.log(data);
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: MY_JOBS_FAIL,
+      payload: message,
+    });
+    message.error(message);
+  }
+};
+

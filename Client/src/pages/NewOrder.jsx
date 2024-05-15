@@ -29,6 +29,7 @@ const NewOrder = () => {
     deadline: null,
     remainingTime: '',
     status: 'PENDING',
+    documentId: '',
   });
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const NewOrder = () => {
       setNewOrder({ ...newOrder, [key]: value });
     }
   };
+
 
   const handleSubmit = async () => {
     // Handling deadline separately to ensure it's in the correct format
@@ -78,10 +80,15 @@ const NewOrder = () => {
         deadline: null,
         remainingTime: '',
         status: 'PENDING',
+        documentId: '',
       });
     }, 100);
   };
   
+  // Function to handle capturing the generated UUID from FileUpload component
+  const handleFileUpload = (documentId) => {
+    setNewOrder(prevState => ({ ...prevState, documentId: documentId }));
+  };
 
   return (
     <>
@@ -148,7 +155,7 @@ const NewOrder = () => {
             </Select>
           </Form.Item>
           <div className="div my-3">
-            <FileUpload />
+            <FileUpload onFileUpload={handleFileUpload} />
           </div>
          <Form.Item label="Select Writer">
           <AssignButton/>

@@ -45,6 +45,9 @@ app.use("/uploadFile", uploadDocumentRoute);
 const bidsRoute = require("./routes/bidsRoute");
 app.use("/bids", bidsRoute);
 
+const SubmitJob= require("./routes/SubmitJobs");
+app.use("/submitJob", SubmitJob);
+
 
 app.use(errorHandler);
 

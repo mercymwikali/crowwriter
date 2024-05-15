@@ -161,3 +161,19 @@ Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31
 20240513	21:46:32	a5990582-e564-4560-ab01-31994c2899a4	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
 20240513	22:11:50	57973e84-6da6-4980-a6f3-5bd4f3f70bad	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
 20240513	22:12:44	4a3b8a55-a5c2-4581-a24d-83ac87a64ef2	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240515	10:13:20	687c1552-4e4f-4c55-9b6d-fdd69e4c9def	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240515	10:13:31	b982647e-3b35-4bf7-af24-3ad6316bf011	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240515	10:21:48	05380941-b859-4c00-baa4-737d88fc951a	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240515	10:42:48	5d9cf4c4-beb2-432d-82cc-f6bc7ee59ca1	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240515	10:44:36	e3db5a93-439b-483d-b555-f0b5c567f6f4	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240515	11:17:52	46a98bd4-0759-49ab-ab23-8031ce7eaebc	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240515	11:20:14	0a9e8118-7549-428a-961a-74c1725bcaca	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240515	17:03:08	9213919e-a306-41bc-9f1f-d6752e1f88b9	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:06:09	c2d169f5-ab25-4319-9c5b-d9746c5a5aac	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:06:52	15c18e82-0ceb-4321-b1eb-c025af429533	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:06:58	babd1adb-7f82-4311-97b4-faf4ff6472c8	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:10:03	03f8e1e3-0e1f-48b0-b445-605864409b1b	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:10:19	00392d04-510a-405b-a05d-e12a6a80df43	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:10:46	9c8c15ef-f1af-468b-8f44-f33f438d7ad2	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:12:06	d034c04f-d8de-4b7a-bb93-dd1ab7dc18b3	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	17:13:26	156d80b8-99d0-4e96-becd-6e0e6a3de07e	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined

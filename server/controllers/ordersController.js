@@ -22,6 +22,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
         deadline: true,
         remainingTime: true,
         status: true,
+        documentId: true,
         writer: {
           select: {
             id: true,

@@ -7,12 +7,14 @@ import {
 } from "./userSlice";
 import {
   deleteUserReducer,
+  myJobsListReducer,
   writerListReducer,
   writerUpdateReducer,
 } from "./writersReducer";
 import {
   assignOrderReducer,
   assignedOrdersListReducer,
+  downloadAttachmentReducer,
   orderCreateReducer,
   orderStatusListReducer,
   orderUpdateReducer,
@@ -39,5 +41,7 @@ export const rootReducer = combineReducers({
   bidlistDetails:bidListDetailsReducer,
   assignOrder:assignOrderReducer,
   assignedOrdersList:assignedOrdersListReducer,
+  myJobs: myJobsListReducer,
+  downloadAttachment:downloadAttachmentReducer,
 
 });

@@ -1,5 +1,5 @@
 import { USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS } from '../constants/userConstants';
-import {LIST_WRITER_FAIL, LIST_WRITER_REQUEST, LIST_WRITER_SUCCESS, LIST_WRITER_RESET, UPDATE_WRITER_REQUEST, UPDATE_WRITER_SUCCESS, UPDATE_WRITER_FAIL, UPDATE_WRITER_RESET} from '../constants/writersDetails'
+import {LIST_WRITER_FAIL, LIST_WRITER_REQUEST, LIST_WRITER_SUCCESS, LIST_WRITER_RESET, UPDATE_WRITER_REQUEST, UPDATE_WRITER_SUCCESS, UPDATE_WRITER_FAIL, UPDATE_WRITER_RESET, MY_JOBS_REQUEST, MY_JOBS_SUCCESS, MY_JOBS_FAIL, MY_JOBS_RESET} from '../constants/writersDetails'
 
 
 export const writerListReducer = (state = { users: [] }, action) => {
@@ -28,6 +28,21 @@ export const writerUpdateReducer = (state = {user: {}}, action) => {
             return { loading: false, error: action.payload };
             case UPDATE_WRITER_RESET:
             return {user: {} };
+        default:
+            return state;
+    }
+}
+
+export const myJobsListReducer = (state = { orders: [] }, action) => {
+    switch (action.type) {
+        case MY_JOBS_REQUEST:
+            return { loading: true };
+        case MY_JOBS_SUCCESS:
+            return { loading: false, orders: action.payload };
+        case MY_JOBS_FAIL:
+            return { loading: false, error: action.payload };
+        case MY_JOBS_RESET:
+            return { orders: [] };
         default:
             return state;
     }

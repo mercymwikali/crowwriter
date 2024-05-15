@@ -12,7 +12,7 @@ const Signout = () => {
 
     // Use the useAuth hook to extract user information
     const userInfo = useAuth();
-    const username = userInfo ? userInfo.username : null;
+    const username = userInfo ? userInfo.UserInfo.username : null;
 
     const handleMenuClick = async (e) => {
         if (e.key === '/signout') {

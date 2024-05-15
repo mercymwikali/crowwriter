@@ -13,7 +13,6 @@ import CompletedJobs from './pages/CompletedJobs.jsx';
 import RejectedJobs from './pages/RejectedJobs.jsx';
 import WritersTransactions from './pages/WritersTransanction.jsx';
 import RequestPayment from './pages/RequestPayment.jsx';
-import AssignedJobs from './pages/AssignedJobs.jsx';
 import CancelledJobs from './pages/CancelledJobs.jsx';
 import AllJobs from './pages/AllJobs.jsx';
 import WriterList from './pages/WriterList.jsx';

@@ -53,7 +53,7 @@ const JobsPool = () => {
       message.error(error)
     ) : (
       <>
-        <table className="table writer-table table-hover table-responsive">
+        <table className="table table-hover table-responsive">
           <thead>
             <tr>
               <th scope='col'>#</th>

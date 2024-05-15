@@ -5,9 +5,10 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["relationJoins", "driverAdapters", "metrics"]
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -15,24 +16,22 @@ datasource db {
 
 // User model representing manager, writer, and admin
 model User {
-  id               String           @id @default(uuid())
-  username         String
-  email            String           @unique
-  password         String           @unique
-  role             Role             @default(writer)
-  active           Boolean          @default(true)
-  profile          Profile?
-  orders           Order[]          // Remove the single relation and add an array of orders
-  bids             Bid[]
-  submittedOrders  SubmittedOrder[]
-  paymentRequests  PaymentRequest[]
-  payments         Payment[]
-  fines            Fine[]
-  notifications    Notification[]
-    assignments Assignment[] // Add a field to store assignments
-
+  id              String           @id @default(uuid())
+  username        String
+  email           String           @unique
+  password        String           @unique
+  role            Role             @default(writer)
+  active          Boolean          @default(true)
+  profile         Profile?
+  orders          Order[] // Remove the single relation and add an array of orders
+  bids            Bid[]
+  submittedOrders SubmittedOrder[]
+  paymentRequests PaymentRequest[]
+  payments        Payment[]
+  fines           Fine[]
+  notifications   Notification[]
+  assignments     Assignment[] // Add a field to store assignments
 }
-
 
 // Payment status enum representing different payment statuses
 enum Role {
@@ -53,84 +52,84 @@ model Profile {
 
 // Order model representing the orders created by the manager
 model Order {
-  id              String       @id @default(uuid())
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  orderId         String       @unique
+  id              String           @id @default(uuid())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  orderId         String           @unique
   topic           String
   discipline      String
   service         String
-  description     String       // New field: Description
+  description     String // New field: Description
   format          String
   noOfPages       Int
-  costPerPage     Float        @default(0.00)
-  fullAmount      Float        @default(0.00)
+  costPerPage     Float            @default(0.00)
+  fullAmount      Float            @default(0.00)
   deadline        DateTime
   remainingTime   String
-  status          OrderStatus  @default(PENDING)
-  writer          User[]       // Change to array of users
+  status          OrderStatus      @default(PENDING)
+  writer          User[] // Change to array of users
   submittedOrders SubmittedOrder[]
   bids            Bid[]
   payments        Payment[]
   paymentRequests PaymentRequest[]
   fines           Fine[]
-    assignments     Assignment[] // Add a field to store assignments
-
+  assignments     Assignment[] // Add a field to store assignments
+  documentId      String?
 
   @@index([orderId, topic])
 }
-
 
 // Order status enum
 enum OrderStatus {
   PENDING
   ASSIGNED
-  COMPLETED
+  SUBMITTED
   CANCELLED
 }
 
 // Bid model representing bids made by writers on orders
 model Bid {
-  id       String    @id @default(uuid())
-  order    Order     @relation(fields: [orderId], references: [id])
+  id       String      @id @default(uuid())
+  order    Order       @relation(fields: [orderId], references: [id])
   orderId  String
-  writer   User      @relation(fields: [writerId], references: [id])
+  writer   User        @relation(fields: [writerId], references: [id])
   writerId String
-  status   OrderStatus 
+  status   OrderStatus
 }
 
 // Assignment model representing the assignment of orders to users
 model Assignment {
-  id       String    @id @default(uuid())
-  order    Order     @relation(fields: [orderId], references: [id])
-  orderId  String
-  user     User      @relation(fields: [userId], references: [id])
-  userId   String
-  createdAt DateTime  @default(now())
+  id        String   @id @default(uuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
 }
 
 // SubmittedOrder model representing orders submitted by writers
 model SubmittedOrder {
-  id             String   @id @default(uuid())
-  order          Order    @relation(fields: [orderId], references: [id])
+  id             String      @id @default(uuid())
+  order          Order       @relation(fields: [orderId], references: [id])
   orderId        String
-  submittedBy    User     @relation(fields: [submittedById], references: [id])
+  submittedBy    User        @relation(fields: [submittedById], references: [id])
   submittedById  String
   submissionDate DateTime
   status         OrderStatus
+  documentId     String?
 
   @@index([orderId, submittedById])
 }
 
 // PaymentRequest model representing payment requests made by writers
 model PaymentRequest {
-  id               String               @id @default(uuid())
-  order            Order                @relation(fields: [orderId], references: [id])
-  orderId          String
-  requestedBy      User                 @relation(fields: [requestedById], references: [id])
-  requestedById    String
-  amount           Int
-  paymentStatus    PaymentRequestStatus @default(PENDING)
+  id            String               @id @default(uuid())
+  order         Order                @relation(fields: [orderId], references: [id])
+  orderId       String
+  requestedBy   User                 @relation(fields: [requestedById], references: [id])
+  requestedById String
+  amount        Int
+  paymentStatus PaymentRequestStatus @default(PENDING)
 
   @@index([requestedById])
 }
@@ -144,17 +143,17 @@ enum PaymentRequestStatus {
 
 // Payment model representing payments made to writers for completed orders
 model Payment {
-  id            String         @id @default(uuid())
-  order         Order          @relation(fields: [orderId], references: [id])
-  orderId       String
-  paidTo        User           @relation(fields: [paidToId], references: [id])
-  paidToId      String
-  amount        Int
-  status        PaymentStatus  @default(UNPAID)
-  orderStatus   OrderStatus
-  wallet        Profile        @relation(fields: [walletId], references: [id])
-  walletId      String
- 
+  id          String        @id @default(uuid())
+  order       Order         @relation(fields: [orderId], references: [id])
+  orderId     String
+  paidTo      User          @relation(fields: [paidToId], references: [id])
+  paidToId    String
+  amount      Int
+  status      PaymentStatus @default(UNPAID)
+  orderStatus OrderStatus
+  wallet      Profile       @relation(fields: [walletId], references: [id])
+  walletId    String
+
   @@index([paidToId, orderStatus])
 }
 
@@ -176,13 +175,13 @@ model Fine {
 }
 
 model Notification {
-  id          String     @id @default(uuid())
-  createdAt   DateTime   @default(now())
+  id          String           @id @default(uuid())
+  createdAt   DateTime         @default(now())
   type        NotificationType
   message     String
-  recipient   User       @relation(fields: [recipientId], references: [id])
+  recipient   User             @relation(fields: [recipientId], references: [id])
   recipientId String
-  read        Boolean    @default(false)
+  read        Boolean          @default(false)
 }
 
 enum NotificationType {
@@ -191,4 +190,3 @@ enum NotificationType {
   ERROR
   CUSTOM
 }
-

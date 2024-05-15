@@ -5,6 +5,9 @@ import {
   ASSIGN_WRITER_FAIL,
   ASSIGN_WRITER_REQUEST,
   ASSIGN_WRITER_SUCCESS,
+  DOWNLOAD_ATTACHMENT_FAIL,
+  DOWNLOAD_ATTACHMENT_REQUEST,
+  DOWNLOAD_ATTACHMENT_SUCCESS,
   GET_ORDER_STATUS_ENUMS_REQUEST,
   LIST_ORDERS_FAIL,
   LIST_ORDERS_REQUEST,
@@ -249,5 +252,54 @@ export const assignedOrderList = () => async (dispatch, getState) => {
       payload: message,
     });
     console.error(message);
+  }
+};
+
+
+//dowload order attachment
+
+export const downloadOrderAttachment = (documentId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DOWNLOAD_ATTACHMENT_REQUEST }); // Dispatch action to indicate request initiation
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
+      },
+      responseType: 'blob', // Set response type to 'blob' for downloading files
+    };
+
+    const { data } = await axios.get(`${API}/uploadFile/download/${documentId}`, config);
+
+    // Create a blob URL for the downloaded file
+    const url = window.URL.createObjectURL(new Blob([data]));
+
+    // Create an anchor element to trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `document.pdf`); // Set generic filename here
+    document.body.appendChild(link);
+    link.click();
+
+    // Dispatch action to indicate request success
+    dispatch({ type: DOWNLOAD_ATTACHMENT_SUCCESS });
+
+    message.success("Files downloaded successfully");
+
+    // Cleanup
+    link.parentNode.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    // Debugging console log
+    console.log("Downloaded attachment");
+
+  } catch (error) {
+    console.error("Error downloading attachment:", error);
+    message.error("Failed to download attachment");
+    // Dispatch action to indicate request failure
+    dispatch({ type: DOWNLOAD_ATTACHMENT_FAIL , payload: error.message });
   }
 };

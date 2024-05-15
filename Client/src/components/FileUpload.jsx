@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload, Progress } from 'antd';
 import { useSelector } from 'react-redux';
-
+import { API_URL as API } from "../../config";
+import { v4 as uuidv4 } from 'uuid'; // Import uuidv4 function
 const { Dragger } = Upload;
 
-const FileUpload = () => {
+const FileUpload = ({ onFileUpload }) => { // Receive onFileUpload function as a prop
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -15,19 +16,20 @@ const FileUpload = () => {
   const props = {
     name: 'file',
     multiple: true,
-    action: 'https://crowwriter-api.vercel.app/', // Adjusted endpoint
+    action: `${API}/uploadFile/upload`,
     headers: {
-      Authorization: `Bearer ${userInfo.accessToken}`, // Add your authorization header here
+      Authorization: `Bearer ${userInfo.accessToken}`,
     },
-
     beforeUpload(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
+          const documentId = file.name
           resolve({
             name: file.name,
             url: reader.result,
+            documentId: documentId, // Include document ID in file object
           });
         };
         reader.onerror = (error) => {
@@ -35,19 +37,31 @@ const FileUpload = () => {
         };
       });
     },
-
+    
     onChange(info) {
-      const { status } = info.file;
+      const { status, response } = info.file;
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
+        // Extract documentId from response and send it back to the parent component
+        if (response && response.documentId) {
+          onFileUpload(response.documentId);
+        } else if (response && response.data && response.data.documentId) {
+          onFileUpload(response.data.documentId); // Adjust this line if documentId is nested in response.data
+        } else {
+          message.error('Failed to retrieve documentId from the response.');
+        }
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
         console.error(info.file, info.fileList);
       }
     },
+
+    onProgress({ percent }) {
+      setProgress(percent);
+    }
   };
 
   return (

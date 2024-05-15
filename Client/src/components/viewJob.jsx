@@ -1,10 +1,25 @@
 import React from 'react';
-import { Modal, Input, Form, Button } from 'antd';
+import { Modal, Input, Form, Button, message } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux'; // Import useDispatch hook
+import { downloadOrderAttachment } from '../actions/orderActions';
 
 const { TextArea } = Input;
 
 const JobViewModal = ({ visible, onCancel, selectedJob }) => {
+  const dispatch = useDispatch(); // Initialize useDispatch hook
+
+const downloadDocument=useSelector(state=>state.downloadAttachment);
+const {loading,error,document}=downloadDocument;
+
+  const handleDownload = () => {
+    if (selectedJob && selectedJob.documentId) {
+      dispatch(downloadOrderAttachment(selectedJob.documentId)); // Dispatch the action to download the attachment
+    } else {
+      message.error('No document available for download');
+    }
+  };
+
   return (
     <Modal
       title="Order Details"
@@ -51,7 +66,7 @@ const JobViewModal = ({ visible, onCancel, selectedJob }) => {
               <TextArea rows={13} value={selectedJob.description} readOnly />
             </Form.Item>
             <Form.Item className='justify-content-center d-flex align-items-center'>
-              <Button type="primary" icon={<DownloadOutlined />} style={{ marginTop: '16px' }} block>Download Attachment</Button>
+              <Button type="primary" size='large'  icon={<DownloadOutlined />} style={{ marginTop: '16px' }} block onClick={handleDownload}>Download Attachment</Button>
             </Form.Item>
           </Form>
         </>

@@ -6,6 +6,10 @@ import {
   ASSIGN_WRITER_FAIL,
   ASSIGN_WRITER_REQUEST,
   ASSIGN_WRITER_SUCCESS,
+  DOWNLOAD_ATTACHMENT_FAIL,
+  DOWNLOAD_ATTACHMENT_REQUEST,
+  DOWNLOAD_ATTACHMENT_RESET,
+  DOWNLOAD_ATTACHMENT_SUCCESS,
   GET_ORDER_STATUS_ENUMS_FAIL,
   GET_ORDER_STATUS_ENUMS_REQUEST,
   GET_ORDER_STATUS_ENUMS_RESET,
@@ -114,3 +118,19 @@ export const assignedOrdersListReducer = (state = { orders: [] }, action) => {
       return state;
   }
 }
+
+// Reducer for download attachment operation
+export const downloadAttachmentReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DOWNLOAD_ATTACHMENT_REQUEST:
+      return { loading: true };
+    case DOWNLOAD_ATTACHMENT_SUCCESS:
+      return { loading: false, success: true };
+    case DOWNLOAD_ATTACHMENT_FAIL:
+      return { loading: false, error: action.payload };
+      case DOWNLOAD_ATTACHMENT_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
