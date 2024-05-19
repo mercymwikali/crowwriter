@@ -16,7 +16,7 @@ const FileUpload = ({ onFileUpload }) => { // Receive onFileUpload function as a
   const props = {
     name: 'file',
     multiple: true,
-    action: `${API}/uploadFile/upload`,
+    action: 'http://localhost:3001/uploadFile/upload',
     headers: {
       Authorization: `Bearer ${userInfo.accessToken}`,
     },
