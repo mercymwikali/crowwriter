@@ -115,26 +115,28 @@ const createOrder = asyncHandler(async (req, res) => {
 const updateOrder = asyncHandler(async (req, res) => {
   try {
     const orderId = req.params.id;
-    //check if the order exists
+    const updatedOrder = req.body;
+
+    // Check if the order exists
     const existingOrder = await prisma.order.findUnique({
       where: { id: orderId },
     });
 
+    // If no order found, return 404 status error
     if (!existingOrder) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    const updatedOrder = await prisma.order.update({
+    // Update the order
+    const updated = await prisma.order.update({
       where: { id: orderId },
       data: {
-        ...req.body,
+        ...updatedOrder,
       },
     });
-    if (updatedOrder) {
-      return res
-        .status(200)
-        .json({ message: "Order updated successfully", data: updatedOrder });
-    }
+
+    res.status(200).json({ message: "Order updated successfully", data: updated });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error updating order" });

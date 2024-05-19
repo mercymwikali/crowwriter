@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { myJobs } from '../actions/writersActions';
-import useAuth from '../hooks/useAuth';
-import { Button, Skeleton, Tooltip, Typography, message } from 'antd';
-import { IoSendSharp } from 'react-icons/io5';
-import SubmitOrder from '../components/SubmitOrder';
-import { CloudDownloadOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Skeleton, Tooltip, Typography, Button, message } from 'antd';
+import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { downloadOrderAttachment } from '../actions/orderActions';
+import { listWritersSubmissions } from '../actions/submitAction';
+import useAuth from '../hooks/useAuth';
+import SubmitOrder from '../components/SubmitOrder';
 import DeleteOrderModal from '../components/DeletedSubmission';
 
 const WriterSubList = () => {
@@ -14,25 +13,25 @@ const WriterSubList = () => {
     const writer = useAuth();
     const writerId = writer ? writer.UserInfo.id : null;
 
-    const myJobsState = useSelector((state) => state.myJobs);
-    const { loading, error, orders } = myJobsState;
+    const mysubmissions = useSelector(state => state.submissionByWriter);
+    const { loading, error, submissions } = mysubmissions;
     const { success: deleteSuccess, error: deleteError } = useSelector(state => state.deleteSubmittedOrder);
 
     const [submitOrderModal, setSubmitOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [deleteModalVisible, setDeleteModalVisible] = useState(false); // State for delete modal visibility
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
     const handleDownload = async (order) => {
         try {
-            await dispatch(downloadOrderAttachment(order.id, order.order.orderId));
+            await dispatch(downloadOrderAttachment(order.documentId, order.orderId));
         } catch (error) {
             message.error('Failed to download attachment');
         }
-    }
+    };
 
     useEffect(() => {
         if (writerId) {
-            dispatch(myJobs(writerId));
+            dispatch(listWritersSubmissions(writerId));
         }
         if (deleteSuccess) {
             message.success(deleteSuccess);
@@ -44,27 +43,27 @@ const WriterSubList = () => {
     const handleSubmitOrder = (order) => {
         setSelectedOrder(order);
         setSubmitOrderModal(true);
-    }
+    };
 
     const handleCancel = () => {
         setSubmitOrderModal(false);
-    }
+    };
 
     return (
         <>
-            <Typography.Title>Submitted Jobs List</Typography.Title>
+            <Typography.Title>Submitted Jobs </Typography.Title>
             {loading ? (
                 <Skeleton active />
             ) : error ? (
                 <>{message.error(error)}</>
-            ) : orders ? (
+            ) : submissions && submissions.documents && submissions.documents.length > 0 ? (
                 <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">OrderId</th>
                             <th scope="col">Topic</th>
-                            <th scope="col">Full Amount(ksh)</th>
+                            <th scope="col">Full Amount (ksh)</th>
                             <th scope='col'>Due Date</th>
                             <th scope="col">Status</th>
                             <th scope='col' className='text-center'>Attachment</th>
@@ -72,19 +71,19 @@ const WriterSubList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orders.map((order, index) => (
-                            <tr key={order.id}>
+                        {submissions.documents.map((submission, index) => (
+                            <tr key={submission.documentId}>
                                 <td>{index + 1}</td>
-                                <td>{order.order.orderId}</td>
-                                <td>{order.order.topic}</td>
-                                <td>{order.order.fullAmount}</td>
-                                <td>{new Date(order.order.deadline).toLocaleDateString()}</td>
-                                <td>{order.order.status}</td>
+                                <td>{submission.orderId}</td>
+                                <td>{submission.topic}</td>
+                                <td>{submission.amount}</td>
+                                <td>{new Date(submission.deadline).toLocaleDateString()}</td>
+                                <td>{submission.status}</td>
                                 <td className='text-center'>
                                     <Tooltip title="Download Attachment File">
                                         <Button
                                             type="primary"
-                                            onClick={() => handleDownload(order)} // Pass the order to handleDownload
+                                            onClick={() => handleDownload(submission)}
                                         >
                                             <CloudDownloadOutlined style={{ marginRight: '5px', fontSize: '20px' }} />
                                         </Button>
@@ -95,7 +94,10 @@ const WriterSubList = () => {
                                         <Button
                                             icon={<DeleteOutlined />}
                                             danger
-                                            onClick={() => setDeleteModalVisible(true)}
+                                            onClick={() => {
+                                                setSelectedOrder(submission);
+                                                setDeleteModalVisible(true);
+                                            }}
                                         >
                                             Delete
                                         </Button>
@@ -105,14 +107,16 @@ const WriterSubList = () => {
                         ))}
                     </tbody>
                 </table>
-            ) : null}
+            ) : (
+                <p>No submitted jobs available.</p>
+            )}
             <SubmitOrder visible={submitOrderModal} onCancel={handleCancel} selectedOrder={selectedOrder} />
             <DeleteOrderModal
                 visible={deleteModalVisible}
                 onCancel={() => setDeleteModalVisible(false)}
-                orderId={selectedOrder?.id ? selectedOrder.id : null}
+                orderId={selectedOrder?.id || null}
                 onSubmit={() => setDeleteModalVisible(false)}
-                selectedOrder={selectedOrder} // Pass selectedOrder to the modal
+                selectedOrder={selectedOrder}
             />
         </>
     );

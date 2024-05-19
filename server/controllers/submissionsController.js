@@ -75,6 +75,7 @@ const submitJob = asyncHandler(async (req, res) => {
 const getSubmittedDocuments = asyncHandler(async (req, res) => {
   try {
     const submissions = await prisma.submittedOrder.findMany({
+      where: { status: 'SUBMITTED' },
       include: {
         order: {
           select: {

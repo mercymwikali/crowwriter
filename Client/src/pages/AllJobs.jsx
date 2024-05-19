@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Skeleton, Tooltip, message, Button, Modal, Pagination, Form, Input, DatePicker, Tag } from 'antd';
 import { DeleteFilled, EditFilled, TagsOutlined } from '@ant-design/icons';
-import { assignOrder, listOrders, updateOrder } from '../actions/orderActions';
+import { listOrders, updateOrder } from '../actions/orderActions';
 import moment from 'moment';
 import AssignWriter from '../components/AssignButton';
+import FileUpload from '../components/FileUpload';
+import { assignOrder } from '../actions/assigningActions';
 
 const { TextArea } = Input;
 
@@ -67,15 +69,17 @@ const Allorders = () => {
   };
 
   const handleEditSubmit = async () => {
-    console.log("Selected order:", selectedorder);
-
-    if (selectedorder && selectedorder.id) {
+    try {
       await dispatch(updateOrder(selectedorder.id, selectedorder));
-      await dispatch(listOrders()); // Fetch the updated list of orders
-    } else {
-      console.error("Selected order or order ID is null");
+      message.success('Order updated successfully');
+      seteditModalVisible(false);
+
+      // Optionally, clear the form fields
+      oncancel();
+    } catch (error) {
+      message.error('Failed to update order');
     }
-    handleCancel();
+
   }
 
   const handleAssignOrder = async () => {
@@ -85,6 +89,10 @@ const Allorders = () => {
     // For example: dispatch(assignOrder(selectedorder.id, writerId));
     dispatch(assignOrder(selectedorder.id, writerId));
     // Remember to handle the assignment logic based on the selected writer ID
+  };
+
+  const handleFileChange = (event) => {
+    setSelectedorder({ ...selectedorder, [event.target.name]: event.target.value });
   };
 
   // Pagination change handler
@@ -186,6 +194,38 @@ const Allorders = () => {
                   })
                 }
               />
+            </Form.Item>
+            <Form.Item label="Topic">
+              <Input value={selectedorder.topic} onChange={(e) => setSelectedorder({ ...selectedorder, topic: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Discipline">
+              <Input value={selectedorder.discipline} onChange={(e) => setSelectedorder({ ...selectedorder, discipline: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Service">
+              <Input value={selectedorder.service} onChange={(e) => setSelectedorder({ ...selectedorder, service: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="No of Pages">
+              <Input value={selectedorder.noOfPages} onChange={(e) => setSelectedorder({ ...selectedorder, noOfPages: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Cost Per Page">
+              <Input value={selectedorder.costPerPage} onChange={(e) => setSelectedorder({ ...selectedorder, costPerPage: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Full Amount">
+              <Input value={selectedorder.fullAmount} onChange={(e) => setSelectedorder({ ...selectedorder, fullAmount: e.target.value })} />
+            </Form.Item>
+            <Form.Item label="Deadline">
+              <DatePicker
+                style={{ width: '100%' }}
+                value={selectedorder.deadline ? moment(selectedorder.deadline) : null}
+                onChange={(date, dateString) => setSelectedorder({ ...selectedorder, deadline: dateString })}
+              />
+            </Form.Item>
+            <Form.Item label="Description">
+              <Input.TextArea rows={14} cols={30}  value={selectedorder.description} onChange={(e) => setSelectedorder({ ...selectedorder, description: e.target.value })} />
+            </Form.Item>
+            {/* file upload */}
+            <Form.Item label="Upload File">
+              <FileUpload onFileUpload={handleFileChange} />
             </Form.Item>
             {/* Other form fields */}
             <Button type="primary" onClick={handleEditSubmit} htmlType="submit">

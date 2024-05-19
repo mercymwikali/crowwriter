@@ -24,6 +24,11 @@ const assignOrder = asyncHandler(async (req, res) => {
       return res.status(400).json({ error: "Order already assigned" });
     }
 
+    // Check if the order is submitted
+    if (orderExists.status === "SUBMITTED") {
+      return res.status(400).json({ error: "Order already submitted" });
+    }
+
     // Check if the user exists
     const userExists = await prisma.user.findUnique({
       where: { id: userId },

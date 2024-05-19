@@ -137,51 +137,7 @@ export const listOrders = () => async (dispatch, getState) => {
   }
 };
 
-//assign an order
-export const assignOrder = (orderId, userId) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: ASSIGN_WRITER_REQUEST }); // Dispatch action to indicate request initiation
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.accessToken}`, // Use accessToken here
-      },
-      withCredentials: true,
-    };
-
-    const { data } = await axios.post(
-      `${API}/orders/assign-order`,
-      { orderId, userId },
-      config
-    );
-    dispatch({ type: ASSIGN_WRITER_SUCCESS, payload: data });
-    message.success(data.message);
-
-    console.log(data);
-  } catch (error) {
-    let errorMessage = error.message; // Default error message
-
-    if (
-      error.response &&
-      error.response.data &&
-      error.response.data.error === "Order already assigned"
-    ) {
-      // If the error is "Order already assigned"
-      errorMessage = error.response.data.error;
-    }
-
-    dispatch({
-      type: ASSIGN_WRITER_FAIL,
-      payload: errorMessage,
-    });
-    // Throw the error to be caught in the component
-    throw new Error(errorMessage);
-  }
-};
-
+//update order
 export const updateOrder = (id, order) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_UPDATE_REQUEST }); // Dispatch action to indicate request initiation

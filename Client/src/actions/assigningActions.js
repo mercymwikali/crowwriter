@@ -30,23 +30,21 @@ export const assignOrder = (orderId, userId) => async (dispatch, getState) => {
   
       console.log(data);
     } catch (error) {
-      let errorMessage = error.message; // Default error message
+      let errorMessage = error.data.message; // Default error message
   
       if (
         error.response &&
         error.response.data &&
-        error.response.data.error === "Order already assigned"
+        error.response.data.message
       ) {
-        // If the error is "Order already assigned"
-        errorMessage = error.response.data.error;
+        errorMessage = error.response.data.message; // Use custom error message if available
       }
   
-      dispatch({
-        type:ASSIGN_WRITER_FAIL,
-        payload: errorMessage,
-      });
-      // Throw the error to be caught in the component
-      throw new Error(errorMessage);
+      // Dispatch action to indicate request failure
+      dispatch({ type: ASSIGN_WRITER_FAIL, payload: errorMessage });
+  
+      // Display error message
+      message.error(errorMessage);
     }
   };
 

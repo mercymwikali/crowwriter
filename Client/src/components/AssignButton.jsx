@@ -3,7 +3,7 @@ import { Button, Form, Input, Modal, Select, message } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listWriters } from "../actions/writersActions";
-import { assignOrder } from "../actions/orderActions";
+import { assignOrder } from "../actions/assigningActions";
 
 const { Option } = Select;
 

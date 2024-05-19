@@ -1,4 +1,4 @@
-import { DELETE_SUBMIT_ORDER_FAIL, DELETE_SUBMIT_ORDER_REQUEST, DELETE_SUBMIT_ORDER_RESET, DELETE_SUBMIT_ORDER_SUCCESS, LIST_SUBMISSIONS_FAIL, LIST_SUBMISSIONS_REQUEST, LIST_SUBMISSIONS_RESET, LIST_SUBMISSIONS_SUCCESS, SUBMIT_ORDER_FAIL, SUBMIT_ORDER_REQUEST, SUBMIT_ORDER_RESET, SUBMIT_ORDER_SUCCESS } from "../constants/submitConstants"
+import { DELETE_SUBMIT_ORDER_FAIL, DELETE_SUBMIT_ORDER_REQUEST, DELETE_SUBMIT_ORDER_RESET, DELETE_SUBMIT_ORDER_SUCCESS, LIST_SUBMISSIONS_FAIL, LIST_SUBMISSIONS_FAIL_WRITER, LIST_SUBMISSIONS_REQUEST, LIST_SUBMISSIONS_REQUEST_WRITER, LIST_SUBMISSIONS_RESET, LIST_SUBMISSIONS_RESET_WRITER, LIST_SUBMISSIONS_SUCCESS, LIST_SUBMISSIONS_SUCCESS_WRITER, SUBMIT_ORDER_FAIL, SUBMIT_ORDER_REQUEST, SUBMIT_ORDER_RESET, SUBMIT_ORDER_SUCCESS } from "../constants/submitConstants"
 
 export const submitOrderReducer = (state = {}, action) => {
     switch (action.type) {
@@ -32,7 +32,21 @@ export const listSubmissionsReducer = (state = { submissions: [] }, action) => {
     }
 }
 
-
+//list submissions by writer reducer
+export const listSubmissionsByWriterReducer = (state = { submissions: [] }, action) => {
+    switch (action.type) {
+        case LIST_SUBMISSIONS_REQUEST_WRITER:
+            return { loading: true }
+        case LIST_SUBMISSIONS_SUCCESS_WRITER:
+            return { loading: false, submissions: action.payload }
+        case LIST_SUBMISSIONS_FAIL_WRITER:
+            return { loading: false, error: action.payload }
+        case  LIST_SUBMISSIONS_RESET_WRITER:
+            return { submissions: [] }
+        default:
+            return state
+    }
+}
 
 
 //delete order reducer
