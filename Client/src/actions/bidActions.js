@@ -136,7 +136,7 @@ export const listWritersBids = () => async (dispatch, getState) => {
     console.log(userId);
 
     const { data } = await axios.get(
-      `${API}/bids/bids/get-writers-bids/${userId}`,
+      `${API}/bids/get-writers-bids/${userId}`,
       config
     );
 

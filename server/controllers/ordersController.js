@@ -88,7 +88,8 @@ const createOrder = asyncHandler(async (req, res) => {
     ) {
       return res
         .status(400)
-        .json({ error: "Please fill in all required fields" });
+        //show the missing fields
+        .json({ error: `${Object.keys(newOrder).join(", ")} are required` });
     }
 
    
@@ -192,7 +193,6 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 //import the orderstatus enum values from the prisma schema
 
-//get the orderstatus enum values from the database
 //get the orderstatus enum values from the database
 const statuses = asyncHandler(async (req, res) => {
   try {

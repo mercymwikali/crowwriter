@@ -1,17 +1,18 @@
-import { Button, Modal, Spin } from 'antd';
+import { Button, Modal, Spin, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { listBidsWithDetails } from '../actions/bidActions';
 import { LoadingOutlined } from '@ant-design/icons';
-import {  assignOrder, createdOrder } from '../actions/orderActions';
+import {   createdOrder } from '../actions/orderActions';
+import { assignOrder } from '../actions/assigningActions';
 
 const ViewBidModal = ({ visible, onCancel, selectedBid }) => {
     const dispatch = useDispatch();
     const bidlistDetails = useSelector(state => state.bidlistDetails);
-    // Add error handling here
     const { loading, error, bids } = bidlistDetails || {};
 
     const [selectedWriterId, setSelectedWriterId] = useState(null);
+    const [selectedOrderId, setSelectedOrderId] = useState(null); // Store the selected order ID
 
     useEffect(() => {
         if (selectedBid) {
@@ -19,35 +20,35 @@ const ViewBidModal = ({ visible, onCancel, selectedBid }) => {
         }
     }, [selectedBid, dispatch]);
 
-    
-    const handleWriterSelection = (writerId) => {
+    const handleWriterSelection = (writerId, orderId) => {
         setSelectedWriterId(writerId);
-        console.log('Selected writer:', writerId);
+        setSelectedOrderId(orderId); // Set the selected order ID
+        console.log("Selected Writer ID:", writerId);
+        console.log("Selected Order ID:", orderId);
     };   
 
     const handleAssignOrder = () => {
-        if (selectedBid && selectedWriterId) {
-            dispatch(assignOrder(selectedBid.orderId, selectedWriterId))
-            onCancel();
+        if (!selectedWriterId || !selectedOrderId) {
+            message.error("Please select a writer and order.");
+            return;
         }
-
-        console.log('Selected writer:', selectedWriterId);
-        console.log('Selected bid:', selectedBid);
+        dispatch(assignOrder(selectedBid.id, selectedWriterId, selectedOrderId));
+        onCancel();
     };
 
 
     return (
         <Modal
-            title="Bids"
-            visible={visible}
-            onCancel={onCancel}
-            style={{ scrollbarColor: 'red', scrollbarWidth: 'thin', overflowY: 'auto' }}
-            width={1000}
-            footer={[
-                <Button key="cancel" onClick={onCancel}>Close</Button>,
-                <Button key="assign" type="primary" onClick={handleAssignOrder}>Assign Order</Button>,
-            ]}
-        >
+        title="Bids"
+        visible={visible}
+        onCancel={onCancel}
+        style={{ scrollbarColor: 'red', scrollbarWidth: 'thin', overflowY: 'auto' }}
+        width={1000}
+        footer={[
+            <Button key="cancel" onClick={onCancel}>Close</Button>,
+            <Button key="assign" type="primary" onClick={handleAssignOrder}>Assign Order</Button>,
+        ]}
+    >
             {loading ? (
                 <div style={{ textAlign: 'center' }}>
                     <Spin
@@ -82,7 +83,7 @@ const ViewBidModal = ({ visible, onCancel, selectedBid }) => {
                                 <td>{bid.status}</td>
                                 <td>{new Date(bid.order.deadline).toLocaleDateString()}</td>
                                 <td className='text-center'>
-                                    <Button type='primary' onClick={() => handleWriterSelection(bid.writer.id)}>Select Writer</Button>                                  
+                                    <Button type="primary" onClick={() => handleWriterSelection(bid.writer.id, bid.order.id)}>Select Writer</Button>
                 
                                 </td>
                             </tr>

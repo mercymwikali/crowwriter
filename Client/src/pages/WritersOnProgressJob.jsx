@@ -31,11 +31,12 @@ const WritersOnProgressJob = () => {
     if (writerId) {
       dispatch(myJobs(writerId));
     }
-  }, [dispatch, writerId]);
+  }, [dispatch, writerId, submitOrderModal, selectedOrder]);
 
   const handleSubmitOrder = (order) => {
     setSelectedOrder(order);
     setSubmitOrderModal(true);
+    
   }
 
   const handleCancel = () => {
@@ -92,13 +93,7 @@ const WritersOnProgressJob = () => {
                     >
                       Submit Order
                     </Button>
-                    <Button 
-                      icon={<DeleteOutlined  />} 
-                      onClick={() => handleSubmitOrder(order)} // Pass the order to handleSubmitOrder
-                      danger
-                    >
-                      Delete 
-                    </Button>
+                    
                   </div>
                 </td>
               </tr>

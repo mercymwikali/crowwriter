@@ -9,7 +9,6 @@ import NewOrder from './pages/NewOrder.jsx';
 import BidsList from './pages/BidsList.jsx';
 import JobsPool from './pages/JobsPool.jsx';
 import WritersOnProgressJob from './pages/WritersOnProgressJob.jsx';
-import CompletedJobs from './pages/CompletedJobs.jsx';
 import RejectedJobs from './pages/RejectedJobs.jsx';
 import WritersTransactions from './pages/WritersTransanction.jsx';
 import RequestPayment from './pages/RequestPayment.jsx';
@@ -21,6 +20,8 @@ import WriterBidList from './pages/WriterBidList.jsx';
 import PrivateRoute from './Auth/PrivateRoute.jsx'; // Import PrivateRoute
 import { ROLES } from './config/role.js';
 import AssignedJobsList from './pages/AssignedJobsList.jsx';
+import WriterSubList from './pages/WriterSubList.jsx';
+import SubmittedJobslist from './pages/SubmittedJobslist.jsx';
 
 const App = () => {
   return (
@@ -37,7 +38,7 @@ const App = () => {
           {/* Index page for Jobs Pool */}
           <Route index element={<JobsPool />} />
           <Route path="jobs-onprogress" element={<WritersOnProgressJob />} />
-          <Route path="completed-jobs" element={<CompletedJobs />} />
+          <Route path="Submitted-jobs" element={<WriterSubList />} />
           <Route path="rejected" element={<RejectedJobs />} />
           <Route path="paid-transactions" element={<WritersTransactions />} />
           <Route path="pending-payments" element={<RequestPayment />} />
@@ -55,6 +56,7 @@ const App = () => {
           <Route path="cancelled-jobs" element={<CancelledJobs />} />
           <Route path="writers-list" element={<WriterList />} />
           <Route path="add-users" element={<AddUser />} />
+          <Route path="Submitted-Jobs" element={<SubmittedJobslist />} />
         </Route>
         {/* Default route */}
         <Route path="*" element={<Navigate to="/login" />} />

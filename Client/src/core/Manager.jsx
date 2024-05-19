@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import { CreditCardOutlined,  EditTwoTone, HourglassOutlined,  MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined, UserAddOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
-import { FaBriefcase, FaCheckCircle, FaClock, FaRegFolderOpen, FaUsers } from "react-icons/fa";
+import { FaBriefcase, FaCheckCircle, FaClock, FaFileArchive, FaRegFolderOpen, FaUsers } from "react-icons/fa";
 import { GiCancel, GiProgression } from "react-icons/gi";
 import { RiFolderWarningLine } from "react-icons/ri";
 import {  MdOutlineCancelPresentation } from "react-icons/md";
@@ -103,6 +103,11 @@ const handleMenuClick = (key) => {
                                     key: 'Assigned-Jobs',
                                     icon: <HourglassOutlined />,
                                     label: 'Assigned Jobs',
+                                },
+                                {
+                                    key: 'Submitted-Jobs',
+                                    icon: <FaFileArchive />,
+                                    label: 'Submitted Jobs',
                                 },
                                 {
                                     key: 'Cancelled-Jobs',

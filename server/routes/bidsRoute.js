@@ -12,7 +12,7 @@ router.route("/get-bid/:id").get(bidController.getBidById);
 router.route("/listBids/:id").get(bidController.getAllBidsForOrder);
 router.route("listbids").get(bidController.getAllBids);
 router.route("/delete-bid/:id").delete(bidController.deleteBid)
-router.route("/bids/get-writers-bids/:writerId").get(bidController.getBidsByWriterId);
+router.route("/get-writers-bids/:writerId").get(bidController.getBidsByWriterId);
 router.route("delete-writer-bids/:writerId").delete(bidController.deleteBidByWriterId);
 
 

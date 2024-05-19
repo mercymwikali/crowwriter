@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createdOrder, listOrderstatusEnums } from '../actions/orderActions';
 import FileUpload from '../components/FileUpload';
 import AssignButton from '../components/AssignButton';
-
+import moment from 'moment';
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -16,75 +16,56 @@ const NewOrder = () => {
   const orderStatus = useSelector(state => state.orderStatus);
   const { orderstatuses } = orderStatus;
 
-  const [newOrder, setNewOrder] = useState({
-    orderId: '',
-    topic: '',
-    discipline: '',
-    service: '',
-    description: '',
-    format: '',
-    noOfPages: '',
-    costPerPage: '',
-    fullAmount: '',
-    deadline: null,
-    remainingTime: '',
-    status: 'PENDING',
-    documentId: '',
-  });
 
   useEffect(() => {
     dispatch(listOrderstatusEnums());
 
   }, [dispatch]);
 
+  const [newOrder, setNewOrder] = useState({
+    orderId:'',
+    topic: '',
+    discipline: '',
+    service: '',
+    format: '',
+    noOfPages: '',
+    costPerPage: '',
+    fullAmount: '',
+    deadline: null,
+    remainingTime: '',
+    documentId: '',
+status: 'PENDING',
+
+  })
+
   const handleChange = (key, value) => {
-    if (key === 'deadline') {
-      // Calculate remaining time when deadline changes
-      const currentTime = new Date();
-      const remainingTimeInMilliseconds = new Date(value) - currentTime;
-      const remainingHours = Math.floor(remainingTimeInMilliseconds / (1000 * 60 * 60));
-      const remainingMinutes = Math.floor((remainingTimeInMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
-      const remainingTimeString = `${remainingHours}hrs ${remainingMinutes}mins`;
-      setNewOrder(prevState => ({ ...prevState, [key]: value, remainingTime: remainingTimeString }));
-    } else {
-      setNewOrder({ ...newOrder, [key]: value });
-    }
+    setNewOrder(prevState => ({ ...prevState, [key]: value }));
+
+    // Add code to handle file upload
+
+  }
+
+  const handleSubmit = () => {
+    dispatch(createdOrder(newOrder));
+
+    // Reset all fields
+    setNewOrder({
+      orderId: '',
+      topic: '',
+      discipline: '',
+      service: '',
+      format: '',
+      noOfPages: '',
+      costPerPage: '',
+      fullAmount: '',
+      deadline: null,
+      remainingTime: '',
+      documentId: '',
+      status: 'PENDING',
+    });
   };
 
 
-  const handleSubmit = async () => {
-    // Handling deadline separately to ensure it's in the correct format
-    const deadlineISOString = newOrder.deadline ? new Date(newOrder.deadline).toISOString() : null;
-  
-    // Creating a new order object with the updated deadline
-    const updatedOrder = {
-      ...newOrder,
-      deadline: deadlineISOString,
-    };
-  
-    // Dispatching the action to create the order with the updated order object
-    dispatch(createdOrder(updatedOrder));
-  
-    // Reset the form after successful creation
-    setTimeout(() => {
-      setNewOrder({
-        orderId: '',
-        topic: '',
-        discipline: '',
-        service: '',
-        description: '',
-        format: '',
-        noOfPages: '',
-        costPerPage: '',
-        fullAmount: '',
-        deadline: null,
-        remainingTime: '',
-        status: 'PENDING',
-        documentId: '',
-      });
-    }, 100);
-  };
-  
   // Function to handle capturing the generated UUID from FileUpload component
   const handleFileUpload = (documentId) => {
     setNewOrder(prevState => ({ ...prevState, documentId: documentId }));
@@ -96,77 +77,51 @@ const NewOrder = () => {
       <h6>Order Requirements</h6>
       <div>
         <Form onFinish={handleSubmit} layout="vertical">
-          <Form.Item label="Order ID" name="orderId" rules={[{ required: true, message: 'Please input the Order ID!' }]}>
-            <Input size="large" placeholder="Enter the Order ID" onChange={(e) => handleChange('orderId', e.target.value)} />
+          <Form.Item label="Order ID">
+            <Input value={newOrder.orderId} onChange={(e) => handleChange('orderId', e.target.value)} />
           </Form.Item>
-          <Form.Item label="Topic" name="topic" rules={[{ required: true, message: 'Please input the Topic!' }]}>
-            <Input size="large" placeholder="Enter the Topic" onChange={(e) => handleChange('topic', e.target.value)} />
+          <Form.Item label="Topic">
+            <Input value={newOrder.topic} onChange={(e) => handleChange('topic', e.target.value)} />
           </Form.Item>
-          <Form.Item label="Discipline" name="discipline" rules={[{ required: true, message: 'Please input the Discipline!' }]}>
-            <Input size="large" placeholder="Enter the Discipline" onChange={(e) => handleChange('discipline', e.target.value)} />
+          <Form.Item label="Discipline">
+            <Input value={newOrder.discipline} onChange={(e) => handleChange('discipline', e.target.value)} />
           </Form.Item>
-          <Form.Item label="Service" name="service" rules={[{ required: true, message: 'Please input the Service!' }]}>
-            <Input size="large" placeholder="Enter the Service" onChange={(e) => handleChange('service', e.target.value)} />
+          <Form.Item label="Service">
+            <Input value={newOrder.service} onChange={(e) => handleChange('service', e.target.value)} />
           </Form.Item>
-          <Form.Item label="Description" name="description">
-            <TextArea
-              showCount
-              placeholder="Description"
-              style={{ height: 120 }}
-              onChange={(e) => handleChange('description', e.target.value)}
-              onScroll={(e) => handleChange('description', e.target.value)}
-            />
+          <Form.Item label="Format">
+            <Input value={newOrder.format} onChange={(e) => handleChange('format', e.target.value)} />
           </Form.Item>
-          <div className="d-block d-md-flex justify-content-between align-items-center">
-            <Form.Item label="Format" name="format" rules={[{ required: true, message: 'Please input the Format!' }]}>
-              <Input size="large" placeholder="Enter the Format" className='col-12  ' onChange={(e) => handleChange('format', e.target.value)} />
-            </Form.Item>
-            <Form.Item label="No of Pages" name="noOfPages" rules={[{ required: true, message: 'Please input the No of Pages!' }]}>
-              <InputNumber size="large" min={0} defaultValue={1} className='col-12  ' onChange={(value) => handleChange('noOfPages', value)} />
-            </Form.Item>
-            <Form.Item label="Cost Per Page" name="costPerPage" rules={[{ required: true, message: 'Please input the Cost Per Page!' }]}>
-              <InputNumber size="large" min={0} defaultValue={0} className='col-12 col-md-auto' onChange={(value) => handleChange('costPerPage', value)} />
-            </Form.Item>
-            <Form.Item label="Full Amount" name="fullAmount" rules={[{ required: true, message: 'Please input the Full Amount!' }]}>
-              <InputNumber size="large" min={0} defaultValue={0} className='col-12 ' onChange={(value) => handleChange('fullAmount', value)} />
-            </Form.Item>
-            <Form.Item label="Deadline" name="deadline" rules={[{ required: true, message: 'Please input the Deadline!' }]}>
-              <DatePicker size="large" onChange={(date, dateString) => handleChange('deadline', dateString)} />
-            </Form.Item>
-
-          </div>
+          <Form.Item label="No of Pages">
+            <InputNumber value={newOrder.noOfPages} onChange={(value) => handleChange('noOfPages', value)} />
+          </Form.Item>
+          <Form.Item label="Cost Per Page">
+            <InputNumber value={newOrder.costPerPage} onChange={(value) => handleChange('costPerPage', value)} />
+          </Form.Item>
+          <Form.Item label="Full Amount">
+            <InputNumber value={newOrder.fullAmount} onChange={(value) => handleChange('fullAmount', value)} />
+          </Form.Item>
+          <Form.Item label="Deadline">
+  <DatePicker
+    value={newOrder.deadline ? moment(newOrder.deadline, 'YYYY-MM-DD') : null}
+    onChange={(date, dateString) => handleChange('deadline', dateString)}
+  />
+</Form.Item>
 
 
-          <Form.Item label="Remaining Time" name="remainingTime">
-            <Input size="large" value={newOrder.remainingTime} onChange={(e) => handleChange('remainingTime', e.target.value)} disabled readOnly />
-          </Form.Item>
-          <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Please input the Status!' }]}>
-            <Select
-              size="large"
-              placeholder="Select Status"
-              onChange={(value) => handleChange('status', value)}
-            >
-              <Option value="PENDING">PENDING</Option>
-              {orderstatuses && orderstatuses.map((status) => (
-                <Option key={status} value={status}>
-                  {status}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
           <div className="div my-3">
             <FileUpload onFileUpload={handleFileUpload} />
           </div>
-         <Form.Item label="Select Writer">
-          <AssignButton/>
+          <Form.Item label="Select Writer">
+            <AssignButton />
           </Form.Item>
-
           <Form.Item>
             <Button type="primary" htmlType="submit" size="large" loading={loading}>
               Create Order
             </Button>
           </Form.Item>
         </Form>
+
       </div>
     </>
   );

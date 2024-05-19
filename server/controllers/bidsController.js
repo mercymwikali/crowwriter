@@ -72,7 +72,7 @@ const getAllBidsForOrder = asyncHandler(async (req, res) => {
     const bids = await prisma.bid.findMany({
       where: {
         orderId: id, // Filter bids based on orderId
-        status: { not: "ASSIGNED" },
+        status: { not: "ASSIGNED" }, // Exclude "assigned" status
       },
       include: {
         order: {
@@ -119,7 +119,9 @@ const getAllBidsWithCountsAndWriters = asyncHandler(async (req, res) => {
   try {
     const bids = await prisma.bid.findMany({
       where: {
-        status: "PENDING" // Only include bids with status "PENDING"
+       order: {
+        status: "PENDING"
+       } 
       },
       include: {
         order: {
@@ -289,6 +291,12 @@ const getBidsByWriterId = asyncHandler(async (req, res) => {
       where: { id: writerId },
       include: {
         bids: {
+          //filter wher order is not assigned and status is pending
+          where: {
+            order: {
+              status: "PENDING"
+            }
+          },
           include: {
             order: {
               select: {

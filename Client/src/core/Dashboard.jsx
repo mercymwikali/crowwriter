@@ -93,9 +93,9 @@ const handleMenuClick = (key) => {
                   label: 'On Progress',
                 },
                 {
-                  key: 'completed-jobs',
+                  key: 'Submitted-jobs',
                   icon: <IoSendSharp />,
-                  label: 'Completed',
+                  label: 'Submitted Jobs',
                 },
                 {
                   key: 'rejected',

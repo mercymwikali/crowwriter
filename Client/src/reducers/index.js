@@ -21,6 +21,8 @@ import {
   ordersListReducer,
 } from "./orderReducer";
 import { bidCreateReducer, bidListDetailsReducer, bidListReducer, deleteBidReducer, writersBidListReducer } from "./bidsReducer";
+import { deleteSubmittedOrderReducer, listSubmissionsReducer, submitOrderReducer } from "./submissionReducer";
+import { deleteAssignedOrderReducer } from "./assignmentReducer";
 
 export const rootReducer = combineReducers({
   userLogin: userLoginReducer,
@@ -43,5 +45,9 @@ export const rootReducer = combineReducers({
   assignedOrdersList:assignedOrdersListReducer,
   myJobs: myJobsListReducer,
   downloadAttachment:downloadAttachmentReducer,
+  submitOrder:submitOrderReducer,
+  deleteSubmittedOrder:deleteSubmittedOrderReducer,
+  deleteAssignedOrderList:deleteAssignedOrderReducer,
+  listSubmission:listSubmissionsReducer,
 
 });

@@ -5,9 +5,7 @@ const router = express.Router();
 const submitJob = require("../controllers/submissionsController");
 const path = require("path");
 const { verifyJwt } = require("../middleware/verifyJwt");
-const { v4: uuidv4 } = require('uuid'); // Import uuidv4 function
-
-
+const { v4: uuidv4 } = require('uuid');
 
 // Multer configuration
 const storage = multer.diskStorage({
@@ -41,15 +39,22 @@ const upload = multer({
   },
 });
 
-
 // Route for submitting a job
-router.post('/submit', submitJob.submitJob);
+router.post('/submit-order', submitJob.submitJob);
 
+// Route for uploading job documents
 router.post('/job-docs', upload.single('file'), submitJob.uploadJobSubmission);
-//fetch all jobs
-router.get("/fetch-jobs-docs", submitJob.getSubmittedDocuments );
 
-//fetch job by id
-router.get("/fetch-job-docs/:id", submitJob.downloadJobSubmission );
+// Route for fetching all job documents
+router.get('/fetch-jobs-docs', submitJob.getSubmittedDocuments);
+
+// Route for fetching job documents by writer ID
+router.get('/fetch-jobs-docs/writer/:writerId', submitJob.getSubmittedDocumentsByWriter);
+
+// Route for downloading job documents by document ID
+router.get('/fetch-job-docs/:documentId', submitJob.downloadJobSubmission);
+
+// Route for deleting a submitted order by ID
+router.delete('/delete-order/:id', submitJob.deleteSubmittedOrder);
 
 module.exports = router;

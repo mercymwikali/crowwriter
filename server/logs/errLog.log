@@ -177,3 +177,6 @@ Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31
 20240515	17:10:46	9c8c15ef-f1af-468b-8f44-f33f438d7ad2	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
 20240515	17:12:06	d034c04f-d8de-4b7a-bb93-dd1ab7dc18b3	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
 20240515	17:13:26	156d80b8-99d0-4e96-becd-6e0e6a3de07e	MulterError: Unexpected field	POST	/submitJob/job-docs	undefined
+20240515	20:06:09	b9985cd4-2b4e-4f3a-8262-e41376a08bd2	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240519	16:45:16	a386bd0c-1b71-407b-a2e6-1143231c220a	undefined: undefined	POST	/submitJob/job-docs	http://localhost:5173
+20240519	19:12:05	8b18e415-0901-484c-b9c8-2207062f5c39	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173

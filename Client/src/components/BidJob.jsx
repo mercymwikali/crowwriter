@@ -18,6 +18,8 @@ const BidJobModal = ({ visible, onCancel, bidJob }) => {
     if (userInfo) {
       dispatch(createBid(bidJob.id, userInfo.UserInfo.id)); // Pass user ID as a parameter
     }
+
+    onCancel();
   };
 
   return (

@@ -20,7 +20,7 @@ const WriterBidList = () => {
 
     useEffect(() => {
         dispatch(listWritersBids());
-    }, [dispatch]);
+    }, [dispatch, successDelete]);
 
     const handleViewJob = (bid) => {
         setSelectedBid(bid);
@@ -33,7 +33,6 @@ const WriterBidList = () => {
 
     const handleDeleteBid = (bid) => {
         setSelectedBid(bid);
-        console.log(bid);
         setDeleteModalVisible(true);
     }
 
@@ -59,41 +58,45 @@ const WriterBidList = () => {
             ) : error ? (
                 message.error(error)
             ) : (
-                <table className="table table-hover table-responsive">
-                    <thead>
-                        <tr>
-                            <th scope='col'>#</th>
-                            <th scope='col'>OrderId</th>
-                            <th scope='col'>Topic</th>
-                            <th scope='col'>Full Amount(Ksh)</th>
-                            <th scope='col'>Deadline</th>
-                            <th scope='col'>Remaining Time</th>
-                            <th scope='col'>Status</th>
-                            <th scope='col'>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {bids && bids.length > 0 && bids.map((bid, index) => (
-                            <tr key={index}>
-                                <td>{index + 1}.</td>
-                                <td>{bid.order.orderId}</td>
-                                <td>{bid.order.topic}</td>
-                                <td>{bid.order.fullAmount}</td>
-                                <td>{new Date(bid.order.deadline).toDateString()}</td>
-                                <td>{bid.order.remainingTime}</td>
-                                <td>{bid.order.status}</td>
-                                <td>
-                                    <Tooltip title="View Details">
-                                        <Button type='primary' icon={<FaEye />} onClick={() => handleViewJob(bid)} />
-                                    </Tooltip>
-                                    <Tooltip title="Delete">
-                                        <Button type='danger' icon={<DeleteOutlined />} onClick={() => handleDeleteBid(bid)} />
-                                    </Tooltip>
-                                </td>
+                bids && bids.length > 0 ? (
+                    <table className="table table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th scope='col'>#</th>
+                                <th scope='col'>OrderId</th>
+                                <th scope='col'>Topic</th>
+                                <th scope='col'>Full Amount(Ksh)</th>
+                                <th scope='col'>Deadline</th>
+                                <th scope='col'>Remaining Time</th>
+                                <th scope='col'>Status</th>
+                                <th scope='col'>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {bids.map((bid, index) => (
+                                <tr key={index}>
+                                    <td>{index + 1}.</td>
+                                    <td>{bid.order.orderId}</td>
+                                    <td>{bid.order.topic}</td>
+                                    <td>{bid.order.fullAmount}</td>
+                                    <td>{new Date(bid.order.deadline).toDateString()}</td>
+                                    <td>{bid.order.remainingTime}</td>
+                                    <td>{bid.order.status}</td>
+                                    <td>
+                                        <Tooltip title="View Details">
+                                            <Button type='primary' icon={<FaEye />} onClick={() => handleViewJob(bid)} />
+                                        </Tooltip>
+                                        <Tooltip title="Delete">
+                                            <Button type='danger' icon={<DeleteOutlined />} onClick={() => handleDeleteBid(bid)} />
+                                        </Tooltip>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p>No jobs to be bid</p>
+                )
             )}
 
             {/* View Modal */}
@@ -107,7 +110,6 @@ const WriterBidList = () => {
                     </Button>
                 ]}
             >
-                {/* Render bid details here */}
                 {selectedBid && (
                     <div>
                         <p>Order ID: {selectedBid.order.orderId}</p>

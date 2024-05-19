@@ -88,16 +88,15 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
                 placeholder="Select a writer"
                 optionFilterProp="children"
                 onChange={(value) => setSelectedWriterId(value)}
-                
+
                 onSearch={handleSearch}
                 filterOption={false} // Disable Antd's built-in filter option as we're handling it in handleSearch
               >
-                {writerslist &&
-                  writerslist.map((writer) => (
-                    <Option key={writer.id} value={writer.id} className="w-100">
-                      {writer.username}
-                    </Option>
-                  ))}
+                {writerslist.map((writer) => (
+                  <Option key={writer.id} value={writer.id}>
+                    {writer.username}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           </div>
