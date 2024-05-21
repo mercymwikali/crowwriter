@@ -44,7 +44,7 @@ const App = () => {
           <Route path="paid-transactions" element={<WritersTransactions />} />
           <Route path="pending-payments" element={<RequestPayment />} />
           <Route path="writer-bids-list" element={<WriterBidList />} />
-          <Route path="my-profile" element={<Profile />} />
+          <Route path="my-profile" element={<Profile  />} exact />
         </Route>
         <Route
           path="/manager/*"
@@ -59,6 +59,8 @@ const App = () => {
           <Route path="writers-list" element={<WriterList />} />
           <Route path="add-users" element={<AddUser />} />
           <Route path="Submitted-Jobs" element={<SubmittedJobslist />} />
+          <Route path="my-profile" element={<Profile  />} exact />
+
         </Route>
         {/* Default route */}
         <Route path="*" element={<Navigate to="/login" />} />

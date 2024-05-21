@@ -141,7 +141,7 @@ const handleMenuClick = (key) => {
                         },
                         {
                             key: '/Manage Writers',
-                            icon: <UserOutlined />,
+                            icon: <FaUsers size={20} />,
                             label: 'Manage Writers',
                             children: [
                                 {
@@ -163,9 +163,16 @@ const handleMenuClick = (key) => {
                                     key: 'Rejected Writers',
                                     icon: <GiCancel />,
                                     label: 'Rejected Writers',
-                                }
+                                },
+                                
                             ]
+                            
                         },
+                        {
+                            key: 'my-profile',
+                            icon: <UserOutlined />,
+                            label: 'My Profile',
+                          }
                     ]}
                 />      </Sider>
             <Layout>
