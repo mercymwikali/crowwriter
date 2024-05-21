@@ -45,16 +45,14 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
     setLoadingAssign(true); // Set loading state while assigning
 
     try {
-      // Dispatch action to assign order
       await dispatch(assignOrder(selectedorder.id, selectedWriterId));
-      onCancel(); // Close the modal after assigning
+      onCancel();
     } catch (error) {
-      console.error("Error assigning order:", error.message);
-      setErrorMessage(error.message); // Set error message state
-      message.error(error.message);
+      setErrorMessage(error.message);
     } finally {
-      setLoadingAssign(false); // Reset loading state
+      setLoadingAssign(false); // Reset loading state after assigning
     }
+   
   };
 
   return (
@@ -92,7 +90,7 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
                 onSearch={handleSearch}
                 filterOption={false} // Disable Antd's built-in filter option as we're handling it in handleSearch
               >
-                {writerslist.map((writer) => (
+                {writerslist && writerslist.length > 0 && writerslist.map((writer) => (
                   <Option key={writer.id} value={writer.id}>
                     {writer.username}
                   </Option>

@@ -19,7 +19,7 @@ const BidsList = () => {
 
   useEffect(() => {
     dispatch(listBids());
-  }, [dispatch, viewBids, selectedBid, error]);
+  }, [dispatch, ]);
 
   const handleViewBids = (order) => {
     setSelectedBid(order);

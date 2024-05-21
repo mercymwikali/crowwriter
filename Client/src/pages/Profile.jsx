@@ -1,40 +1,40 @@
-import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Card, Space, Typography } from 'antd'
+import { UserOutlined, WalletOutlined } from '@ant-design/icons'
+import { Avatar, Card, Space, Tabs, Typography, Input } from 'antd'
 import React from 'react'
 
 const Profile = () => {
     return (
         <div>
             <Typography.Title level={2}>Profile</Typography.Title>
-            <Card>
-                <Space>
+            <Card className='mb-3'>
+                <Space direction="vertical">
                     <Avatar icon={<UserOutlined />} size={100} />
-                    <div className="div">
-                        <Typography.Title level={5}>Username</Typography.Title>
-                        <Typography.Text>Email</Typography.Text>
-                    </div>
+                    <Space direction="" size={20} align="center">
+                        <Tabs defaultActiveKey="1">
+                            <Tabs.TabPane tab="Profile" key="1">
+                                <Space direction="horizontal">
+                                    <Typography.Text>Full Name:</Typography.Text>
+                                    <Input placeholder="Mary Jane" color='primary' readOnly bordered={false} />
+                                    <Typography.Text>Email:</Typography.Text>
+                                    <Input placeholder="Enter your email" readOnly bordered={false} />
+                                </Space>
+                              
+                            </Tabs.TabPane>
+                            <Tabs.TabPane tab="Bio" key="2">
+                            <Space direction="vertical">
+                                    <Typography.Text>Bio:</Typography.Text>
+                                    <Input.TextArea placeholder="Enter your bio" className='w-100' readOnly bordered={false} />
+                                </Space>
+                            </Tabs.TabPane>
+                            <Tabs.TabPane tab="E-Wallet" key="3">
+                                <Space direction="vertical">
+                                    <Typography.Title level={5}>Balance</Typography.Title>
+                                    <Typography.Text>Transaction History</Typography.Text>
+                                </Space>
+                            </Tabs.TabPane>
+                        </Tabs>
+                    </Space>
                 </Space>
-            </Card>
-            <Typography.Title level={3} style={{ marginTop: '20px' }}>E-Wallet</Typography.Title>
-            <Card style={{ width: '400px', marginTop: '20px', backgroundColor: 'grey', color: 'white' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <h1 style={{ fontSize: '24px', marginBottom: '10px' }}>Your E-Wallet</h1>
-                    <h2 style={{ fontSize: '18px', marginBottom: '20px' }}>Available Balance: $5000</h2>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <div>
-                            <p style={{ marginBottom: '5px' }}>Card Number</p>
-                            <h3 style={{ marginBottom: '20px' }}>**** **** **** 1234</h3>
-                            <p style={{ marginBottom: '5px' }}>Expiry Date</p>
-                            <h3 style={{ marginBottom: '20px' }}>09/24</h3>
-                        </div>
-                        <div>
-                            <p style={{ marginBottom: '5px' }}>Card Holder</p>
-                            <h3 style={{ marginBottom: '20px' }}>John Doe</h3>
-                            <p style={{ marginBottom: '5px' }}>CVV</p>
-                            <h3 style={{ marginBottom: '20px' }}>123</h3>
-                        </div>
-                    </div>
-                </div>
             </Card>
         </div>
     )

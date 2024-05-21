@@ -106,7 +106,7 @@ const Allorders = () => {
 
   return (
     <>
-      <h1 className='text-success'>Listed orders</h1>
+      <h1 className='text-success'>All orders</h1>
       <div className="d-block d-md-flex gap-4 justify-content-between align-items-center">
         <h4><Link className='btn btn-success' to="/" type='button'>Create New Order</Link></h4>
       </div>

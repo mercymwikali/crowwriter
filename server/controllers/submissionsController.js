@@ -127,7 +127,7 @@ const getSubmittedDocumentsByWriter = asyncHandler(async (req, res) => {
   try {
     const { writerId } = req.params;
     const submissions = await prisma.submittedOrder.findMany({
-      where: { submittedById: writerId },
+      where: { submittedById: writerId, status: "SUBMITTED" },
       include: {
         order: {
           select: {

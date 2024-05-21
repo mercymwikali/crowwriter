@@ -4,10 +4,13 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const { OrderStatus } = require("@prisma/client");
 
-// Get all orders
+// Get all unassigned pending orders
 const getAllOrders = asyncHandler(async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
+      where: {
+        status: "PENDING",
+      },
       select: {
         id: true,
         orderId: true,
@@ -34,14 +37,6 @@ const getAllOrders = asyncHandler(async (req, res) => {
       },
     });
 
-    // Iterate over orders to update status if there is no signed user
-    orders.forEach((order) => {
-      if (!order.writer) {
-        order.status = "PENDING"; // Set status to "PENDING" if no signed user
-      }
-    });
-
-    // If no orders, return 404 status error
     if (!orders || orders.length === 0) {
       return res.status(404).json({ error: "No orders found" });
     }
@@ -52,6 +47,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Error retrieving orders" });
   }
 });
+
 
 // Create an order
 // Create an order
