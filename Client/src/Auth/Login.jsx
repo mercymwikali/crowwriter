@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Card, Typography, Form, Input, Button, Alert, Spin } from 'antd';
+import RegisterImage from '../assets/RegisterImage.jpg';
+
+import { Card, Typography, Form, Input, Button, Alert, Spin, Flex } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../actions/userActions';
 import { LoadingOutlined } from '@ant-design/icons';
-import { jwtDecode } from 'jwt-decode';
-import RegisterImage from '../assets/RegisterImage.jpg';
+import {jwtDecode} from 'jwt-decode';
 
 const Login = () => {
     const userRef = useRef();
     const [email, setEmail] = useState('test@email.com');
-    const [password, setPassword] = useState('test1453');
+    const [password, setPassword] = useState('test123');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -48,12 +49,11 @@ const Login = () => {
 
     return (
         <Card className='form-container mt-5'>
-            <div style={{ display: 'flex', gap: 'large', alignItems: 'center' }}>
-                {/* Image */}
-                <div style={{ flex: 1, display: 'none', md: 'block' }}>
+            <Flex gap="large" align='center'>
+                {/* image */}
+                <Flex flex={1} className='d-none d-md-block'>
                     <img src={RegisterImage} className='auth-image' alt="Register" />
-                </div>
-                {/* Form */}
+                </Flex>
                 <div style={{ flex: 1 }}>
                     <Typography.Title level={3} strong className='title'> Sign In</Typography.Title>
                     <Typography.Text type='secondary' strong className='slogan'>Our service to Humanity</Typography.Text>
@@ -112,7 +112,7 @@ const Login = () => {
                         </div>
                     </Form>
                 </div>
-            </div>
+            </Flex>
         </Card>
     );
 };
