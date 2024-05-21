@@ -21,7 +21,7 @@ import {
   ordersListReducer,
 } from "./orderReducer";
 import { bidCreateReducer, bidListDetailsReducer, bidListReducer, deleteBidReducer, writersBidListReducer } from "./bidsReducer";
-import { deleteSubmittedOrderReducer, listSubmissionsByWriterReducer, listSubmissionsReducer, submitOrderReducer } from "./submissionReducer";
+import { deleteSubmittedOrderReducer, downloadSubmissionReducer, listSubmissionsByWriterReducer, listSubmissionsReducer, submitOrderReducer } from "./submissionReducer";
 import { deleteAssignedOrderReducer } from "./assignmentReducer";
 
 export const rootReducer = combineReducers({
@@ -50,5 +50,6 @@ export const rootReducer = combineReducers({
   deleteAssignedOrderList:deleteAssignedOrderReducer,
   listSubmission:listSubmissionsReducer,
   submissionByWriter:listSubmissionsByWriterReducer,
+  downloadSubmission:downloadSubmissionReducer,
 
 });

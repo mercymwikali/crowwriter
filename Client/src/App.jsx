@@ -22,6 +22,7 @@ import { ROLES } from './config/role.js';
 import AssignedJobsList from './pages/AssignedJobsList.jsx';
 import WriterSubList from './pages/WriterSubList.jsx';
 import SubmittedJobslist from './pages/SubmittedJobslist.jsx';
+import Profile from './pages/Profile.jsx';
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="paid-transactions" element={<WritersTransactions />} />
           <Route path="pending-payments" element={<RequestPayment />} />
           <Route path="writer-bids-list" element={<WriterBidList />} />
+          <Route path="my-profile" element={<Profile />} />
         </Route>
         <Route
           path="/manager/*"

@@ -117,7 +117,7 @@ const getAssignedOrdersWithWriterId = asyncHandler(async (req, res) => {
     const assignedOrders = await prisma.assignment.findMany({
       where: {
         userId: writerId,
-        order: { status: { not: "SUBMITTED" } },
+        order: { status:"ASSIGNED" },
       },
       include: {
         order: {

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Skeleton, Tooltip, Typography, Button, message } from 'antd';
 import { CloudDownloadOutlined, DeleteOutlined } from '@ant-design/icons';
-import { downloadOrderAttachment } from '../actions/orderActions';
-import { listWritersSubmissions } from '../actions/submitAction';
+import { downloadSubmission, listWritersSubmissions, deleteOrder } from '../actions/submitAction';
 import useAuth from '../hooks/useAuth';
 import SubmitOrder from '../components/SubmitOrder';
 import DeleteOrderModal from '../components/DeletedSubmission';
@@ -21,11 +20,13 @@ const WriterSubList = () => {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
-    const handleDownload = async (order) => {
+    const handleDownload = async (documentId) => {
         try {
-            await dispatch(downloadOrderAttachment(order.documentId, order.orderId));
+            if (documentId) {
+                await dispatch(downloadSubmission(documentId));
+            }
         } catch (error) {
-            message.error('Failed to download attachment');
+            message.error("Failed to download file");
         }
     };
 
@@ -49,9 +50,14 @@ const WriterSubList = () => {
         setSubmitOrderModal(false);
     };
 
+    const handleDelete = (submission) => {
+        setSelectedOrder(submission);
+        setDeleteModalVisible(true);
+    };
+
     return (
         <>
-            <Typography.Title>Submitted Jobs </Typography.Title>
+            <Typography.Title>Submitted Jobs</Typography.Title>
             {loading ? (
                 <Skeleton active />
             ) : error ? (
@@ -64,9 +70,9 @@ const WriterSubList = () => {
                             <th scope="col">OrderId</th>
                             <th scope="col">Topic</th>
                             <th scope="col">Full Amount (ksh)</th>
-                            <th scope='col'>Due Date</th>
+                            <th scope="col">Due Date</th>
                             <th scope="col">Status</th>
-                            <th scope='col' className='text-center'>Attachment</th>
+                            <th scope="col" className='text-center'>Attachment</th>
                             <th scope="col" className='text-center'>Actions</th>
                         </tr>
                     </thead>
@@ -83,7 +89,7 @@ const WriterSubList = () => {
                                     <Tooltip title="Download Attachment File">
                                         <Button
                                             type="primary"
-                                            onClick={() => handleDownload(submission)}
+                                            onClick={() => handleDownload(submission.documentId)}
                                         >
                                             <CloudDownloadOutlined style={{ marginRight: '5px', fontSize: '20px' }} />
                                         </Button>
@@ -94,10 +100,7 @@ const WriterSubList = () => {
                                         <Button
                                             icon={<DeleteOutlined />}
                                             danger
-                                            onClick={() => {
-                                                setSelectedOrder(submission);
-                                                setDeleteModalVisible(true);
-                                            }}
+                                            onClick={() => handleDelete(submission)}
                                         >
                                             Delete
                                         </Button>
@@ -114,8 +117,6 @@ const WriterSubList = () => {
             <DeleteOrderModal
                 visible={deleteModalVisible}
                 onCancel={() => setDeleteModalVisible(false)}
-                orderId={selectedOrder?.id || null}
-                onSubmit={() => setDeleteModalVisible(false)}
                 selectedOrder={selectedOrder}
             />
         </>

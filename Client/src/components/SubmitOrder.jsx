@@ -17,7 +17,6 @@ const SubmitOrder = ({ visible, onCancel, selectedOrder }) => {
     const { UserInfo } = useAuth();
     const writerId = UserInfo ? UserInfo.id : null;
 
-
     useEffect(() => {
         if (success) {
             message.success(success);
@@ -34,7 +33,7 @@ const SubmitOrder = ({ visible, onCancel, selectedOrder }) => {
     }, [success, error, deleteSuccess, deleteError, onCancel]);
 
     const handleOrderSubmit = () => {
-        if (selectedOrder && selectedOrder.orderId && documentId && writerId) {
+        if (selectedOrder && selectedOrder.order.orderId && documentId && writerId) {
             dispatch(submitOrder(selectedOrder.orderId, writerId, documentId));
         } else {
             if (!documentId) message.error('Please upload at least one document.');
@@ -60,31 +59,31 @@ const SubmitOrder = ({ visible, onCancel, selectedOrder }) => {
                     </Button>,
                     <Button key="cancel" onClick={onCancel}>Cancel</Button>
                 ]}
-            >
-                {selectedOrder && selectedOrder.orderId ? (
-                    <>
-                        <Form.Item>
-                            <Typography.Text strong>Order ID:</Typography.Text>
-                            <Input value={selectedOrder.order.orderId} readOnly />
-                        </Form.Item>
-                        <Form.Item>
-                            <Typography.Text strong>Topic:</Typography.Text>
-                            <Input value={selectedOrder.order.topic} readOnly />
-                        </Form.Item>
-                        <Form.Item>
-                            <Typography.Text strong>Full Amount (ksh):</Typography.Text>
-                            <Input value={selectedOrder.order.fullAmount} readOnly />
-                        </Form.Item>
-                        <div className="my-3">
-                            <Typography.Text strong>Submit Documents:</Typography.Text>
-                            <SubmitDocs onSubmitDocs={onDocumentUpload} />
-                        </div>
-                    </>
-                ) : null}
+            >{selectedOrder && selectedOrder.order ? (
+                <>
+                    <Form.Item>
+                        <Typography.Text strong>Order ID:</Typography.Text>
+                        <Input value={selectedOrder.order.orderId} readOnly />
+                    </Form.Item>
+                    <Form.Item>
+                        <Typography.Text strong>Topic:</Typography.Text>
+                        <Input value={selectedOrder.order.topic} readOnly />
+                    </Form.Item>
+                    <Form.Item>
+                        <Typography.Text strong>Full Amount (ksh):</Typography.Text>
+                        <Input value={selectedOrder.order.fullAmount} readOnly />
+                    </Form.Item>
+                    <div className="my-3">
+                        <Typography.Text strong>Submit Documents:</Typography.Text>
+                        <SubmitDocs onSubmitDocs={onDocumentUpload} />
+                    </div>
+                </>
+            ) : null}
+            
             </Modal>
             <DeleteOrderModal visible={deleteModalVisible}
                 onCancel={() => setDeleteModalVisible(false)}
-                orderId={selectedOrder ? selectedOrder.orderId : null} />
+                selectedOrder={selectedOrder}/>
         </>
     );
 };

@@ -1,8 +1,8 @@
 import { Skeleton, Typography, message, Tag, Button, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { listSubmissions } from '../actions/submitAction';
-import { EditFilled, EditTwoTone } from '@ant-design/icons';
+import { downloadSubmission, listSubmissions } from '../actions/submitAction';
+import { CloudDownloadOutlined, EditFilled, EditTwoTone } from '@ant-design/icons';
 
 const SubmittedJobsList = () => {
     const dispatch = useDispatch();
@@ -11,7 +11,16 @@ const SubmittedJobsList = () => {
 
     useEffect(() => {
         dispatch(listSubmissions());
-    }, [dispatch, success]);
+    }, [dispatch, success, error]);
+
+
+    const handleDownload = async (documentId) => {
+        try {
+            await dispatch(downloadSubmission(documentId));
+        } catch (error) {
+            message.error('Failed to download attachment');
+        }
+    };
 
     return (
         <div>
@@ -53,8 +62,14 @@ const SubmittedJobsList = () => {
                                     <td>{submission.submittedBy}</td>
                                     <td>{new Date(submission.submissionDate).toLocaleDateString()}</td>
                                     <td className='text-center'>
-                                        <Button type="default" style={{ borderColor: 'green', color: 'green' }} onClick={() => window.open(submission.attachment)}>Download</Button>
-                                    </td>
+                                    <Tooltip title="Download Attachment File">
+                                        <Button
+                                            type="primary"
+                                            onClick={() => handleDownload(submission.documentId)}
+                                        >
+                                            <CloudDownloadOutlined style={{ marginRight: '5px', fontSize: '20px' }} />
+                                        </Button>
+                                    </Tooltip>                                    </td>
                                     <td className='text-center'>
                                         <Tooltip title='Approve Order'>
                                             <Button type='primary'>

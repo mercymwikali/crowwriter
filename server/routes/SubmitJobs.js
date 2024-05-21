@@ -7,6 +7,7 @@ const path = require("path");
 const { verifyJwt } = require("../middleware/verifyJwt");
 const { v4: uuidv4 } = require('uuid');
 
+
 // Multer configuration
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -16,7 +17,6 @@ const storage = multer.diskStorage({
     const documentId = uuidv4(); // Generate UUID
     const originalFileName = file.originalname.replace(/\s/g, ''); // Remove spaces from the original filename
     const uniqueFileName = `${documentId}-${originalFileName}`;
-    console.log('Generated Unique Filename:', uniqueFileName); // Log the unique filename to the console
     cb(null, uniqueFileName);
   },
 });
@@ -43,8 +43,7 @@ const upload = multer({
 router.post('/submit-order', submitJob.submitJob);
 
 // Route for uploading job documents
-router.post('/job-docs', upload.single('file'), submitJob.uploadJobSubmission);
-
+router.post('/job-docs', upload.single('files'), submitJob.uploadJobSubmission);  // Ensure 'files' is used here
 // Route for fetching all job documents
 router.get('/fetch-jobs-docs', submitJob.getSubmittedDocuments);
 

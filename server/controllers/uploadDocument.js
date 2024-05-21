@@ -60,7 +60,7 @@ const uploadDocument = asyncHandler(async (req, res) => {
     //send the document id back to the client
 
     console.log(documentId);
-    res.status(200).json({ success: true, message: "Document uploaded successfully", filename: filename, documentId: documentId });
+    res.status(200).json({ success: true, message: "Document uploaded successfully", documentId, filename });
 
 
   } catch (error) {

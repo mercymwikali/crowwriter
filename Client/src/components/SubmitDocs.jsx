@@ -14,7 +14,7 @@ const SubmitDocs = ({ onSubmitDocs }) => {
     const { userInfo } = userLogin;
 
     const props = {
-        name: 'file',
+        name: 'files',  // Update this to match the field name expected by the server
         multiple: true,
         action: `${API}/submitJob/job-docs`,
         headers: {
@@ -41,6 +41,8 @@ const SubmitDocs = ({ onSubmitDocs }) => {
                 message.success(`${info.file.name} file uploaded successfully.`);
                 if (response && response.documentId) {
                     onSubmitDocs(response.documentId);
+                } else if (response && response.data && response.data.documentId) {
+                    onSubmitDocs(response.data.documentId);
                 } else {
                     message.error('Failed to retrieve documentId from the response.');
                 }
@@ -53,7 +55,7 @@ const SubmitDocs = ({ onSubmitDocs }) => {
             setProgress(percent);
         }
     };
-
+    
     return (
         <div>
             <Dragger {...props}>

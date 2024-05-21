@@ -5,19 +5,16 @@ import { deleteOrder } from '../actions/submitAction';
 
 const DeleteOrderModal = ({ visible, onCancel, selectedOrder }) => {
   const dispatch = useDispatch();
-  const { loading } = useSelector(state => state.deleteSubmittedOrder);
-  
+  const { loading } = useSelector((state) => state.deleteSubmittedOrder);
 
   const handleDelete = () => {
-    dispatch(deleteOrder(selectedOrder.order.id))
-      .then(() => {
-        message.success('Order deleted successfully');
+    if (selectedOrder && selectedOrder.id) {
+      dispatch(deleteOrder(selectedOrder.id)).then(() => {
         onCancel();
-      })
-      .catch((error) => {
-        message.error('Failed to delete order');
-        console.error('Error deleting order:', error);
       });
+    } else {
+      message.error('Selected order is invalid');
+    }
   };
 
   return (

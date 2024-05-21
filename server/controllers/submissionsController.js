@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 const fs = require("fs");
 const path = require("path");
 
+//get mime type
+
 const submitJob = asyncHandler(async (req, res) => {
   try {
     const { orderId, writerId, documentId } = req.body;
@@ -16,17 +18,17 @@ const submitJob = asyncHandler(async (req, res) => {
     });
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
 
     // Check if the order is already submitted
-    if (order.status === 'SUBMITTED') {
-      return res.status(400).json({ message: 'Order already submitted' });
+    if (order.status === "SUBMITTED") {
+      return res.status(400).json({ message: "Order already submitted" });
     }
 
     // Check if the order is assigned
-    if (order.status !== 'ASSIGNED') {
-      return res.status(400).json({ message: 'Order not assigned' });
+    if (order.status !== "ASSIGNED") {
+      return res.status(400).json({ message: "Order not assigned" });
     }
 
     // Check if the writer exists and if they are active
@@ -36,11 +38,11 @@ const submitJob = asyncHandler(async (req, res) => {
     });
 
     if (!writer) {
-      return res.status(404).json({ message: 'Writer not found' });
+      return res.status(404).json({ message: "Writer not found" });
     }
 
     if (!writer.active) {
-      return res.status(400).json({ message: 'Writer not active' });
+      return res.status(400).json({ message: "Writer not active" });
     }
 
     // Create a new submission
@@ -50,32 +52,30 @@ const submitJob = asyncHandler(async (req, res) => {
         submittedById: writerId,
         documentId,
         submissionDate: new Date(),
-        status: 'SUBMITTED',
+        status: "SUBMITTED",
       },
     });
 
     // Update the order status to SUBMITTED
     await prisma.order.update({
       where: { id: orderId },
-      data: { status: 'SUBMITTED' },
+      data: { status: "SUBMITTED" },
     });
 
-    return res.status(200).json({
-      message: 'Job Submitted successfully',
-      data: newSubmission,
-    });
+   //success message should be in the data response
+
+    return res.status(200).json({ success: true, message: "Job submitted successfully", newSubmission });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "Server error" });
   }
 });
-
 
 // get all submitted documents
 const getSubmittedDocuments = asyncHandler(async (req, res) => {
   try {
     const submissions = await prisma.submittedOrder.findMany({
-      where: { status: 'SUBMITTED' },
+      where: { status: "SUBMITTED" },
       include: {
         order: {
           select: {
@@ -96,7 +96,7 @@ const getSubmittedDocuments = asyncHandler(async (req, res) => {
       },
     });
 
-    const documents = submissions.map(sub => ({
+    const documents = submissions.map((sub) => ({
       documentId: sub.documentId,
       orderId: sub.order.orderId,
       topic: sub.order.topic,
@@ -108,7 +108,10 @@ const getSubmittedDocuments = asyncHandler(async (req, res) => {
       submittedByEmail: sub.submittedBy.email,
       submissionDate: sub.submissionDate,
       documentStatus: sub.status,
-      filePath: path.join(__dirname, `../uploads/jobSubmission/${sub.documentId}`),
+      filePath: path.join(
+        __dirname,
+        `../uploads/jobSubmission/${sub.documentId}`
+      ),
     }));
 
     return res.status(200).json({ success: true, documents });
@@ -117,7 +120,6 @@ const getSubmittedDocuments = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-
 
 // get all submitted documents by writer ID
 
@@ -129,6 +131,7 @@ const getSubmittedDocumentsByWriter = asyncHandler(async (req, res) => {
       include: {
         order: {
           select: {
+            id: true,
             orderId: true,
             topic: true,
             noOfPages: true,
@@ -146,7 +149,8 @@ const getSubmittedDocumentsByWriter = asyncHandler(async (req, res) => {
       },
     });
 
-    const documents = submissions.map(sub => ({
+    const documents = submissions.map((sub) => ({
+      id: sub.id,
       documentId: sub.documentId,
       orderId: sub.order.orderId,
       topic: sub.order.topic,
@@ -158,7 +162,10 @@ const getSubmittedDocumentsByWriter = asyncHandler(async (req, res) => {
       submittedByEmail: sub.submittedBy.email,
       submissionDate: sub.submissionDate,
       documentStatus: sub.status,
-      filePath: path.join(__dirname, `../uploads/jobSubmission/${sub.documentId}`),
+      filePath: path.join(
+        __dirname,
+        `../uploads/jobSubmission/${sub.documentId}`
+      ),
     }));
 
     return res.status(200).json({ success: true, documents });
@@ -183,6 +190,9 @@ const uploadJobSubmission = asyncHandler(async (req, res) => {
       filename,
       documentId,
     });
+
+    console.log(filename.body);
+    console.log(documentId.body);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
@@ -195,64 +205,86 @@ const downloadJobSubmission = asyncHandler(async (req, res) => {
     const filePath = path.join(__dirname, `../uploads/jobSubmission/${documentId}`);
 
     if (!fs.existsSync(filePath)) {
-      console.error(`File not found: ${filePath}`);
       return res.status(404).json({ error: "File not found" });
     }
 
-    console.log(`Downloading file: ${filePath}`);
-    res.setHeader("Content-Disposition", `attachment; filename="${documentId}"`);
-    res.setHeader("Content-Type", "application/pdf"); // Adjust content type based on file type if needed
+    const actualFileName = documentId.split('-').slice(1).join('-'); // Assuming documentId is in the format UUID-FileName
+
+    // Set appropriate headers for file download
+    res.setHeader('Content-Disposition', `attachment; filename="${actualFileName}"`);
+    res.setHeader('Content-Type', 'application/pdf'); // Set the content type to PDF
 
     const fileStream = fs.createReadStream(filePath);
     fileStream.pipe(res);
 
     fileStream.on("error", (error) => {
-      console.error(`Error streaming file: ${error}`);
-      res.status(500).json({ error: "Server error" });
-    });
-
-    fileStream.on("end", () => {
-      console.log(`File downloaded successfully: ${filePath}`);
+      res.status(500).json({ error: `Error streaming file: ${error}` });
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Server error" });
   }
-});
+});;
+
+// Function to determine MIME type based on file extension
+const determineMimeType = (fileName) => {
+  const extension = fileName.split('.').pop().toLowerCase();
+
+  switch (extension) {
+    case 'pdf':
+      return 'application/pdf';
+    case 'zip':
+      return 'application/zip';
+    case 'docx':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    case 'xlsx':
+      return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    // Add more cases for other file types if needed
+    default:
+      return 'application/octet-stream'; // Default to octet-stream if the type is unknown
+  }
+};
+
+
 
 const deleteSubmittedOrder = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
     const submittedOrder = await prisma.submittedOrder.findUnique({
       where: { id },
+      include: { order: true },
     });
 
     if (!submittedOrder) {
-      return res.status(404).json({ message: 'Submitted order not found' });
+      return res.status(404).json({ message: "Submitted order not found" });
     }
 
-    const filePath = path.join(__dirname, `../uploads/jobSubmission/${submittedOrder.documentId}`);
+    const { documentId, orderId } = submittedOrder;
+
+    // Delete the submission from the database
     await prisma.submittedOrder.delete({ where: { id } });
 
+    // Update the order status to "ASSIGNED"
     await prisma.order.update({
-      where: { id: submittedOrder.orderId },
-      data: { status: 'ASSIGNED' },
+      where: { id: orderId },
+      data: { status: "ASSIGNED" },
     });
 
+    // Remove the associated file
+    const filePath = path.join(__dirname, `../uploads/jobSubmission/${documentId}`);
     fs.unlink(filePath, (err) => {
       if (err) {
         console.error(`Failed to delete file: ${filePath}`, err);
         return res.status(200).json({
-          message: 'Submitted order deleted from the database, but failed to delete the file from storage',
+          message: "Submitted order deleted from the database, but failed to delete the file from storage",
         });
       }
       console.log(`File deleted successfully: ${filePath}`);
     });
 
-    return res.status(200).json({ message: 'Submitted order deleted successfully' });
+    return res.status(200).json({ message: "Submitted order deleted successfully and order reassigned" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "Server error" });
   }
 });
 

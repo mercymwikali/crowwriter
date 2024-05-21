@@ -41,6 +41,7 @@ const WritersOnProgressJob = () => {
 
   const handleCancel = () => {
     setSubmitOrderModal(false);
+    setSelectedOrder(null);
   }
 
   return (
