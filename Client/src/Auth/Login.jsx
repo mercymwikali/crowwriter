@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../actions/userActions';
 import { LoadingOutlined } from '@ant-design/icons';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import RegisterImage from '../assets/RegisterImage.jpg';
 
 const Login = () => {

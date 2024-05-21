@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Register from './Auth/Register';
-import { Login } from './Auth/Login';
+import Login from './Auth/Login';
 import Dashboard from './core/Dashboard.jsx';
 import Manager from './core/Manager.jsx';
 import NewOrder from './pages/NewOrder.jsx';
