@@ -1,18 +1,22 @@
-import { Skeleton, Typography, message, Tag, Button, Tooltip } from 'antd';
-import React, { useEffect } from 'react';
+import { Skeleton, Typography, message, Tag, Button, Tooltip, Flex } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { downloadSubmission, listSubmissions } from '../actions/submitAction';
-import { CloudDownloadOutlined, EditFilled, EditTwoTone } from '@ant-design/icons';
+import { CloudDownloadOutlined, DollarCircleOutlined, EditFilled } from '@ant-design/icons';
+import ReassignBtn from '../components/ReassignBtn';
+import FineModal from '../components/FineModal'; // Import FineModal
 
 const SubmittedJobsList = () => {
     const dispatch = useDispatch();
     const submissionsList = useSelector(state => state.listSubmission);
     const { loading, success, error, submissions } = submissionsList;
+    const [ReassignModal, setReassignModal] = useState(false);
+    const [selectedorder, setSelectedorder] = useState(null);
+    const [FineModalVisible, setFineModalVisible] = useState(false); // Add state for FineModal
 
     useEffect(() => {
         dispatch(listSubmissions());
     }, [dispatch, success, error]);
-
 
     const handleDownload = async (documentId) => {
         try {
@@ -20,6 +24,16 @@ const SubmittedJobsList = () => {
         } catch (error) {
             message.error('Failed to download attachment');
         }
+    };
+
+    const reassignOrder = (order) => {
+        setSelectedorder(order);
+        setReassignModal(true);
+    };
+
+    const fineOrder = (order) => { // Add function to handle fine button click
+        setSelectedorder(order);
+        setFineModalVisible(true);
     };
 
     return (
@@ -62,20 +76,28 @@ const SubmittedJobsList = () => {
                                     <td>{submission.submittedBy}</td>
                                     <td>{new Date(submission.submissionDate).toLocaleDateString()}</td>
                                     <td className='text-center'>
-                                    <Tooltip title="Download Attachment File">
-                                        <Button
-                                            type="primary"
-                                            onClick={() => handleDownload(submission.documentId)}
-                                        >
-                                            <CloudDownloadOutlined style={{ marginRight: '5px', fontSize: '20px' }} />
-                                        </Button>
-                                    </Tooltip>                                    </td>
-                                    <td className='text-center'>
-                                        <Tooltip title='Approve Order'>
-                                            <Button type='primary'>
-                                                <EditFilled style={{ fontSize: '20px' }} />
+                                        <Tooltip title="Download Attachment File">
+                                            <Button
+                                                type="primary"
+                                                onClick={() => handleDownload(submission.documentId)}
+                                            >
+                                                <CloudDownloadOutlined style={{ marginRight: '5px', fontSize: '20px' }} />
                                             </Button>
                                         </Tooltip>
+                                    </td>
+                                    <td className='text-center'>
+                                        <Flex gap={4}>
+                                            <Tooltip title='Reassign Order'>
+                                                <Button type='primary' className='bg-warning' onClick={() => reassignOrder(submission)}>
+                                                    <EditFilled style={{ fontSize: '16px' }} />
+                                                </Button>
+                                            </Tooltip>
+                                            <Tooltip title='Fine Order'>
+                                                <Button className='bg-success' onClick={() => fineOrder(submission)}> {/* Add onClick for fine button */}
+                                                    <DollarCircleOutlined style={{ fontSize: '16px', color: 'white' }} />
+                                                </Button>
+                                            </Tooltip>
+                                        </Flex>
                                     </td>
                                 </tr>
                             ))}
@@ -85,6 +107,17 @@ const SubmittedJobsList = () => {
                     <p>No submitted jobs available.</p>
                 )
             )}
+
+            <ReassignBtn
+                selectedorder={selectedorder}
+                visible={ReassignModal}
+                onCancel={() => setReassignModal(false)}
+            />
+            <FineModal // Render FineModal
+                selectedorder={selectedorder}
+                visible={FineModalVisible}
+                onCancel={() => setFineModalVisible(false)}
+            />
         </div>
     );
 };

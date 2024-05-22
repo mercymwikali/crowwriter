@@ -189,3 +189,6 @@ Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31
 20240521	11:34:33	278d5252-d28b-4fca-a3ab-84e1201fffdc	undefined: undefined	POST	/submitJob/job-docs	http://localhost:5173
 20240521	19:29:53	8eec9954-da65-458e-bdb7-16b4ea0f4daf	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
 20240521	19:34:35	626a7e79-6433-43d2-9239-a618ea730412	undefined: undefined	POST	/uploadFile/upload	http://localhost:5173
+20240522	15:44:05	46126580-93d3-4d46-9f59-79ff31e82267	TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.	GET	/profile/user-profile/7e14ee40-0408-4a2c-8ed0-de1c20073cd0	undefined
+20240522	15:45:56	4b64f4da-8d47-432a-b709-211f6552e9bf	TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.	GET	/profile/user-profile/7e14ee40-0408-4a2c-8ed0-de1c20073cd0	undefined
+20240522	15:49:44	e4da4841-f36b-4ec1-ab8a-66a787d84fc9	TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.	GET	/profile/user-profile/7e14ee40-0408-4a2c-8ed0-de1c20073cd0	undefined

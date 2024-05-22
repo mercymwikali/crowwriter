@@ -19,7 +19,7 @@ const BidsList = () => {
 
   useEffect(() => {
     dispatch(listBids());
-  }, [dispatch, ]);
+  }, [dispatch, viewBids]);
 
   const handleViewBids = (order) => {
     setSelectedBid(order);
@@ -44,23 +44,23 @@ const BidsList = () => {
         message.error(error)
       ) : (
         <>
-          {orders && orders.length > 0 ? (
-            <div className="mt-4">
-              <table className="table table-hover table-responsive">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Order ID</th>
-                    <th scope="col">Topic</th>
-                    <th scope="col">Deadline</th>
-                    <th scope="col">Cost Per Page</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Bid Count</th>
-                    <th scope="col">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order, index) => (
+          <div className="mt-4">
+            <table className="table table-hover table-responsive">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Order ID</th>
+                  <th scope="col">Topic</th>
+                  <th scope="col">Deadline</th>
+                  <th scope="col">Cost Per Page</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Bid Count</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders && orders.length > 0 ? (
+                  orders.map((order, index) => (
                     <tr key={order.id}>
                       <td>{index + 1}</td>
                       <td>{order.orderId}</td>
@@ -80,13 +80,15 @@ const BidsList = () => {
                         </div>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p>No bids found.</p>
-          )}
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8" className="text-center text-danger">No bids found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </>
       )}
       <ViewBidModal visible={viewBids} onCancel={handleCancel} selectedBid={selectedBid} />

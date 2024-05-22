@@ -7,6 +7,7 @@ import { RiFolderWarningLine } from "react-icons/ri";
 import { BsCashCoin, BsList } from "react-icons/bs";
 import Signout from '../components/SignOut';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { GiReceiveMoney } from 'react-icons/gi';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -109,6 +110,11 @@ const handleMenuClick = (key) => {
               icon: <CreditCardOutlined />,
               label: 'My Wallet',
               children: [
+                {
+                  key:'Invoice',
+                  icon: <GiReceiveMoney  style={{fontSize:'20px'}}/>,
+                  label: 'Invoice',
+                },
                 {
                   key: 'paid-transactions',
                   icon: <BsCashCoin className='text-red' />,

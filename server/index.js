@@ -48,6 +48,12 @@ app.use("/bids", bidsRoute);
 const SubmitJob= require("./routes/SubmitJobs");
 app.use("/submitJob", SubmitJob);
 
+const Profile = require("./routes/Profile");
+app.use("/profile", Profile);
+
+// const apiRoute = require("./routes/apiRoute");
+// app.use("/api", apiRoute);
+
 
 app.use(errorHandler);
 
