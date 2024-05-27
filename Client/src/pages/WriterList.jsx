@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { listWriters, deleteUser,UpdateWriter } from '../actions/writersActions';
+import { listWriters, deleteUser } from '../actions/writersActions';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Pagination, Skeleton, Tooltip, message, Modal, Button, Input, Switch } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
+import { updateUser } from '../actions/userActions';
 
 const WriterList = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const WriterList = () => {
     const userDelete = useSelector((state) => state.deleteUser);
     const { success: successDelete } = userDelete;
 
-    const writerUpdate = useSelector((state) => state.writersUpdate);
+    const writerUpdate = useSelector((state) => state.userUpdate);
     const { success: successUpdate } = writerUpdate;
 
     useEffect(() => {
@@ -58,7 +59,7 @@ const WriterList = () => {
     const handleEdit = () => {
         console.log("Selected user:", selectedUser);
         if (selectedUser && selectedUser.id) {
-            dispatch(UpdateWriter(selectedUser.id, selectedUser)); // Pass id and updated user object
+            dispatch(updateUser(selectedUser.id, selectedUser)); // Pass id and updated user object
         } else {
             console.error("Selected user or user ID is null.");
         }

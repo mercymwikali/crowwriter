@@ -21,6 +21,10 @@
 .btn{
   width:100%;
 }
+/* 
+.container {
+  padding: 20px;
+} */
 
 
 
@@ -39,7 +43,7 @@
 }
 
 sidemenu{
-  height: 100dvh !important;
+  height: 100vh !important;
   position: fixed !important;
   left:0 !important;
   top: 0 !important;
@@ -57,12 +61,16 @@ sidemenu{
   color: rgb(0, 35, 41);
   padding: 8px 12px 8px 12px;
   position: sticky;
+  left: 0;
+  right: 0;
   width: 100%;
   top: 0;
   height: 64 !important;
   line-height: 64px;
   z-index: 99999;
 }
+
+
 .auth-image {
   width: 100%;
   border-radius: 8px;
@@ -133,7 +141,7 @@ sidemenu{
 }
 
 .sidemenu{
-  height: 100dvh !important;
+  height: 100vh !important;
   position: fixed !important;
   left:0 !important;
   top: 0 !important;
@@ -146,8 +154,10 @@ sidemenu{
   overflow-y: scroll !important;
   height: 100% !important;
   padding:24 !important;
-  margin: 24px 16px 0;
-
+  /* margin: 24px 16px 0; */
+  min-height: 280px;
+  background: #fff;
+  border-radius: 8px;
   
 }
 
@@ -182,6 +192,67 @@ border: 1px solid #001b27 !important;
   background-color: #dc3545 !important;
 }
 
+
+
+/* .inv-container {
+  padding: 20px;
+} */
+
+.inv-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+
+}
+
+.invoice-info {
+  margin-bottom: 10px;
+  /* border-bottom: 1px solid #ccc; */
+  padding-bottom: 10px;
+  width: 100%;
+  
+}
+
+.user-info {
+  margin-bottom: 10px;
+  text-align: right;
+  width: 100%;
+  /* border-bottom: 1px solid #ccc; */
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 20px;
+}
+
+.actions button {
+  margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+  .inv-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .actions button {
+    margin-left: 10px;
+    margin-bottom: 0;
+  }
+}
+
+
 @media screen and (max-width: 768px) {
   
     .ant-layout-sider {
@@ -201,15 +272,40 @@ border: 1px solid #001b27 !important;
   }
 
   .contentStyle {
-    margin-left: 60px; /* Adjust content margin for smaller screens */
-    width: 100%;
-    padding: 0;
+    overflow-y: scroll !important;
+    height: 100% !important;
+    padding:24 !important;
+    /* margin: 24px 16px 0; */
+    min-height: 680px;
+    background: #fff;
+    border-radius: 8px;
+  }
+
+  .sidemenu{
+    height: 100vh !important;
+    position: fixed !important;
+    left:0 !important;
+    top: 0 !important;
+    background-color: #002329 !important  ;
+    transition: 0.2s ease;
+    z-index: 1 !important;
+  }
+
+  .header {
+    height: 60px !important;
+    z-index: 1 !important;
   }
 
   main {
     margin-left: 60px !important;
+    margin-right: 0px !important;
+    margin-bottom: 0px !important;
+    padding: 0px !important;
+    transition: 0.2s ease;  
   }
 
-
+  .text-md-right {
+    text-align: right;
+  }
   
 }

@@ -18,21 +18,6 @@ export const writerListReducer = (state = { users: [] }, action) => {
 }
 
 
-export const writerUpdateReducer = (state = {user: {}}, action) => {
-    switch (action.type) {
-        case UPDATE_WRITER_REQUEST:
-            return { loading: true };
-        case UPDATE_WRITER_SUCCESS:
-            return { loading: false, success: true , user: action.payload };
-        case UPDATE_WRITER_FAIL:
-            return { loading: false, error: action.payload };
-            case UPDATE_WRITER_RESET:
-            return {user: {} };
-        default:
-            return state;
-    }
-}
-
 export const myJobsListReducer = (state = { orders: [] }, action) => {
     switch (action.type) {
         case MY_JOBS_REQUEST:

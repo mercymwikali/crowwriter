@@ -23,6 +23,7 @@ const Manager = () => {
         '/Manage-Jobs',
         '/Payments',
         '/Manage Writers',
+        '/Fines'
 
     ];
 
@@ -132,11 +133,27 @@ const handleMenuClick = (key) => {
                                     icon: <BsDashCircleFill />,
                                     label: 'Unpaid Orders',
                                 },
+                               
+                            ]
+                        },
+                        {
+                            key: '/Fines',
+                            icon: <RiFolderWarningLine />,
+                            label: 'Fined Orders',
+                            children: [
+                                {
+
+                                    key: 'New-Fine',
+                                    icon: <FaClock />,
+                                    label: 'New Fine',
+
+                                },
                                 {
                                     key: 'Fined-Orders',
-                                    icon: <RiFolderWarningLine />,
+                                    icon: <FaCheckCircle />,
                                     label: 'Fined Orders',
-                                }
+                                },
+
                             ]
                         },
                         {
@@ -155,15 +172,15 @@ const handleMenuClick = (key) => {
                                     label: 'All Writers',
                                 },
                                 {
-                                    key: 'Pending Writers',
+                                    key: 'Pending-Writers',
                                     icon: <Bs0SquareFill />,
                                     label: 'Pending Writers',
                                 },
-                                {
-                                    key: 'Rejected Writers',
-                                    icon: <GiCancel />,
-                                    label: 'Rejected Writers',
-                                },
+                                // {
+                                //     key: 'Rejected Writers',
+                                //     icon: <GiCancel />,
+                                //     label: 'Rejected Writers',
+                                // },
                                 
                             ]
                             

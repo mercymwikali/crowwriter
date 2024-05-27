@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, DatePicker, Form, Input, InputNumber, Typography, message } from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Select, Typography, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { createdOrder, listOrderstatusEnums } from '../actions/orderActions';
 import FileUpload from '../components/FileUpload';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Import the styles
 
-const { TextArea } = Input;
+const { Option } = Select;
 
 const NewOrder = () => {
   const dispatch = useDispatch();
@@ -34,14 +36,49 @@ const NewOrder = () => {
     status: 'PENDING',
   });
 
+  const services = [
+    { value: 'Writing', label: 'Writing' },
+    { value: 'Rewriting', label: 'Rewriting' },
+    { value: 'Editing', label: 'Editing' },
+    { value: 'Proofreading', label: 'Proofreading' },
+    { value: 'Translation', label: 'Translation' },
+    { value: 'Problem-Solving', label: 'Problem-Solving' },
+    { value: 'Other', label: 'Other' },
+  ];
 
+  const disciplines = [
+    { value: 'English', label: 'English' },
+    { value: 'Math', label: 'Math' },
+    { value: 'Social Works', label: 'Social Works' },
+    { value: 'History', label: 'History' },
+    { value: 'Psychology', label: 'Psychology' },
+    { value: 'Art', label: 'Art' },
+    { value: 'Business & Management', label: 'Business & Management' },
+    { value: 'Nursing', label: 'Nursing' },
+  ];
 
-  useEffect(() => {
-    if (success) {
-      message.success('Order created successfully');
-      navigate('/manager/all-jobs');
-    }
-  }, [success, navigate]);
+  const sources = [
+    { value: 'One source', label: 'One source' },
+    { value: 'Two sources', label: 'Two sources' },
+    { value: 'Three sources', label: 'Three sources' },
+    { value: 'Four sources', label: 'Four sources' },
+    { value: 'Five sources', label: 'Five sources' },
+    { value: 'Six sources', label: 'Six sources' },
+    { value: 'Seven sources', label: 'Seven sources' },
+    { value: 'Eight sources', label: 'Eight sources' },
+    { value: 'Nine sources', label: 'Nine sources' },
+    { value: 'Ten sources', label: 'Ten sources' },
+  ];
+
+  const citationStyles = [
+    { value: 'APA 6th Edition', label: 'APA 6th Edition' },
+    { value: 'APA 7th Edition', label: 'APA 7th Edition' },
+    { value: 'ASA', label: 'ASA' },
+    { value: 'IEEE', label: 'IEEE' },
+    { value: 'MLA', label: 'MLA' },
+    { value: 'Chicago', label: 'Chicago' },
+    { value: 'Harvard', label: 'Harvard' },
+  ];
 
   const handleChange = (key, value) => {
     setNewOrder(prevState => ({ ...prevState, [key]: value }));
@@ -58,10 +95,18 @@ const NewOrder = () => {
       ...newOrder,
       deadline: newOrder.deadline ? moment(newOrder.deadline).toISOString() : null,
     };
-    dispatch(createdOrder(formattedOrder));
+    dispatch(createdOrder(formattedOrder))
+      .then(() => {
+        if (success) {
+          message.success('Order created successfully');
+          navigate('/manager/all-jobs');
+        }
+      })
+      .catch((error) => {
+        message.error('Failed to create order');
+      });
   };
 
-  // Calculate remaining time in days and hours
   const handleRemainingTime = (deadline) => {
     const now = moment();
     const end = moment(deadline);
@@ -71,7 +116,6 @@ const NewOrder = () => {
     setNewOrder(prevState => ({ ...prevState, remainingTime: `${days} days and ${hours} hours remaining` }));
   };
 
-  // Function to handle capturing the generated UUID from FileUpload component
   const handleFileUpload = (documentId) => {
     setNewOrder(prevState => ({ ...prevState, documentId }));
   };
@@ -89,34 +133,62 @@ const NewOrder = () => {
             <Input value={newOrder.topic} onChange={(e) => handleChange('topic', e.target.value)} />
           </Form.Item>
           <Form.Item label="Discipline">
-            <Input value={newOrder.discipline} onChange={(e) => handleChange('discipline', e.target.value)} />
+            <Select
+              value={newOrder.discipline}
+              onChange={(value) => handleChange('discipline', value)}
+              options={disciplines}
+            />
           </Form.Item>
           <Form.Item label="Service">
-            <Input value={newOrder.service} onChange={(e) => handleChange('service', e.target.value)} />
+            <Select
+              value={newOrder.service}
+              onChange={(value) => handleChange('service', value)}
+              options={services}
+            />
           </Form.Item>
-          <Form.Item label="Format">
-            <Input value={newOrder.format} onChange={(e) => handleChange('format', e.target.value)} />
+          {/* <Form.Item label="No of Sources Required">
+            <Select
+              value={newOrder.sources}
+              onChange={(value) => handleChange('sources', value)}
+              options={sources}
+            />
+          </Form.Item> */}
+          <Form.Item label="Format/Citation Style">
+            <Select
+              value={newOrder.format}
+              onChange={(value) => handleChange('format', value)}
+              options={citationStyles}
+            />
           </Form.Item>
           <Form.Item label="Description">
-            <TextArea value={newOrder.description} onChange={(e) => handleChange('description', e.target.value)} />
+            <ReactQuill value={newOrder.description} onChange={(value) => handleChange('description', value)} theme="snow" style={{ height: '200px' }} />
           </Form.Item>
-          <Form.Item label="No of Pages">
-            <InputNumber className='w-100' value={newOrder.noOfPages} onChange={(value) => handleChange('noOfPages', value)} />
+          <Form.Item label="No of Pages" style={{ marginTop: '50px' }}>
+            <InputNumber
+              className="w-100"
+              value={newOrder.noOfPages}
+              onChange={(value) => handleChange('noOfPages', value)}
+            />
           </Form.Item>
           <Form.Item label="Cost Per Page">
-            <InputNumber className='w-100' value={newOrder.costPerPage} onChange={(value) => handleChange('costPerPage', value)} />
+            <InputNumber
+              className="w-100"
+              value={newOrder.costPerPage}
+              onChange={(value) => handleChange('costPerPage', value)}
+            />
           </Form.Item>
           <Form.Item label="Full Amount (ksh)">
-            <InputNumber className='w-100' value={newOrder.fullAmount} readOnly />
+            <InputNumber className="w-100" value={newOrder.fullAmount} readOnly />
           </Form.Item>
           <Form.Item label="Deadline">
             <DatePicker
+              showTime
               value={newOrder.deadline ? moment(newOrder.deadline) : null}
               onChange={(date, dateString) => handleChange('deadline', dateString)}
-              className='w-100'
+              className="w-100"
             />
           </Form.Item>
-          <Form.Item label="Remaining Time">
+          <Form.Item label="Due In">
             <Input value={newOrder.remainingTime} readOnly />
           </Form.Item>
           <div className="my-3">

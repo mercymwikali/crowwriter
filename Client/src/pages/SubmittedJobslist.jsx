@@ -16,7 +16,7 @@ const SubmittedJobsList = () => {
 
     useEffect(() => {
         dispatch(listSubmissions());
-    }, [dispatch, success, error]);
+    }, [dispatch]);
 
     const handleDownload = async (documentId) => {
         try {
@@ -41,28 +41,32 @@ const SubmittedJobsList = () => {
             <Typography.Title level={2}>Submitted Jobs</Typography.Title>
             {loading ? (
                 <Skeleton active />
-            ) : error ? (
-                message.error(error)
             ) : (
-                submissions && submissions.documents && submissions.documents.length > 0 ? (
-                    <table className="table table-hover table-responsive">
-                        <thead>
+                <table className="table table-hover table-responsive">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">OrderId</th>
+                            <th scope="col">Topic</th>
+                            <th scope="col">No of Pages</th>
+                            <th scope="col">Amount (ksh)</th>
+                            <th scope="col">Deadline</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Submitted By</th>
+                            <th scope="col">Date Submitted</th>
+                            <th scope="col" className="text-center">Attachment</th>
+                            <th scope="col" className="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {error ? (
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">OrderId</th>
-                                <th scope="col">Topic</th>
-                                <th scope="col">No of Pages</th>
-                                <th scope="col">Amount (ksh)</th>
-                                <th scope='col'>Deadline</th>
-                                <th scope="col">Status</th>
-                                <th scope='col'>Submitted By</th>
-                                <th scope='col'>Date Submitted</th>
-                                <th scope='col' className='text-center'>Attachment</th>
-                                <th scope="col" className='text-center'>Actions</th>
+                                <td colSpan="11" className="text-center text-danger">
+                                   No Submissions found
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {submissions.documents.map((submission, index) => (
+                        ) : submissions && submissions.documents && submissions.documents.length > 0 ? (
+                            submissions.documents.map((submission, index) => (
                                 <tr key={submission.documentId}>
                                     <td>{index + 1}</td>
                                     <td>{submission.orderId}</td>
@@ -71,11 +75,13 @@ const SubmittedJobsList = () => {
                                     <td>{submission.amount}</td>
                                     <td>{new Date(submission.deadline).toLocaleDateString()}</td>
                                     <td>
-                                        <Tag color={submission.status === 'APPROVED' ? 'green' : 'blue'} bordered={false}><span color='red' className='fw-bold'>{submission.status}</span></Tag>
+                                        <Tag color={submission.status === 'APPROVED' ? 'green' : 'blue'} bordered={false}>
+                                            <span className="fw-bold">{submission.status}</span>
+                                        </Tag>
                                     </td>
                                     <td>{submission.submittedBy}</td>
                                     <td>{new Date(submission.submissionDate).toLocaleDateString()}</td>
-                                    <td className='text-center'>
+                                    <td className="text-center">
                                         <Tooltip title="Download Attachment File">
                                             <Button
                                                 type="primary"
@@ -85,27 +91,31 @@ const SubmittedJobsList = () => {
                                             </Button>
                                         </Tooltip>
                                     </td>
-                                    <td className='text-center'>
+                                    <td className="text-center">
                                         <Flex gap={4}>
-                                            <Tooltip title='Reassign Order'>
-                                                <Button type='primary' className='bg-warning' onClick={() => reassignOrder(submission)}>
+                                            <Tooltip title="Reassign Order">
+                                                <Button type="primary" className="bg-warning" onClick={() => reassignOrder(submission)}>
                                                     <EditFilled style={{ fontSize: '16px' }} />
                                                 </Button>
                                             </Tooltip>
-                                            <Tooltip title='Fine Order'>
-                                                <Button className='bg-success' onClick={() => fineOrder(submission)}> {/* Add onClick for fine button */}
+                                            <Tooltip title="Fine Order">
+                                                <Button className="bg-success" onClick={() => fineOrder(submission)}>
                                                     <DollarCircleOutlined style={{ fontSize: '16px', color: 'white' }} />
                                                 </Button>
                                             </Tooltip>
                                         </Flex>
                                     </td>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <p>No submitted jobs available.</p>
-                )
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="11" className="text-center">
+                                    No submitted jobs available.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
             )}
 
             <ReassignBtn

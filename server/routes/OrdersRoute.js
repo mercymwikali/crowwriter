@@ -5,7 +5,7 @@ const assignedOrdersController = require('../controllers/OrderAssignment');
 const { verifyJwt } = require('../middleware/verifyJwt'); // Import the verifyJwt middleware function
 
 // Apply verifyJwt middleware to protected routes
-router.use(verifyJwt);
+// router.use(verifyJwt);
 
 router.route('/get-writers-orders').get(orderController.getAllOrders);
 // router.route('/get-all-orders').get(orderController.getAllOrdersWithoutDetails);
@@ -15,6 +15,7 @@ router.delete('/delete-order/:id', orderController.deleteOrder);
 router.get('/order-Status', orderController.statuses);
 router.get("/assigned-Orders-list", assignedOrdersController.getAssignedOrders)
 router.get("/my-jobs/:writerId", assignedOrdersController.getAssignedOrdersWithWriterId);
+router.post("/reassigning-order", assignedOrdersController.reassignOrder)
 
 router.post("/assign-order", assignedOrdersController.assignOrder);
 router.delete("/delete-assigned-orders", assignedOrdersController.deleteAssignedOrders); // Add the route for deleting assigned orders

@@ -16,12 +16,16 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
 
   // Fetch writers from Redux store
   const writerList = useSelector((state) => state.writersList);
-  const { loading, error, users } = writerList;
+  const { loading, error, users,success } = writerList;
 
   // Fetch writers when the component mounts
   useEffect(() => {
+if (success) {
+  dispatch(listWriters());
+}
+
     dispatch(listWriters());
-  }, [dispatch]);
+  }, [dispatch, success]);
 
   // Update writers list when the users data changes
   useEffect(() => {
@@ -60,6 +64,14 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
       title="Assign Job"
       visible={visible}
       onCancel={onCancel}
+      width={500}
+      bodyStyle={{ padding: "20px" }}
+      footerStyle={{ justifyContent: "center" }}
+      maskClosable
+      destroyOnClose
+      centered
+      footerAlign="center"
+
       footer={[
         <Button key="cancel" onClick={onCancel}>
           Cancel
@@ -68,6 +80,7 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
           type="primary"
           onClick={handleAssignOrder}
           loading={loadingAssign} // Use loading state for button
+          
         >
           Assign
         </Button>,

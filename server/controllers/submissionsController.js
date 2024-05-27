@@ -79,6 +79,7 @@ const getSubmittedDocuments = asyncHandler(async (req, res) => {
       include: {
         order: {
           select: {
+            id: true,
             orderId: true,
             topic: true,
             noOfPages: true,
@@ -89,6 +90,7 @@ const getSubmittedDocuments = asyncHandler(async (req, res) => {
         },
         submittedBy: {
           select: {
+            id: true,
             username: true,
             email: true,
           },
@@ -96,14 +98,25 @@ const getSubmittedDocuments = asyncHandler(async (req, res) => {
       },
     });
 
+
+    //if not found
+    if (!submissions || submissions.length === 0) {
+      return res.status(404).json({ message: "No documents found" });
+    }
+
+
+    // Create an array of document details with file path
     const documents = submissions.map((sub) => ({
+      id: sub.id,
       documentId: sub.documentId,
+      Orderid: sub.order.id,
       orderId: sub.order.orderId,
       topic: sub.order.topic,
       noOfPages: sub.order.noOfPages,
       amount: sub.order.fullAmount,
       deadline: sub.order.deadline,
       status: sub.order.status,
+      submittedById: sub.submittedById,
       submittedBy: sub.submittedBy.username,
       submittedByEmail: sub.submittedBy.email,
       submissionDate: sub.submissionDate,
@@ -115,6 +128,9 @@ const getSubmittedDocuments = asyncHandler(async (req, res) => {
     }));
 
     return res.status(200).json({ success: true, documents });
+
+
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });

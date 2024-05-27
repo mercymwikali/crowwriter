@@ -192,3 +192,9 @@ Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31
 20240522	15:44:05	46126580-93d3-4d46-9f59-79ff31e82267	TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.	GET	/profile/user-profile/7e14ee40-0408-4a2c-8ed0-de1c20073cd0	undefined
 20240522	15:45:56	4b64f4da-8d47-432a-b709-211f6552e9bf	TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.	GET	/profile/user-profile/7e14ee40-0408-4a2c-8ed0-de1c20073cd0	undefined
 20240522	15:49:44	e4da4841-f36b-4ec1-ab8a-66a787d84fc9	TypeError: Cannot destructure property 'id' of 'req.user' as it is undefined.	GET	/profile/user-profile/7e14ee40-0408-4a2c-8ed0-de1c20073cd0	undefined
+20240524	16:49:53	1aba2708-18ea-4dfc-ba4e-d2a02c73a166	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240524	16:49:53	a6a98fb7-3d93-4444-8d67-f92903e8d101	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240525	17:56:33	4f0e3b33-8d7c-4223-b636-573b32430f4b	ReferenceError: fineId is not defined	PATCH	/fines/update-fine/e908d728-bdcd-43b9-b9f2-7e9789097491	undefined
+20240525	18:25:57	582d6d60-e0f8-4411-acea-0d97a88c67b5	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240525	19:25:08	c3bc47da-5a13-4e84-a5c5-78c516a165de	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240526	16:02:18	4b14a0a2-a40c-4c94-80f6-6ef7e5a7f214	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173

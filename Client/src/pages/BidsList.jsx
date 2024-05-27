@@ -25,12 +25,12 @@ const BidsList = () => {
     setSelectedBid(order);
     setViewBids(true);
   }
-  
+
   const handleCancel = () => {
     setSelectedBid(null);
     setViewBids(false);
   }
-  
+
   return (
     <>
       <h1 className='text-success'>Bids List</h1>
@@ -41,8 +41,8 @@ const BidsList = () => {
       {loading ? (
         <Skeleton active />
       ) : error ? (
-        message.error(error)
-      ) : (
+        <>{message.error(error)}</>
+      ) : orders ? (
         <>
           <div className="mt-4">
             <table className="table table-hover table-responsive">
@@ -90,7 +90,7 @@ const BidsList = () => {
             </table>
           </div>
         </>
-      )}
+      ) : null}
       <ViewBidModal visible={viewBids} onCancel={handleCancel} selectedBid={selectedBid} />
     </>
   );

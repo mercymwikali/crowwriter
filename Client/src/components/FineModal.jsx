@@ -1,65 +1,40 @@
-// FineModal.js
-import { Button, Form, Input, InputNumber, Modal, Select, message } from "antd";
+import { Button, Form, Input, InputNumber, Modal, message } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listWriters } from "../actions/writersActions";
-// import { createFine } from "../actions/finesActions"; // Assume there's an action to handle fine creation
-
-const { Option } = Select;
+import { createFine } from "../actions/FinesActions";
+import { useNavigate } from "react-router-dom";
 
 const FineModal = ({ selectedorder, onCancel, visible }) => {
     const dispatch = useDispatch();
-    const [selectedWriterId, setSelectedWriterId] = useState(null);
     const [fineAmount, setFineAmount] = useState(null);
-    const [fineReason, setFineReason] = useState("");
-    const [writerslist, setWriterslist] = useState([]);
-    const [loadingFine, setLoadingFine] = useState(false); // State to track loading status
-    const [errorMessage, setErrorMessage] = useState(null); // State to hold error message
-
-    // Fetch writers from Redux store
-    const writerList = useSelector((state) => state.writersList);
-    const { loading, error, users } = writerList;
-
-    // Fetch writers when the component mounts
-    useEffect(() => {
-        dispatch(listWriters());
-    }, [dispatch]);
-
-    // Update writers list when the users data changes
-    useEffect(() => {
-        setWriterslist(users);
-    }, [users]);
-
-    const handleSearch = (value) => {
-        // Filter writers list based on the search input
-        const filteredWriters = users.filter((writer) =>
-            writer.username.toLowerCase().includes(value.toLowerCase())
-        );
-        setWriterslist(filteredWriters);
-    };
+    const [description, setDescription] = useState("");
+    const [loadingFine, setLoadingFine] = useState(false);
+    const navigate = useNavigate(); // Add useNavigate hook
 
     const handleCreateFine = async () => {
-        console.log(selectedWriterId, fineAmount, fineReason);
-        // if (!selectedWriterId || !fineAmount || !fineReason) {
-        //     message.error("Please fill all the fields");
-        //     return;
-        // }
+        if (!fineAmount || !description) {
+            message.error("Please fill all the fields");
+            return;
+        }
 
-        // setLoadingFine(true); // Set loading state while creating fine
+        setLoadingFine(true);
 
-        // try {
-        //     await dispatch(createFine({
-        //         orderId: selectedorder.id,
-        //         finedToId: selectedWriterId,
-        //         amount: fineAmount,
-        //         reason: fineReason,
-        //     }));
-        //     onCancel();
-        // } catch (error) {
-        //     setErrorMessage(error.message);
-        // } finally {
-        //     setLoadingFine(false); // Reset loading state after creating fine
-        // }
+        try {
+            const payload = {
+                orderId: selectedorder.Orderid,
+                writerId: selectedorder.submittedById,
+                amount: fineAmount,
+                description: description,
+            };
+
+            await dispatch(createFine(payload));
+            onCancel();
+            navigate("/manager/Fined-Orders"); // Navigate to the fine-list route after successful creation
+        } catch (error) {
+            message.error(error.message || "Error creating fine");
+        } finally {
+            setLoadingFine(false);
+        }
     };
 
     return (
@@ -75,7 +50,7 @@ const FineModal = ({ selectedorder, onCancel, visible }) => {
                 <Button
                     type="primary"
                     onClick={handleCreateFine}
-                    loading={loadingFine} // Use loading state for button
+                    loading={loadingFine}
                 >
                     Create Fine
                 </Button>,
@@ -88,21 +63,8 @@ const FineModal = ({ selectedorder, onCancel, visible }) => {
                         <Input value={selectedorder.orderId} readOnly />
                     </Form.Item>
                     <div className="d-block align-items-center gap-3">
-                        <Form.Item label="Select a writer" className="col-12">
-                            <Select
-                                showSearch
-                                placeholder="Select a writer"
-                                optionFilterProp="children"
-                                onChange={(value) => setSelectedWriterId(value)}
-                                onSearch={handleSearch}
-                                filterOption={false} // Disable Antd's built-in filter option as we're handling it in handleSearch
-                            >
-                                {writerslist && writerslist.length > 0 && writerslist.map((writer) => (
-                                    <Option key={writer.id} value={writer.id}>
-                                        {writer.username}
-                                    </Option>
-                                ))}
-                            </Select>
+                        <Form.Item label="Writer" className="col-12">
+                            <Input value={selectedorder.submittedBy} readOnly />
                         </Form.Item>
                         <Form.Item label="Fine Amount" className="col-12">
                             <InputNumber
@@ -115,8 +77,8 @@ const FineModal = ({ selectedorder, onCancel, visible }) => {
                     </div>
                     <Form.Item label="Reason for Fine">
                         <Input
-                            value={fineReason}
-                            onChange={(e) => setFineReason(e.target.value)}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                         />
                     </Form.Item>
                 </>

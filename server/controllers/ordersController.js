@@ -106,7 +106,6 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
-
 // Update an order
 const updateOrder = asyncHandler(async (req, res) => {
   try {
@@ -121,6 +120,11 @@ const updateOrder = asyncHandler(async (req, res) => {
     // If no order found, return 404 status error
     if (!existingOrder) {
       return res.status(404).json({ error: "Order not found" });
+    }
+
+    // If writer field is not included in the update, set it to null or empty
+    if (!updatedOrder.hasOwnProperty('writer')) {
+      updatedOrder.writer = null; // or updatedOrder.writer = []
     }
 
     // Update the order

@@ -50,7 +50,7 @@ const WriterBidList = () => {
         <>
             <h1 className='text-success'>Bids List</h1>
             <div className="d-block d-md-flex gap-4 justify-content-between align-items-center">
-                <h4><Link className='btn btn-success' to="jobs-pool" type='button'>Job Pool</Link></h4>
+                <h4><Link className='btn btn-success' to="/dashboard/" type='button'>Job Pool</Link></h4>
             </div>
 
             {loading ? (

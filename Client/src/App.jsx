@@ -24,6 +24,15 @@ import WriterSubList from './pages/WriterSubList.jsx';
 import SubmittedJobslist from './pages/SubmittedJobslist.jsx';
 import Profile from './pages/Profile.jsx';
 import Invoice from './pages/Invoice.jsx';
+import MypaidTrans from './pages/MypaidTrans.jsx';
+import MypendingTrans from './pages/MypendingTrans.jsx';
+import PaidOrders from './pages/PaidOrders.jsx';
+import UnpaidOrders from './pages/UnpaidOrders.jsx';
+import FinedOrders from './pages/FinedOrders.jsx';
+import NotificationList from './pages/NotificationList.jsx';
+import NewFine from './pages/NewFine.jsx';
+import MyFines from './pages/MyFines.jsx';
+
 
 const App = () => {
   return (
@@ -42,11 +51,13 @@ const App = () => {
           <Route path="jobs-onprogress" element={<WritersOnProgressJob />} />
           <Route path="Submitted-jobs" element={<WriterSubList />} />
           <Route path="rejected" element={<RejectedJobs />} />
-          <Route path="paid-transactions" element={<WritersTransactions />} />
-          <Route path="pending-payments" element={<RequestPayment />} />
+          <Route path="paid-transactions" element={<MypaidTrans />} />
+          <Route path="pending-payments" element={<MypendingTrans />} />
           <Route path="writer-bids-list" element={<WriterBidList />} />
           <Route path="my-profile" element={<Profile  />} exact />
           <Route path="Invoice" element={<Invoice />} />
+          <Route path='my-fines' element={<MyFines/>}/>
+          <Route path="notifications" element={< NotificationList/>} />
         </Route>
         <Route
           path="/manager/*"
@@ -62,6 +73,10 @@ const App = () => {
           <Route path="add-users" element={<AddUser />} />
           <Route path="Submitted-Jobs" element={<SubmittedJobslist />} />
           <Route path="my-profile" element={<Profile  />} exact />
+          <Route path="Paid-Orders" element={<PaidOrders />} />
+          <Route path="Unpaid-Orders" element={<UnpaidOrders />} />
+          <Route path="Fined-Orders" element={<FinedOrders />} />
+          <Route path="New-Fine" element={<NewFine />} />
 
         </Route>
         {/* Default route */}

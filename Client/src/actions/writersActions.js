@@ -76,47 +76,6 @@ export const listWriters = () => async (dispatch, getState) => {
     message.error(error.response.data.message);
   }
 };
-export const UpdateWriter = (id, updatedUser) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: UPDATE_WRITER_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.accessToken}`,
-      },
-      withCredentials: true,
-    };
-
-    const { data } = await axios.patch(
-      `${API}/users/updateUser/${id}`,
-      updatedUser, // Pass updated user object here
-      config
-    );
-
-    dispatch({
-      type: UPDATE_WRITER_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === "Not authorized, token failed") {
-      dispatch(logout());
-    }
-    dispatch({
-      type: UPDATE_WRITER_FAIL,
-      payload: message,
-    });
-
-    message.error(message);
-  }
-};
 
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {

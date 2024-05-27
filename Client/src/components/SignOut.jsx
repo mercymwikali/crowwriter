@@ -26,7 +26,23 @@ const Signout = () => {
                 console.error('Logout Error:', error);
             }
         } else if (e.key === 'viewprofile') {
-            console.log('User clicked View Profile');
+            switch (userInfo.UserInfo.roles) {
+                case 'admin':
+                    navigate('/admin/my-profile');
+                    break;
+
+                case 'manager':
+                    navigate('/manager/my-profile');
+                    break;
+
+                case 'writer':
+                    navigate('/dashboard/my-profile');
+                    break;
+
+                default:
+                    break;
+            }
+
         }
     };
 

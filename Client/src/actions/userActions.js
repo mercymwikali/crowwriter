@@ -14,14 +14,16 @@ import {
   USER_CREATE_FAIL,
   USER_CREATE_REQUEST,
   USER_CREATE_SUCCESS,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from "../constants/userConstants";
 import { message } from "antd";
-import {jwtDecode} from 'jwt-decode'
+import { jwtDecode } from "jwt-decode";
 
 import { API_URL as API } from "../../config";
 
 export const login = (email, password) => async (dispatch) => {
-
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
@@ -32,7 +34,6 @@ export const login = (email, password) => async (dispatch) => {
         "Content-Type": "application/json",
       },
       withCredentials: true,
-
     };
 
     const { data } = await axios.post(
@@ -48,7 +49,6 @@ export const login = (email, password) => async (dispatch) => {
 
     const userInfo = jwtDecode(data.accessToken);
     localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -70,7 +70,6 @@ export const logout = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.accesstoken}`,
       },
       withCredentials: true,
-
     };
 
     // Send POST request to clear token
@@ -109,9 +108,8 @@ export const createUser = (userData) => async (dispatch, getState) => {
     dispatch({
       type: USER_CREATE_SUCCESS,
       payload: data.response && data.response,
-
     });
-message.success(data.message)
+    message.success(data.message);
   } catch (error) {
     dispatch({
       type: USER_CREATE_FAIL,
@@ -122,6 +120,48 @@ message.success(data.message)
     });
 
     message.error(error.response.data.message);
+  }
+};
+
+export const updateUser = (id, updatedUser) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_UPDATE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.accessToken}`,
+      },
+      withCredentials: true,
+    };
+
+    const { data } = await axios.patch(
+      `${API}/users/updateUser/${id}`,
+      updatedUser, // Pass updated user object here
+      config
+    );
+
+    dispatch({
+      type: USER_UPDATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: USER_UPDATE_FAIL,
+      payload: message,
+    });
+
+    message.error(message);
   }
 };
 
@@ -140,7 +180,7 @@ export const getUserDetails = (user) => async (dispatch, getState) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.accesstoken}`,
       },
-      withCredentials: true,  
+      withCredentials: true,
     };
 
     const { data } = await axios.get(
@@ -153,7 +193,6 @@ export const getUserDetails = (user) => async (dispatch, getState) => {
       type: USER_DETAILS_SUCCESS,
       payload: data,
     });
-
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -169,6 +208,3 @@ export const getUserDetails = (user) => async (dispatch, getState) => {
     });
   }
 };
-
-
-

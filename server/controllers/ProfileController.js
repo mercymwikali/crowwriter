@@ -31,7 +31,6 @@ const getProfile = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Error fetching profile details." });
     }
 });
-
 // Update profile details
 const updateProfile = asyncHandler(async (req, res) => {
     const { id } = req.params; // Accessing user ID from route parameters

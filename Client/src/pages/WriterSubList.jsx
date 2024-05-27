@@ -62,7 +62,7 @@ const WriterSubList = () => {
                 <Skeleton active />
             ) : error ? (
                 <>{message.error(error)}</>
-            ) : submissions && submissions.documents && submissions.documents.length > 0 ? (
+            ) : submissions ? (
                 <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
@@ -77,7 +77,7 @@ const WriterSubList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {submissions.documents.map((submission, index) => (
+                        {submissions.documents && submissions.documents.map((submission, index) => (
                             <tr key={submission.documentId}>
                                 <td>{index + 1}</td>
                                 <td>{submission.orderId}</td>

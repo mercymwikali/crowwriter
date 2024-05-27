@@ -133,7 +133,6 @@ export const listOrders = () => async (dispatch, getState) => {
   } catch (error) {
     // Dispatch action to indicate request failure
     dispatch({ type: LIST_ORDERS_FAIL, payload: error.message });
-    message.error(error.response.data.message);
   }
 };
 
@@ -173,7 +172,6 @@ export const updateOrder = (id, order) => async (dispatch, getState) => {
       payload: message,
     });
 
-    message.error(message);
   }
 };
 

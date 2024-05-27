@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { CreditCardOutlined, DotChartOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { CreditCardOutlined, DotChartOutlined, MenuFoldOutlined, NotificationFilled, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { FaBriefcase, FaCheckCircle, FaClock, FaRegFolderOpen } from "react-icons/fa";
-import { IoSendSharp } from "react-icons/io5";
+import { IoNotificationsCircleOutline, IoSendSharp } from "react-icons/io5";
 import { RiFolderWarningLine } from "react-icons/ri";
 import { BsCashCoin, BsList } from "react-icons/bs";
 import Signout from '../components/SignOut';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { GiReceiveMoney } from 'react-icons/gi';
-
+import NotificationBtn from '../components/Notifications'
 const { Header, Content, Footer, Sider } = Layout;
 
 const Dashboard = () => {
@@ -27,15 +27,15 @@ const Dashboard = () => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     if (latestOpenKey && rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-        setOpenKeys(keys);
-        setCollapsed(true)
+      setOpenKeys(keys);
+      setCollapsed(true)
     } else {
-        setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     }
-}
-const handleMenuClick = (key) => {
-  navigate(`/dashboard/${key}`);
-};
+  }
+  const handleMenuClick = (key) => {
+    navigate(`/dashboard/${key}`);
+  };
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -50,19 +50,19 @@ const handleMenuClick = (key) => {
         collapsible collapsed={collapsed}
         className='sidemenu'
         onBreakpoint={(broken) => {
-            console.log(broken);
+          console.log(broken);
         }}
         onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
+          console.log(collapsed, type);
         }}
       >
         <Menu
-         theme="dark"
-         mode="inline"
-         defaultSelectedKeys={['/jobs-pool']}
-         openKeys={openKeys}
-         onOpenChange={onOpenChange}
-         onClick={({ key }) => handleMenuClick(key)}
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['/jobs-pool']}
+          openKeys={openKeys}
+          onOpenChange={onOpenChange}
+          onClick={({ key }) => handleMenuClick(key)}
           style={{
             backgroundColor: 'transparent',
             height: '100%',
@@ -106,13 +106,19 @@ const handleMenuClick = (key) => {
               ]
             },
             {
+
+              key: 'my-fines',
+              icon: <NotificationFilled />,
+              label: 'My Fines',
+            },
+            {
               key: '/My-Wallet',
               icon: <CreditCardOutlined />,
               label: 'My Wallet',
               children: [
                 {
-                  key:'Invoice',
-                  icon: <GiReceiveMoney  style={{fontSize:'20px'}}/>,
+                  key: 'Invoice',
+                  icon: <GiReceiveMoney style={{ fontSize: '20px' }} />,
                   label: 'Invoice',
                 },
                 {
@@ -156,7 +162,10 @@ const handleMenuClick = (key) => {
               }}
             />
           </div>
-          <Signout className='d-none d-sm-block cursor-pointer' />
+          <div className="d-flex">
+            <NotificationBtn />
+            <Signout className='d-none d-sm-block cursor-pointer' />
+          </div>
         </Header>
         <Content
           className='contentStyle'

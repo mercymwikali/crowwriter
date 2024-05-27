@@ -75,6 +75,7 @@ model Order {
   fines           Fine[]
   assignments     Assignment[] // Add a field to store assignments
   documentId      String?
+  Notification    Notification[]
 
   @@index([orderId, topic])
 }
@@ -85,6 +86,7 @@ enum OrderStatus {
   ASSIGNED
   SUBMITTED
   CANCELLED
+  BIDDED
 }
 
 // Bid model representing bids made by writers on orders
@@ -163,9 +165,10 @@ enum PaymentStatus {
   UNPAID
 }
 
-// Fine model representing fines applied to orders
+//
 model Fine {
   id        String @id @default(uuid())
+  createdAt  DateTime  @default(now())
   order     Order  @relation(fields: [orderId], references: [id])
   orderId   String
   finedTo   User   @relation(fields: [finedToId], references: [id])
@@ -177,6 +180,8 @@ model Fine {
 model Notification {
   id          String           @id @default(uuid())
   createdAt   DateTime         @default(now())
+  order       Order            @relation(fields: [orderId], references: [id])
+  orderId     String
   type        NotificationType
   message     String
   recipient   User             @relation(fields: [recipientId], references: [id])

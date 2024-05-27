@@ -3,13 +3,14 @@ import {
   userCreateReducer,
   userDetailsReducer,
   userLoginReducer,
+  userProfileReducer,
+  userUpdateReducer,
   usersDetailsReducer,
 } from "./userSlice";
 import {
   deleteUserReducer,
   myJobsListReducer,
   writerListReducer,
-  writerUpdateReducer,
 } from "./writersReducer";
 import {
   assignOrderReducer,
@@ -23,13 +24,14 @@ import {
 import { bidCreateReducer, bidListDetailsReducer, bidListReducer, deleteBidReducer, writersBidListReducer } from "./bidsReducer";
 import { deleteSubmittedOrderReducer, downloadSubmissionReducer, listSubmissionsByWriterReducer, listSubmissionsReducer, submitOrderReducer } from "./submissionReducer";
 import { deleteAssignedOrderReducer } from "./assignmentReducer";
+import { fineCreateReducer, fineDeleteReducer, fineUpdateReducer, listFinesReducer, writerFinesReducer } from "./FinesReducer";
 
 export const rootReducer = combineReducers({
   userLogin: userLoginReducer,
   userDetails: userDetailsReducer,
   usersDetails: usersDetailsReducer,
   writersList: writerListReducer,
-  writersUpdate: writerUpdateReducer,
+  userUpdate: userUpdateReducer,
   deleteUser: deleteUserReducer,
   userCreate: userCreateReducer,
   orderCreate: orderCreateReducer,
@@ -51,5 +53,11 @@ export const rootReducer = combineReducers({
   listSubmission:listSubmissionsReducer,
   submissionByWriter:listSubmissionsByWriterReducer,
   downloadSubmission:downloadSubmissionReducer,
+  userProfile:userProfileReducer,
+  fineOrder:fineCreateReducer,
+  fineList:listFinesReducer,
+  updateFine:fineUpdateReducer,
+  writerFines:writerFinesReducer,
+  deleteFine:fineDeleteReducer
 
 });

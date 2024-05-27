@@ -1,23 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Table, Button, InputNumber, Input, Popconfirm } from 'antd';
+import useAuth from '../hooks/useAuth';
 
 const { Title, Text } = Typography;
 
 const Invoice = () => {
-  const [invoiceItems, setInvoiceItems] = useState([
-    { key: '1', description: 'Web Development Services', quantity: 1, price: 1000, total: 1000 },
-    { key: '2', description: 'Graphic Design Services', quantity: 1, price: 500, total: 500 },
-  ]);
+  const [invoiceItems, setInvoiceItems] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [invoiceDate, setInvoiceDate] = useState('');
+
+  const user = useAuth();
+
+  useEffect(() => {
+    const generatedInvoiceNumber = getNextInvoiceNumber();
+
+    const generateInvoiceDate = () => {
+      const currentDate = new Date();
+      return currentDate.toISOString().split('T')[0];
+    };
+
+    setInvoiceNumber(generatedInvoiceNumber);
+    setInvoiceDate(generateInvoiceDate());
+  }, []);
+
+  const getNextInvoiceNumber = () => {
+    const latestInvoiceNumber = localStorage.getItem('latestInvoiceNumber') || '0000';
+    const nextInvoiceNumber = (parseInt(latestInvoiceNumber, 10) + 1).toString().padStart(4, '0');
+    localStorage.setItem('latestInvoiceNumber', nextInvoiceNumber);
+    return `INV-${nextInvoiceNumber}`;
+  };
 
   const calculateTotalAmount = (items) => {
     return items.reduce((acc, item) => acc + item.total, 0);
   };
 
-  const [totalAmount, setTotalAmount] = useState(calculateTotalAmount(invoiceItems));
-
   const handleAddRow = () => {
     const newKey = (invoiceItems.length + 1).toString();
-    const newItem = { key: newKey, description: '', quantity: 0, price: 0, total: 0 };
+    const newItem = { key: newKey, OrderId: '', 'No-of-Pages': 0, 'Cost Per Page': 0, total: 0 };
     setInvoiceItems([...invoiceItems, newItem]);
   };
 
@@ -31,8 +51,8 @@ const Invoice = () => {
     const newItems = invoiceItems.map(item => {
       if (item.key === key) {
         const updatedItem = { ...item, [field]: value };
-        if (field === 'No Of Pages' || field === 'Cost Per Page') {
-          updatedItem.total = updatedItem['No Of Pages'] * updatedItem['Cost Per Page'];
+        if (field === 'No-of-Pages' || field === 'Cost Per Page') {
+          updatedItem.total = updatedItem['No-of-Pages'] * updatedItem['Cost Per Page'];
         }
         return updatedItem;
       }
@@ -41,28 +61,44 @@ const Invoice = () => {
     setInvoiceItems(newItems);
     setTotalAmount(calculateTotalAmount(newItems));
   };
-  
+
+  const handleRequestPayment = () => {
+    // Logic for handling payment request
+    console.log('Payment requested!');
+  };
+
   const columns = [
     {
       title: 'Order ID',
-      dataIndex: 'Order ID',
-      key: 'Order ID',
+      dataIndex: 'OrderId',
+      key: 'OrderId',
       render: (text, record) => (
         <Input
           value={text}
-          onChange={(e) => handleInputChange(record.key, 'Order ID', e.target.value)}
+          onChange={(e) => handleInputChange(record.key, 'OrderId', e.target.value)}
         />
       ),
     },
     {
-      title: 'No Of Pages',
-      dataIndex: 'No Of Pages',
-      key: 'No Of Pages',
+      title: 'Topic',
+      dataIndex: 'Topic',
+      key: 'Topic',
+      render: (text, record) => (
+        <Input
+          value={text}
+          onChange={(e) => handleInputChange(record.key, 'Topic', e.target.value)}
+        />
+      ),
+    },
+    {
+      title: 'No. of Pages',
+      dataIndex: 'No-of-Pages',
+      key: 'No-of-Pages',
       render: (text, record) => (
         <InputNumber
           min={0}
           value={text}
-          onChange={(value) => handleInputChange(record.key, 'No Of Pages', value)}
+          onChange={(value) => handleInputChange(record.key, 'No-of-Pages', value)}
         />
       ),
     },
@@ -96,24 +132,17 @@ const Invoice = () => {
   ];
 
   return (
-    <div className="container mt-5">
-      <div className="d-flex justify-content-between mb-4">
-        <div>
+    <div className="inv-container mt-5">
+      <div className="inv-header">
+        <div className="invoice-info">
           <Title level={2}>Invoice</Title>
-          <Text>Invoice Number: INV-001</Text><br />
-          <Text>Date: 2024-05-22</Text><br />
-          <Text>Due Date: 2024-06-22</Text>
+          <Text>Invoice Number:{invoiceNumber}</Text><br />
+          <Text>Invoice Date: {invoiceDate}</Text><br />
         </div>
-        <div className="text-right">
-          <Text strong>ABC Company</Text><br />
-          <Text>123 Main St, Anytown, USA</Text>
+        <div className="user-info">
+          <Text strong>{user.UserInfo.username}</Text><br />
+          <Text>{user.UserInfo.email}</Text>
         </div>
-      </div>
-
-      <div className="mb-4">
-        <Text strong>Bill To:</Text><br />
-        <Text>John Doe</Text><br />
-        <Text>456 Elm St, Othertown, USA</Text>
       </div>
 
       <Table
@@ -128,12 +157,11 @@ const Invoice = () => {
         )}
       />
 
-      <div className="mt-4 text-right">
+      <div className="actions">
         <Button type="primary" onClick={handleAddRow}>Add Item</Button>
-      </div>
-
-      <div className="mt-4 text-right">
-        <Button type="primary">Request Payment</Button>
+        <Button type="primary" disabled={!invoiceItems.length} onClick={handleRequestPayment}>
+          Request Payment
+        </Button>
       </div>
     </div>
   );
