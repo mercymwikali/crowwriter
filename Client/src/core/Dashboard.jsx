@@ -9,6 +9,7 @@ import Signout from '../components/SignOut';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { GiReceiveMoney } from 'react-icons/gi';
 import NotificationBtn from '../components/Notifications'
+import { MdDataExploration } from 'react-icons/md';
 const { Header, Content, Footer, Sider } = Layout;
 
 const Dashboard = () => {
@@ -73,6 +74,12 @@ const Dashboard = () => {
             transition: '0.2s ease',
           }}
           items={[
+            {
+              key: '/Dashboard',
+              icon: <MdDataExploration />,
+              label: 'Dashboard',
+              
+            },
             {
               key: '/',
               icon: <FaBriefcase />,

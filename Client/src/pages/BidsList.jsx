@@ -51,7 +51,7 @@ const BidsList = () => {
                   <th scope="col">#</th>
                   <th scope="col">Order ID</th>
                   <th scope="col">Topic</th>
-                  <th scope="col">Deadline</th>
+                  <th scope="col">Due In</th>
                   <th scope="col">Cost Per Page</th>
                   <th scope="col">Status</th>
                   <th scope="col">Bid Count</th>
@@ -65,7 +65,7 @@ const BidsList = () => {
                       <td>{index + 1}</td>
                       <td>{order.orderId}</td>
                       <td>{order.topic}</td>
-                      <td>{new Date(order.deadline).toLocaleDateString()}</td>
+                      <td>{order.remainingTime}</td>
                       <td>{order.costPerPage}</td>
                       <td>{order.status}</td>
                       <td>{order.bidCount}</td>

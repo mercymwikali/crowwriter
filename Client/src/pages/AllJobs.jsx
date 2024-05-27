@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Skeleton, Tooltip, message, Button, Modal, Pagination } from 'antd';
-import { DeleteFilled, EditFilled, TagsOutlined } from '@ant-design/icons';
+import { DeleteFilled, DeleteOutlined, EditFilled, TagsOutlined } from '@ant-design/icons';
 import { listOrders } from '../actions/orderActions';
 import moment from 'moment';
 import AssignWriter from '../components/AssignButton';
@@ -78,7 +78,7 @@ const Allorders = () => {
 
   return (
     <>
-      <h1 className='text-success'>All orders</h1>
+      <h1 className='text-dark'>My Orders</h1>
       <div className="d-block d-flex justify-content-end align-items-center my-1">
         <h4>
           <Link className='btn btn-success' to={'/manager/'} type='button'>Create New Order</Link>
@@ -91,10 +91,8 @@ const Allorders = () => {
             <th scope='col'>OrderId</th>
             <th scope='col'>Topic</th>
             <th scope='col'>No of Pages</th>
-            <th scope='col'>Cost Per Page</th>
             <th scope='col'>Full Amount</th>
-            <th scope='col'>Deadline</th>
-            <th scope='col'>Remaining Time</th>
+            <th scope='col'>Due In</th>
             <th scope='col'>Status</th>
             <th scope='col'>Actions</th>
           </tr>
@@ -120,21 +118,27 @@ const Allorders = () => {
                   <td>{order.orderId}</td>
                   <td>{order.topic}</td>
                   <td>{order.noOfPages}</td>
-                  <td>{order.costPerPage}</td>
                   <td>{order.fullAmount}</td>
-                  <td>{moment(order.deadline).format('YYYY-MM-DD')}</td>
                   <td>{order.remainingTime}</td>
                   <td>{order.status}</td>
                   <td>
-                    <Tooltip title="Edit">
-                      <Button type="ghost" icon={<EditFilled style={{ color: 'blue' }} />} onClick={() => handleEdit(order)} />
+                   <div className="d-flex flex-col gap-2 ">
+                   <Tooltip title="Update Order">
+                      <Button type="primary" icon={<EditFilled style={{ color: '#fff' }} />} onClick={() => handleEdit(order)} >
+                        Update Order
+                      </Button>
                     </Tooltip>
-                    <Tooltip title="Assign Order">
-                      <Button type="ghost" icon={<TagsOutlined style={{ color: 'blue' }} />} onClick={() => assignOrder(order)} />
+                    <Tooltip title="Hire Writer">
+                      <Button type="primary" icon={<TagsOutlined style={{ color: 'blue', fontSize: '18px' }} />} onClick={() => assignOrder(order)} ghost >
+                        Hire Writer
+                      </Button>
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <Button type="danger" icon={<DeleteFilled style={{ color: 'red' }} />} onClick={() => deleteOrder(order.id)} />
+                      <Button type="primary" icon={<DeleteOutlined style={{ color: '#fff' }} />} onClick={() => deleteOrder(order.id)} danger>
+                        Delete
+                      </Button>
                     </Tooltip>
+                   </div>
                   </td>
                 </tr>
               ))

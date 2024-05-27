@@ -59,11 +59,11 @@ const {loading,error,document}=downloadDocument;
             <Form.Item label="Deadline">
               <Input value={new Date(selectedJob.deadline).toLocaleDateString()} readOnly />
             </Form.Item>
-            <Form.Item label="Remaining Time">
+            <Form.Item label="Due In:">
               <Input value={selectedJob.remainingTime} readOnly />
             </Form.Item>
             <Form.Item label="Description">
-              <TextArea rows={13} value={selectedJob.description} readOnly />
+              <TextArea rows={8} value={selectedJob.description} readOnly style={{ resize: 'none', overflowY: 'auto'   }} />
             </Form.Item>
             <Form.Item className='justify-content-center d-flex align-items-center'>
               <Button type="primary" size='large'  icon={<DownloadOutlined />} style={{ marginTop: '16px' }} block onClick={handleDownload}>Download Attachment</Button>

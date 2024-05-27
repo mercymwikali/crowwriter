@@ -94,7 +94,7 @@ const Profile = () => {
                             </Tooltip>
                         </Button>
                     </div>
-                    <Tabs defaultActiveKey="1" className='w-100 col-12 p-3'>
+                    <Tabs defaultActiveKey="1" className='w-100 col-12 '>
                         <Tabs.TabPane tab="Profile" key="1">
                             <Form form={form} layout="vertical">
                                 <Form.Item label="Username" name="username" className="w-100">
@@ -102,7 +102,7 @@ const Profile = () => {
                                 </Form.Item>
 
                                 <Form.Item label="Email" name="email" className="w-100">
-                                    <Input size="large" className='px-3' prefix={<MdEmail style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter your email" readOnly />
+                                    <Input size="large" type="email" prefix={<MdEmail style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter your email" readOnly />
                                 </Form.Item>
 
                                 <Form.Item label="Role" name="role" className="w-100">

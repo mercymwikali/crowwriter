@@ -52,6 +52,9 @@ app.use("/submitJob", SubmitJob);
 const Fines = require("./routes/FineRoutes");
 app.use("/fines", Fines);
 
+const paymentRoute = require("./routes/PaymentsRoutes");
+app.use("/payment", paymentRoute);
+
 // const Profile = require("./routes/Profile");
 // app.use("/profile", Profile);
 

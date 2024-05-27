@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { CreditCardOutlined,  EditTwoTone, HourglassOutlined,  MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined, UserAddOutlined } from '@ant-design/icons';
+import { CreditCardOutlined,  EditTwoTone, HourglassOutlined,  MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined, UserAddOutlined, FolderOpenFilled } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { FaBriefcase, FaCheckCircle, FaClock, FaFileArchive, FaRegFolderOpen, FaUsers } from "react-icons/fa";
 import { GiCancel, GiProgression } from "react-icons/gi";
@@ -87,7 +87,7 @@ const handleMenuClick = (key) => {
                         },
                         {
                             key: '/Manage-Jobs',
-                            icon: <FaBriefcase />,
+                            icon: <FolderOpenFilled />,
                             label: 'Manage Jobs',
                             children: [
                                 {

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listWriters } from "../actions/writersActions";
 import { assignOrder } from "../actions/assigningActions";
+import { PlusOutlined } from "@ant-design/icons";
+import { FaUserPlus } from "react-icons/fa";
 
 const { Option } = Select;
 
@@ -16,13 +18,13 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
 
   // Fetch writers from Redux store
   const writerList = useSelector((state) => state.writersList);
-  const { loading, error, users,success } = writerList;
+  const { loading, error, users, success } = writerList;
 
   // Fetch writers when the component mounts
   useEffect(() => {
-if (success) {
-  dispatch(listWriters());
-}
+    if (success) {
+      dispatch(listWriters());
+    }
 
     dispatch(listWriters());
   }, [dispatch, success]);
@@ -56,16 +58,15 @@ if (success) {
     } finally {
       setLoadingAssign(false); // Reset loading state after assigning
     }
-   
+
   };
 
   return (
     <Modal
-      title="Assign Job"
+      title="Hire Writer"
       visible={visible}
       onCancel={onCancel}
       width={500}
-      bodyStyle={{ padding: "20px" }}
       footerStyle={{ justifyContent: "center" }}
       maskClosable
       destroyOnClose
@@ -80,23 +81,23 @@ if (success) {
           type="primary"
           onClick={handleAssignOrder}
           loading={loadingAssign} // Use loading state for button
-          
+          style={{backgroundColor: 'green', borderColor: 'green'}}
+
         >
-          Assign
+         <span className="px-2"> Hire Writer</span> <FaUserPlus size={20}/>
         </Button>,
       ]}
     >
       {selectedorder && (
         <>
-          <p>Assign this order to a writer:</p>
           <Form.Item label="Order ID">
             <Input value={selectedorder.orderId} readOnly />
           </Form.Item>
           <div className="d-flex align-items-center gap-3">
-            <Form.Item label="Select a writer" className="col-10">
+            <Form.Item label="Hire a writer" className="col-12">
               <Select
                 showSearch
-                placeholder="Select a writer"
+                placeholder="Hire a writer"
                 optionFilterProp="children"
                 onChange={(value) => setSelectedWriterId(value)}
 

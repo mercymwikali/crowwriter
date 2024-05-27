@@ -5,6 +5,7 @@ import { Skeleton, message, Button, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import JobViewModal from '../components/viewJob';
 import BidJobModal from '../components/BidJob';
+import { EyeFilled } from '@ant-design/icons';
 
 const JobsPool = () => {
   const dispatch = useDispatch();
@@ -84,8 +85,9 @@ const JobsPool = () => {
                   <td>
                     <div className="d-flex gap-3">
                       <Tooltip title="View Details">
-                        <Button className="view-job-btn bg-warning" onClick={() => handleViewJob(order)}>
-                          View
+                        <Button className="view-job-btn " onClick={() => handleViewJob(order)}>
+                         <EyeFilled />
+                         view
                         </Button>
                       </Tooltip>
                       <Tooltip title="Bid Job">

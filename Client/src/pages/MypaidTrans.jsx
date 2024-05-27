@@ -4,7 +4,7 @@ import React from 'react'
 const MypaidTrans = () => {
     return (
         <div>
-            <Typography.Title level={2} underline>Paid Orders</Typography.Title>
+            <Typography.Title level={2} >My Balance : $0.00</Typography.Title>
             <table className="table table-hover table-responsive">
                 <thead>
                     <tr>
