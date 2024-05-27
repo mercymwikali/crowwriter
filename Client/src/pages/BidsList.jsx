@@ -34,7 +34,7 @@ const BidsList = () => {
   return (
     <>
       <h1 className='text-success'>Bids List</h1>
-      <div className="d-block d-md-flex gap-4 justify-items-between align-items-center">
+      <div className="d-block d-md-flex gap-4 w-100 justify-items-between align-items-center">
         <button className='btn my-3 btn-success' type='button' onClick={() => navigate('/Order-requirements-details')}>Create Job</button>
         <button className='btn btn-success' type='button' onClick={() => navigate('/Create-order')}>Download List</button>
       </div>

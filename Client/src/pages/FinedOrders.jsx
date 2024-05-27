@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { listFines, editFine, deleteFine } from '../actions/FinesActions';
-import { Modal, Button, Skeleton, Typography, message, Form, Input, Space, InputNumber } from 'antd';
+import { Modal, Button, Skeleton, Typography, Form, Input, Space, InputNumber } from 'antd';
 import { DeleteOutlined, EditFilled } from '@ant-design/icons';
 
 const FinedOrders = () => {
@@ -24,11 +24,10 @@ const FinedOrders = () => {
         dispatch(listFines());
     }, [dispatch]);
 
-   useEffect(() => {
-       if (successUpdate || successDelete) {
-        dispatch(listFines());
-        
-       }
+    useEffect(() => {
+        if (successUpdate || successDelete) {
+            dispatch(listFines());
+        }
     }, [dispatch, successUpdate, successDelete]);
 
     const handleEditModalOpen = (fine) => {
@@ -79,58 +78,76 @@ const FinedOrders = () => {
         <div>
             <Typography.Title level={2} underline>Fined Orders</Typography.Title>
             {loading ? (
-                <Skeleton active />
+    <Skeleton active />
+) : error ? (
+    <table className="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>Writer</th>
+                <th scope='col'>Order ID</th>
+                <th scope='col'>Topic</th>
+                <th scope='col'>Date Posted</th>
+                <th scope='col'>Order Amount</th>
+                <th scope='col'>Fine Amount</th>
+                <th scope='col'>Reason</th>
+                <th scope='col'>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colSpan="8" className='text-danger py-2'>{error}</td>
+            </tr>
+        </tbody>
+    </table>
+) : (
+    <table className="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th scope='col'>#</th>
+                <th scope='col'>Writer</th>
+                <th scope='col'>Order ID</th>
+                <th scope='col'>Topic</th>
+                <th scope='col'>Date Posted</th>
+                <th scope='col'>Order Amount</th>
+                <th scope='col'>Fine Amount</th>
+                <th scope='col'>Reason</th>
+                <th scope='col'>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {fines && fines.length > 0 ? (
+                fines.map((fine, index) => (
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{fine.finedTo.username}</td>
+                        <td>{fine.order.orderId}</td>
+                        <td>{fine.order.topic}</td>
+                        <td>{fine.order.createdAt}</td>
+                        <td>{fine.order.fullAmount}</td>
+                        <td>{fine.amount}</td>
+                        <td>{fine.reason}</td>
+                        <td>
+                            <Space>
+                                <Button type='primary' style={{ backgroundColor: '#FFC107' }} onClick={() => handleEditModalOpen(fine)}>
+                                    <EditFilled style={{ color: 'white', fontSize: '21px' }} />
+                                </Button>
+                                <Button type='primary' danger onClick={() => handleDeleteModalOpen(fine)}>
+                                    <DeleteOutlined style={{ color: 'white', fontSize: '21px' }} />
+                                </Button>
+                            </Space>
+                        </td>
+                    </tr>
+                ))
             ) : (
-                <table className="table table-hover table-responsive">
-                    <thead>
-                        <tr>
-                            <th scope='col'>#</th>
-                            <th scope='col'>Writer</th>
-                            <th scope='col'>Order ID</th>
-                            <th scope='col'>Topic</th>
-                            <th scope='col'>Date Posted</th>
-                            <th scope='col'>Order Amount</th>
-                            <th scope='col'>Fine Amount</th>
-                            <th scope='col'>Reason</th>
-                            <th scope='col'>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {error ? (
-                            <tr>
-                                <td colSpan="8" className='text-danger py-2'>No records found</td>
-                            </tr>
-                        ) : fines && fines.length > 0 ? (
-                            fines.map((fine, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{fine.finedTo.username}</td>
-                                    <td>{fine.order.orderId}</td>
-                                    <td>{fine.order.topic}</td>
-                                    <td>{fine.order.createdAt}</td>
-                                    <td>{fine.order.fullAmount}</td>
-                                    <td>{fine.amount}</td>
-                                    <td>{fine.reason}</td>
-                                    <td>
-                                        <Space>
-                                            <Button type='primary' style={{ backgroundColor: '#FFC107' }} onClick={() => handleEditModalOpen(fine)}>
-                                                <EditFilled style={{ color: 'white', fontSize: '21px' }} />
-                                            </Button>
-                                            <Button type='primary' danger onClick={() => handleDeleteModalOpen(fine)}>
-                                                <DeleteOutlined style={{ color: 'white', fontSize: '21px' }} />
-                                            </Button>
-                                        </Space>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="8" className='text-danger py-2'>No records found</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                <tr>
+                    <td colSpan="8" className='text-danger py-2'>No records found</td>
+                </tr>
             )}
+        </tbody>
+    </table>
+)}
+
             {/* Edit Fine Modal */}
             <Modal
                 title="Edit Fine"
