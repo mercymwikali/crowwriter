@@ -113,7 +113,27 @@ const NewOrder = () => {
     const duration = moment.duration(end.diff(now));
     const days = Math.floor(duration.asDays());
     const hours = Math.floor(duration.asHours() % 24);
-    setNewOrder(prevState => ({ ...prevState, remainingTime: `${days} days and ${hours} hours remaining` }));
+    const minutes = Math.floor(duration.asMinutes() % 60);
+    setNewOrder(prevState => ({ ...prevState, remainingTime: `${days} days and ${hours} hours ` }));
+
+    //if 0 days, then show only hours
+    if (days === 0) {
+      setNewOrder(prevState => ({ ...prevState, remainingTime: `${hours} hours ` }));
+    }
+
+    //if hours are 0, then show only show minutes
+    if (hours === 0) {
+      setNewOrder(prevState => ({ ...prevState, remainingTime: `${minutes} minutes ` }));
+    }
+   
+
+    //else if cleared deadline
+    if (deadline === null) {  
+      setNewOrder(prevState => ({ ...prevState, remainingTime: 'No Deadline' }));
+
+
+    };
+
   };
 
   const handleFileUpload = (documentId) => {
