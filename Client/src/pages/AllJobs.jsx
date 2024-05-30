@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Skeleton, Tooltip, message, Button, Modal, Pagination } from 'antd';
-import { DeleteFilled, DeleteOutlined, EditFilled, TagsOutlined } from '@ant-design/icons';
+import { Skeleton, Tooltip, message, Button, Modal, Pagination, Input, Select, Space, Row, Col, Table, Typography, Tag } from 'antd';
+import { DeleteOutlined, EditFilled, TagsOutlined } from '@ant-design/icons';
 import { listOrders } from '../actions/orderActions';
 import moment from 'moment';
 import AssignWriter from '../components/AssignButton';
 import EditJob from '../components/EditJob';
+
+const { Search } = Input;
+const { Option } = Select;
 
 const Allorders = () => {
   const dispatch = useDispatch();
@@ -20,6 +23,8 @@ const Allorders = () => {
   const [assignOrderModal, setAssignOrderModal] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState('');
+  const [searchType, setSearchType] = useState('orderId');
   const pageSize = 25;
 
   useEffect(() => {
@@ -73,82 +78,125 @@ const Allorders = () => {
     setCurrentPage(page);
   };
 
+  const handleSearch = (value) => {
+    setSearchText(value.toLowerCase());
+  };
+
+  const filteredOrders = orders ? orders.filter(order => {
+    switch (searchType) {
+      case 'orderId':
+        return order.orderId.toLowerCase().includes(searchText);
+      case 'topic':
+        return order.topic.toLowerCase().includes(searchText);
+      default:
+        return false;
+    }
+  }) : [];
+
+  const renderStatusTag = (status) => {
+    let color;
+    switch (status.toLowerCase()) {
+      case 'assigned':
+        color = 'blue';
+        break;
+      case 'completed':
+        color = 'green';
+        break;
+      case 'pending':
+        color = 'orange';
+        break;
+      case 'cancelled':
+        color = 'red';
+        break;
+      default:
+        color = 'default';
+        break;
+    }
+    return <Tag color={color}>{status.toUpperCase()}</Tag>;
+  };
+
+  const columns = [
+    { title: '#', dataIndex: 'index', key: 'index', render: (_, __, index) => index + 1 },
+    { title: 'OrderId', dataIndex: 'orderId', key: 'orderId' },
+    { title: 'Topic', dataIndex: 'topic', key: 'topic' },
+    { title: 'No of Pages', dataIndex: 'noOfPages', key: 'noOfPages' },
+    { title: 'Full Amount', dataIndex: 'fullAmount', key: 'fullAmount' },
+    { title: 'Due In', dataIndex: 'remainingTime', key: 'remainingTime' },
+    {
+      title: 'Deadline',
+      dataIndex: 'deadline',
+      key: 'deadline',
+      render: (deadline) => moment(deadline).format('DD/MM/YYYY'),
+    },
+
+    { title: 'Status', dataIndex: 'status', key: 'status', render: renderStatusTag },
+    {
+      title: 'Actions', key: 'actions', render: (text, order) => (
+        <Space size="middle">
+          <Tooltip title="Update Order">
+            <Button type="primary" icon={<EditFilled />} onClick={() => handleEdit(order)} />
+          </Tooltip>
+          <Tooltip title="Hire Writer">
+            <Button type="primary" icon={<TagsOutlined style={{ color: 'blue', fontSize: '18px' }} />} onClick={() => assignOrder(order)} ghost />
+          </Tooltip>
+          <Tooltip title="Delete">
+            <Button type="primary" icon={<DeleteOutlined />} onClick={() => deleteOrder(order.id)} danger />
+          </Tooltip>
+        </Space>
+      )
+    },
+  ];
+
   const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, orders && orders.length);
+  const endIndex = Math.min(startIndex + pageSize, filteredOrders.length);
 
   return (
     <>
-      <h1 className='text-dark'>My Orders</h1>
-      <div className="d-block d-flex justify-content-end align-items-center my-1">
-        <h4>
+      <Row gutter={[16, 16]} justify="space-between" align="middle">
+        <Col xs={24} md={12}>
+          <Typography.Title level={3}>My Orders</Typography.Title>
+        </Col>
+        <Col xs={24} md={12} style={{ textAlign: 'right' }}>
           <Link className='btn btn-success' to={'/manager/'} type='button'>Create New Order</Link>
-        </h4>
-      </div>
-      <table className="table table-hover table-responsive">
-        <thead>
-          <tr>
-            <th scope='col'>#</th>
-            <th scope='col'>OrderId</th>
-            <th scope='col'>Topic</th>
-            <th scope='col'>No of Pages</th>
-            <th scope='col'>Full Amount</th>
-            <th scope='col'>Due In</th>
-            <th scope='col'>Status</th>
-            <th scope='col'>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
-            <tr>
-              <td colSpan="10"><Skeleton active /></td>
-            </tr>
-          ) : error ? (
-            <tr>
-              <td colSpan="10">{message.error(error)}</td>
-            </tr>
-          ) : (
-            orders && orders.length === 0 ? (
-              <tr>
-                <td colSpan="10">No orders found</td>
-              </tr>
-            ) : (
-              orders && orders.length > 0 && orders.slice(startIndex, endIndex).map((order, index) => (
-                <tr key={order.id}>
-                  <td>{startIndex + index + 1}</td>
-                  <td>{order.orderId}</td>
-                  <td>{order.topic}</td>
-                  <td>{order.noOfPages}</td>
-                  <td>{order.fullAmount}</td>
-                  <td>{order.remainingTime}</td>
-                  <td>{order.status}</td>
-                  <td>
-                   <div className="d-flex flex-col gap-2 ">
-                   <Tooltip title="Update Order">
-                      <Button type="primary" icon={<EditFilled style={{ color: '#fff' }} />} onClick={() => handleEdit(order)} >
-                        Update Order
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title="Hire Writer">
-                      <Button type="primary" icon={<TagsOutlined style={{ color: 'blue', fontSize: '18px' }} />} onClick={() => assignOrder(order)} ghost >
-                        Hire Writer
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <Button type="primary" icon={<DeleteOutlined style={{ color: '#fff' }} />} onClick={() => deleteOrder(order.id)} danger>
-                        Delete
-                      </Button>
-                    </Tooltip>
-                   </div>
-                  </td>
-                </tr>
-              ))
-            )
-          )}
-        </tbody>
-      </table>
+        </Col>
+      </Row>
+      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+        <Col xs={24} md={8}>
+          <Select defaultValue="orderId" onChange={setSearchType} style={{ width: '100%' }}>
+            <Option value="orderId">Order ID</Option>
+            <Option value="topic">Topic</Option>
+          </Select>
+        </Col>
+        <Col xs={24} md={16}>
+          <Search
+            placeholder={`Search by ${searchType}`}
+            onSearch={handleSearch}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: '100%' }}
+          />
+        </Col>
+      </Row>
+      {loading ? (
+        <Skeleton active />
+      ) : error ? (
+        <Row>
+          <Col span={24}>{message.error(error)}</Col>
+        </Row>
+      ) : filteredOrders && filteredOrders.length === 0 ? (
+        <Row>
+          <Col span={24}><Typography.Text>No orders found</Typography.Text></Col>
+        </Row>
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={filteredOrders.slice(startIndex, endIndex)}
+          rowKey={(record) => record.id}
+          pagination={false}
+        />
+      )}
       <Pagination
         current={currentPage}
-        total={orders ? orders.length : 0}
+        total={filteredOrders ? filteredOrders.length : 0}
         pageSize={pageSize}
         onChange={onPageChange}
         showSizeChanger={false}

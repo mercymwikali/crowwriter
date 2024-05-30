@@ -47,19 +47,20 @@ const AssignWriter = ({ selectedorder, onCancel, visible }) => {
       message.error("Please select a writer");
       return;
     }
-
+  
     setLoadingAssign(true); // Set loading state while assigning
-
+  
     try {
       await dispatch(assignOrder(selectedorder.id, selectedWriterId));
-      onCancel();
+      message.success("Writer assigned successfully"); // Display success message
+      onCancel(); // Close the modal after successful assignment
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
       setLoadingAssign(false); // Reset loading state after assigning
     }
-
   };
+  
 
   return (
     <Modal

@@ -93,7 +93,7 @@ const handleMenuClick = (key) => {
                                 {
                                     key: 'All-Jobs',
                                     icon: <GiProgression />,
-                                    label: 'All Jobs',
+                                    label: 'Listed Jobs',
                                 },
                                 {
                                     key: 'Bids-List',
@@ -103,7 +103,7 @@ const handleMenuClick = (key) => {
                                 {
                                     key: 'Assigned-Jobs',
                                     icon: <HourglassOutlined />,
-                                    label: 'Assigned Jobs',
+                                    label: 'Hired Writers',
                                 },
                                 {
                                     key: 'Submitted-Jobs',
