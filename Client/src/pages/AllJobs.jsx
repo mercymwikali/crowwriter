@@ -154,7 +154,7 @@ const Allorders = () => {
     <>
       <Row gutter={[16, 16]} justify="space-between" align="middle">
         <Col xs={24} md={12}>
-          <Typography.Title level={3}>My Orders</Typography.Title>
+          <Typography.Title level={3}>Listed Orders</Typography.Title>
         </Col>
         <Col xs={24} md={12} style={{ textAlign: 'right' }}>
           <Link className='btn btn-success' to={'/manager/'} type='button'>Create New Order</Link>
@@ -162,12 +162,14 @@ const Allorders = () => {
       </Row>
       <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col xs={24} md={8}>
+          <Typography.Text style={{ marginRight: 8 , fontWeight: 'bold' }}>Search by: </Typography.Text>
           <Select defaultValue="orderId" onChange={setSearchType} style={{ width: '100%' }}>
             <Option value="orderId">Order ID</Option>
             <Option value="topic">Topic</Option>
           </Select>
         </Col>
         <Col xs={24} md={16}>
+          <Typography.Text style={{ marginRight: 8 , fontWeight: 'bold' }}>Search: </Typography.Text>
           <Search
             placeholder={`Search by ${searchType}`}
             onSearch={handleSearch}

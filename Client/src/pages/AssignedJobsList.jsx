@@ -86,12 +86,14 @@ const AssignedJobsList = () => {
             </Row>
             <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
                 <Col xs={24} md={8}>
+                    <Typography.Text style={{ marginRight: 8 , fontWeight: 'bold'}}>Search by: </Typography.Text>
                     <Select defaultValue="order" onChange={setSearchType} style={{ width: '100%' }}>
                         <Option value="order">Order</Option>
                         <Option value="writer">Writer</Option>
                     </Select>
                 </Col>
                 <Col xs={24} md={16}>
+                    <Typography.Text style={{ marginRight: 8 , fontWeight: 'bold'}}>Search: </Typography.Text>
                     <Search 
                         placeholder={`Search by ${searchType}`} 
                         onSearch={handleSearch} 
