@@ -240,13 +240,13 @@ const reassignOrder = asyncHandler(async (req, res) => {
 
     const oldWriterId = currentAssignment.userId;
 
-    // Delete the assignment from the original writer
-    await prisma.assignment.deleteMany({
-      where: {
-        orderId: orderId,
-        userId: oldWriterId // Ensure writerId is the original writer's ID
-      }
-    });
+    // // Delete the assignment from the original writer
+    // await prisma.assignment.deleteMany({
+    //   where: {
+    //     orderId: orderId,
+    //     userId: oldWriterId // Ensure writerId is the original writer's ID
+    //   }
+    // });
 
     // Create an assignment for the new writer
     const assignment = await prisma.assignment.create({

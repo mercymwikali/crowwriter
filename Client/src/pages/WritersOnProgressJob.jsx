@@ -16,16 +16,23 @@ const WritersOnProgressJob = () => {
   const myJobsState = useSelector((state) => state.myJobs);
   const { loading, error, orders } = myJobsState;
 
+  const downloadDocument = useSelector(state => state.downloadAttachment);
+  const { loading: docloading, error: docerror, document } = downloadDocument;
+
+
   const [submitOrderModal, setSubmitOrderModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const handleDownload = async (order) => {
     try {
-      await dispatch(downloadOrderAttachment(order.id, order.order.orderId));
+      if (order && order.order.documentId) {
+        await dispatch(downloadOrderAttachment(order.order.documentId));
+      }
     } catch (error) {
       message.error('Failed to download attachment');
     }
   }
+
 
   useEffect(() => {
     if (writerId) {
@@ -36,7 +43,7 @@ const WritersOnProgressJob = () => {
   const handleSubmitOrder = (order) => {
     setSelectedOrder(order);
     setSubmitOrderModal(true);
-    
+
   }
 
   const handleCancel = () => {
@@ -62,7 +69,7 @@ const WritersOnProgressJob = () => {
               <th scope='col'>Due Date</th>
               <th scope="col">Status</th>
               <th scope='col' className='text-center'>Attachment</th>
-              <th scope="col"className='text-center'>Actions</th>
+              <th scope="col" className='text-center'>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -76,9 +83,9 @@ const WritersOnProgressJob = () => {
                 <td>{order.order.status}</td>
                 <td className='text-center'>
                   <Tooltip title="Download Attachment File">
-                    <Button 
-                      type="primary" 
-                      onClick={() => handleDownload(order)} // Pass the order to handleDownload
+                    <Button
+                      type="primary"
+                      onClick={() => handleDownload(order)}
                     >
                       <CloudDownloadOutlined style={{ marginRight: '5px', fontSize: '20px' }} />
                     </Button>
@@ -86,15 +93,15 @@ const WritersOnProgressJob = () => {
                 </td>
                 <td>
                   <div className="d-flex justify-content-center align-items-center">
-                    <Button 
-                      type="default" 
-                      style={{ marginRight: '10px', border: '1px solid #1890ff' , color: '#1890ff'}}
-                      icon={<IoSendSharp />} 
+                    <Button
+                      type="default"
+                      style={{ marginRight: '10px', border: '1px solid #1890ff', color: '#1890ff' }}
+                      icon={<IoSendSharp />}
                       onClick={() => handleSubmitOrder(order)} // Pass the order to handleSubmitOrder
                     >
                       Submit Order
                     </Button>
-                    
+
                   </div>
                 </td>
               </tr>

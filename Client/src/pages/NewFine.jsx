@@ -24,6 +24,8 @@ const NewFine = () => {
     // Fetch submissions from Redux store
     const submissionsList = useSelector((state) => state.listSubmission);
     // Extract documents from submissionsList
+
+    
     const { documents: Orders } = submissionsList || { documents: [] }; // Default to an empty array if submissionsList is undefined
 
     // Fetch writers when the component mounts

@@ -9,8 +9,8 @@ const { TextArea } = Input;
 const JobViewModal = ({ visible, onCancel, selectedJob }) => {
   const dispatch = useDispatch(); // Initialize useDispatch hook
 
-const downloadDocument=useSelector(state=>state.downloadAttachment);
-const {loading,error,document}=downloadDocument;
+  const downloadDocument = useSelector(state => state.downloadAttachment);
+  const { loading, error, document } = downloadDocument;
 
   const handleDownload = () => {
     if (selectedJob && selectedJob.documentId) {
@@ -18,6 +18,11 @@ const {loading,error,document}=downloadDocument;
     } else {
       message.error('No document available for download');
     }
+  };
+
+  // Function to remove <p> tags from description
+  const extractDescription = (description) => {
+    return description.replace(/<p>/g, '').replace(/<\/p>/g, '');
   };
 
   return (
@@ -63,10 +68,10 @@ const {loading,error,document}=downloadDocument;
               <Input value={selectedJob.remainingTime} readOnly />
             </Form.Item>
             <Form.Item label="Description">
-              <TextArea rows={8} value={selectedJob.description} readOnly style={{ resize: 'none', overflowY: 'auto'   }} />
+              <TextArea value={extractDescription(selectedJob.description)} readOnly style={{ resize: 'none', overflowY: 'auto' }} />
             </Form.Item>
             <Form.Item className='justify-content-center d-flex align-items-center'>
-              <Button type="primary" size='large'  icon={<DownloadOutlined />} style={{ marginTop: '16px' }} block onClick={handleDownload}>Download Attachment</Button>
+              <Button type="primary" size='large' icon={<DownloadOutlined />} style={{ marginTop: '16px' }} block onClick={handleDownload}>Download Attachment</Button>
             </Form.Item>
           </Form>
         </>

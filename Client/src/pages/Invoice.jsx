@@ -136,9 +136,10 @@ const Invoice = () => {
       <div className="inv-header">
         <div className="invoice-info">
           <Title level={2}>Invoice</Title>
-          <Text>Invoice Number:{invoiceNumber}</Text><br />
+          <Text>Invoice Number: {invoiceNumber}</Text><br />
           <Text>Invoice Date: {invoiceDate}</Text><br />
         </div>
+        
         <div className="user-info">
           <Text strong>{user.UserInfo.username}</Text><br />
           <Text>{user.UserInfo.email}</Text>

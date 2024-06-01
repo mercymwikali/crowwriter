@@ -198,3 +198,7 @@ Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31
 20240525	18:25:57	582d6d60-e0f8-4411-acea-0d97a88c67b5	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
 20240525	19:25:08	c3bc47da-5a13-4e84-a5c5-78c516a165de	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
 20240526	16:02:18	4b14a0a2-a40c-4c94-80f6-6ef7e5a7f214	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240601	19:08:30	ba236dbb-8f76-4757-a9ac-94b96b7e4bf0	undefined: undefined	POST	/submitJob/job-docs	http://localhost:5173
+20240601	20:11:10	b9c1537a-da1e-4af7-82c4-4cf8c256db49	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240601	20:11:10	d4435133-1835-480e-abbe-47de44cf4c02	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240601	20:12:22	6904242a-7d92-4cef-9042-56797d290dd8	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173

@@ -48,11 +48,11 @@ const createBid = asyncHandler(async (req, res) => {
       },
     });
 
-    // Update the order status to "PENDING" when a bid is created
-    await prisma.order.update({
-      where: { id: orderId },
-      data: { status: "PENDING" }
-    });
+    // Update the order status to "BIDDED" when a bid is created
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { status: "BIDDED" }
+  });
 
     res.status(201).json({ message: "Bid created successfully", data: bid });
   } catch (error) {
@@ -71,8 +71,9 @@ const getAllBidsForOrder = asyncHandler(async (req, res) => {
     // Retrieve all bids for the specified order excluding the "assigned" status
     const bids = await prisma.bid.findMany({
       where: {
-        orderId: id, // Filter bids based on orderId
-        status: { not: "ASSIGNED" }, // Exclude "assigned" status
+        order: {
+          status: "BIDDED" // Filter orders by status "BIDDED"
+        } 
       },
       include: {
         order: {
@@ -80,6 +81,7 @@ const getAllBidsForOrder = asyncHandler(async (req, res) => {
             id: true,
             orderId: true,
             topic: true,
+            discipline:true,
             costPerPage: true,
             deadline: true,
             remainingTime: true,
@@ -120,7 +122,7 @@ const getAllBidsWithCountsAndWriters = asyncHandler(async (req, res) => {
     const bids = await prisma.bid.findMany({
       where: {
        order: {
-        status: "PENDING"
+        status: "BIDDED"
        } 
       },
       include: {
@@ -129,6 +131,7 @@ const getAllBidsWithCountsAndWriters = asyncHandler(async (req, res) => {
             id: true,
             orderId: true,
             topic: true,
+            discipline:true,
             costPerPage: true,
             deadline: true,
             remainingTime: true,
@@ -294,7 +297,7 @@ const getBidsByWriterId = asyncHandler(async (req, res) => {
           //filter wher order is not assigned and status is pending
           where: {
             order: {
-              status: "PENDING"
+              status: "BIDDED"
             }
           },
           include: {

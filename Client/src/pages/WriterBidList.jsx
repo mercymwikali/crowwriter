@@ -14,7 +14,7 @@ const WriterBidList = () => {
 
     const writerBidList = useSelector(state => state.writerBidList);
     const { loading, error, bids } = writerBidList;
-    
+
     const deleteBidState = useSelector(state => state.deleteBid);
     const { loading: loadingDelete, error: errorDelete, success: successDelete } = deleteBidState;
 
@@ -100,8 +100,9 @@ const WriterBidList = () => {
             )}
 
             {/* View Modal */}
+
             <Modal
-                title="View Bid Details"
+                title="View Order Details"
                 visible={viewModalVisible}
                 onCancel={handleCloseViewModal}
                 footer={[
@@ -112,8 +113,19 @@ const WriterBidList = () => {
             >
                 {selectedBid && (
                     <div>
-                        <p>Order ID: {selectedBid.order.orderId}</p>
-                        {/* Add other bid details */}
+                        {Object.entries(selectedBid.order)
+                            .filter(([key]) => key !== 'id') // Exclude 'id' field
+                            .map(([key, value]) => {
+                                if (key === 'deadline') {
+                                    value = new Date(value).toLocaleDateString(); // Format 'deadline' to ISO string
+                                }
+                                return (
+                                    <p key={key}>
+                                        <strong>{key}: </strong>
+                                        {value}
+                                    </p>
+                                );
+                            })}
                     </div>
                 )}
             </Modal>

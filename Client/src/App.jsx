@@ -32,6 +32,7 @@ import FinedOrders from './pages/FinedOrders.jsx';
 import NotificationList from './pages/NotificationList.jsx';
 import NewFine from './pages/NewFine.jsx';
 import MyFines from './pages/MyFines.jsx';
+import DashboardMgr from './pages/DashboardMgr.jsx';
 
 
 const App = () => {
@@ -54,10 +55,10 @@ const App = () => {
           <Route path="paid-transactions" element={<MypaidTrans />} />
           <Route path="pending-payments" element={<MypendingTrans />} />
           <Route path="writer-bids-list" element={<WriterBidList />} />
-          <Route path="my-profile" element={<Profile  />} exact />
+          <Route path="my-profile" element={<Profile />} exact />
           <Route path="Invoice" element={<Invoice />} />
-          <Route path='my-fines' element={<MyFines/>}/>
-          <Route path="notifications" element={< NotificationList/>} />
+          <Route path='my-fines' element={<MyFines />} />
+          <Route path="notifications" element={< NotificationList />} />
         </Route>
         <Route
           path="/manager/*"
@@ -72,12 +73,12 @@ const App = () => {
           <Route path="writers-list" element={<WriterList />} />
           <Route path="add-users" element={<AddUser />} />
           <Route path="Submitted-Jobs" element={<SubmittedJobslist />} />
-          <Route path="my-profile" element={<Profile  />} exact />
+          <Route path="my-profile" element={<Profile />} exact />
           <Route path="Paid-Orders" element={<PaidOrders />} />
           <Route path="Unpaid-Orders" element={<UnpaidOrders />} />
           <Route path="Fined-Orders" element={<FinedOrders />} />
           <Route path="New-Fine" element={<NewFine />} />
-
+          <Route path='dashboard' element={<DashboardMgr />} />
         </Route>
         {/* Default route */}
         <Route path="*" element={<Navigate to="/login" />} />

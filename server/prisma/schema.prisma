@@ -22,6 +22,7 @@ model User {
   password        String           @unique
   role            Role             @default(writer)
   active          Boolean          @default(true)
+  online          Boolean          @default(false) // New field to track online status
   profile         Profile?
   orders          Order[] // Remove the single relation and add an array of orders
   bids            Bid[]
@@ -124,6 +125,7 @@ model SubmittedOrder {
 }
 
 // PaymentRequest model representing payment requests made by writers
+// PaymentRequest model representing payment requests made by writers
 model PaymentRequest {
   id            String               @id @default(uuid())
   order         Order                @relation(fields: [orderId], references: [id])
@@ -132,9 +134,12 @@ model PaymentRequest {
   requestedById String
   amount        Int
   paymentStatus PaymentRequestStatus @default(PENDING)
-
-  @@index([requestedById])
+  invoiceNumber String
+  createdAt     DateTime
+  updatedAt     DateTime
+  finedOrders   Fine[]              
 }
+
 
 // Payment request status enum representing different payment request statuses
 enum PaymentRequestStatus {
@@ -165,16 +170,18 @@ enum PaymentStatus {
   UNPAID
 }
 
-//
+// Fine model representing fines for orders
 model Fine {
-  id        String @id @default(uuid())
-  createdAt  DateTime  @default(now())
-  order     Order  @relation(fields: [orderId], references: [id])
-  orderId   String
-  finedTo   User   @relation(fields: [finedToId], references: [id])
-  finedToId String
-  amount    Int
-  reason    String
+  id               String        @id @default(uuid())
+  createdAt        DateTime      @default(now())
+  order            Order         @relation(fields: [orderId], references: [id])
+  orderId          String
+  finedTo          User          @relation(fields: [finedToId], references: [id])
+  finedToId        String
+  amount           Int
+  reason           String
+  paymentRequest   PaymentRequest? @relation(fields: [paymentRequestId], references: [id]) // Add this field
+  paymentRequestId String?        // Add this field
 }
 
 model Notification {

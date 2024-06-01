@@ -23,13 +23,13 @@ const JobsPool = () => {
 
   useEffect(() => {
     dispatch(listOrders());
-  }, [dispatch, success, bidSuccess]);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (bidSuccess && bidSuccess === true) {
-      navigate('/manager/writer-bids-list'); // Navigate to bid list on successful bid
+    if (success) {
+      navigate('/dashboard/writer-bids-list'); // Navigate to bid list on successful bid
     }
-  }, [bidSuccess, navigate]);
+  }, [success, navigate]);
 
   const handleViewJob = (job) => {
     setSelectedJob(job);
@@ -66,7 +66,7 @@ const JobsPool = () => {
                 <th scope='col'>Cost Per Page</th>
                 <th scope='col'>Full Amount</th>
                 <th scope='col'>Deadline</th>
-                <th scope='col'>Remaining Time</th>
+                <th scope='col'>Due In</th>
                 <th scope='col'>Actions</th>
               </tr>
             </thead>

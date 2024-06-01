@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { CreditCardOutlined,  EditTwoTone, HourglassOutlined,  MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined, UserAddOutlined, FolderOpenFilled } from '@ant-design/icons';
+import { CreditCardOutlined, EditTwoTone, HourglassOutlined, MenuUnfoldOutlined, MenuFoldOutlined, UserOutlined, VideoCameraOutlined, UserAddOutlined, FolderOpenFilled, DashboardFilled } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { FaBriefcase, FaCheckCircle, FaClock, FaFileArchive, FaRegFolderOpen, FaUsers } from "react-icons/fa";
 import { GiCancel, GiProgression } from "react-icons/gi";
 import { RiFolderWarningLine } from "react-icons/ri";
-import {  MdOutlineCancelPresentation } from "react-icons/md";
+import { MdOutlineCancelPresentation } from "react-icons/md";
 import { Bs0SquareFill, BsCashCoin, BsDashCircleFill } from "react-icons/bs";
 import Signout from '../components/SignOut';
 
@@ -23,7 +23,8 @@ const Manager = () => {
         '/Manage-Jobs',
         '/Payments',
         '/Manage Writers',
-        '/Fines'
+        '/Fines',
+        '/dashboard'
 
     ];
 
@@ -38,10 +39,10 @@ const Manager = () => {
         }
     }
 
-    
-const handleMenuClick = (key) => {
-    navigate(`/manager/${key}`);
-  };
+
+    const handleMenuClick = (key) => {
+        navigate(`/manager/${key}`);
+    };
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -81,7 +82,12 @@ const handleMenuClick = (key) => {
                     }}
                     items={[
                         {
-                            key: '/',
+                            key: 'dashboard',
+                            icon: <DashboardFilled />,
+                            label: 'Dashboard'
+                        },
+                        {
+                            key: '',
                             icon: <EditTwoTone />,
                             label: 'Create New Order',
                         },
@@ -133,7 +139,7 @@ const handleMenuClick = (key) => {
                                     icon: <BsDashCircleFill />,
                                     label: 'Unpaid Orders',
                                 },
-                               
+
                             ]
                         },
                         {
@@ -181,15 +187,15 @@ const handleMenuClick = (key) => {
                                 //     icon: <GiCancel />,
                                 //     label: 'Rejected Writers',
                                 // },
-                                
+
                             ]
-                            
+
                         },
                         {
                             key: 'my-profile',
                             icon: <UserOutlined />,
                             label: 'My Profile',
-                          }
+                        }
                     ]}
                 />      </Sider>
             <Layout>
