@@ -81,7 +81,7 @@ export const ordersListReducer = (state = { orders: [] }, action) => {
     case LIST_ORDERS_FAIL:
       return { loading: false, error: action.payload };
     case LIST_ORDERS_RESET:
-      return { users: [] };
+      return { orders: [] };
     default:
       return state;
   }

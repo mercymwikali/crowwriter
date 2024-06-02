@@ -202,3 +202,4 @@ Please make sure your database server is running at `viaduct.proxy.rlwy.net`:`31
 20240601	20:11:10	b9c1537a-da1e-4af7-82c4-4cf8c256db49	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
 20240601	20:11:10	d4435133-1835-480e-abbe-47de44cf4c02	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
 20240601	20:12:22	6904242a-7d92-4cef-9042-56797d290dd8	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173
+20240601	22:39:09	7e4a89de-c11c-4a0d-b61b-df47f5c8eb74	Error: Error fetching writers	GET	/users/fetch-All-writers/	http://localhost:5173

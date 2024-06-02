@@ -10,6 +10,7 @@ import {
   MY_JOBS_REQUEST,
   MY_JOBS_SUCCESS,
   MY_JOBS_FAIL,
+  MY_JOBS_RESET,
 } from "../constants/writersDetails";
 import { message } from "antd"; // Import message from 'antd'
 import {
@@ -145,7 +146,10 @@ export const myJobs = (writerId) => async (dispatch, getState) => {
       type: MY_JOBS_FAIL,
       payload: message,
     });
-    message.error(message);
+
+    dispatch({
+      type:MY_JOBS_RESET,
+    })
   }
 };
 

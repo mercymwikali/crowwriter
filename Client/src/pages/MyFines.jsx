@@ -32,9 +32,14 @@ const MyFines = () => {
         setSelectedFine(null);
     };
 
+    const stripHtml = (html) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        return doc.body.textContent || "";
+    };
+
     return (
         <div>
-            <Typography.Title level={3} underline>My Fines</Typography.Title>
+            <Typography.Title level={3} underline>My Fined Orders</Typography.Title>
             {loading ? (
                 <Skeleton active />
             ) : error ? (
@@ -100,7 +105,7 @@ const MyFines = () => {
                         <Typography.Title level={4}>Order Details</Typography.Title>
                         <p><strong>Order Id:</strong> {selectedFine.order.orderId}</p>
                         <p><strong>Topic:</strong> {selectedFine.order.topic}</p>
-                        <p><strong>Description:</strong> {selectedFine.order.description}</p>
+                        <p><strong>Description:</strong> {stripHtml(selectedFine.order.description)}</p>
                         <p><strong>Cost Per Page:</strong> {selectedFine.order.costPerPage}</p>
                         <p><strong>Full Amount:</strong> {selectedFine.order.fullAmount}</p>
                         <p><strong>Deadline:</strong> {new Date(selectedFine.order.deadline).toLocaleDateString()}</p>

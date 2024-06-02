@@ -83,7 +83,7 @@ const Dashboard = () => {
             {
               key: '/',
               icon: <FaBriefcase />,
-              label: 'Jobs Pools',
+              label: 'Available Jobs',
             },
             {
               key: '/My-Jobs',

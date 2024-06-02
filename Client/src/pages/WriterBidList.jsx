@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { listWritersBids, deleteBid } from '../actions/bidActions';
 import { Link } from 'react-router-dom';
-import { Button, Skeleton, Tooltip, message, Modal } from 'antd';
+import { Button, Skeleton, Tooltip, Modal, Input, message } from 'antd';
 import { FaEye } from 'react-icons/fa';
 import { DeleteOutlined } from '@ant-design/icons';
 
@@ -11,6 +11,8 @@ const WriterBidList = () => {
     const [viewModalVisible, setViewModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [selectedBid, setSelectedBid] = useState(null);
+    const [searchOrderId, setSearchOrderId] = useState('');
+    const [searchTopic, setSearchTopic] = useState('');
 
     const writerBidList = useSelector(state => state.writerBidList);
     const { loading, error, bids } = writerBidList;
@@ -21,6 +23,15 @@ const WriterBidList = () => {
     useEffect(() => {
         dispatch(listWritersBids());
     }, [dispatch, successDelete]);
+
+    useEffect(() => {
+        if (error) {
+            message.error(error);
+        }
+        if (errorDelete) {
+            message.error(errorDelete);
+        }
+    }, [error, errorDelete]);
 
     const handleViewJob = (bid) => {
         setSelectedBid(bid);
@@ -46,19 +57,43 @@ const WriterBidList = () => {
         setDeleteModalVisible(false);
     }
 
+    const handleSearchOrderId = (e) => {
+        setSearchOrderId(e.target.value);
+    }
+
+    const handleSearchTopic = (e) => {
+        setSearchTopic(e.target.value);
+    }
+
+    const filteredBids = bids && bids.filter(bid =>
+        bid.order.orderId.includes(searchOrderId) &&
+        bid.order.topic.toLowerCase().includes(searchTopic.toLowerCase())
+    );
+
     return (
         <>
-            <h1 className='text-success'>Bids List</h1>
-            <div className="d-block d-md-flex gap-4 justify-content-between align-items-center">
-                <h4><Link className='btn btn-success' to="/dashboard/" type='button'>Job Pool</Link></h4>
+            <h1 className='text-dark'>My Bids</h1>
+            {/* <h4><Link className='btn btn-success' to="/dashboard/" >Go back to Available Jobs</Link></h4> */}
+
+            <div className="d-block d-md-flex gap-4 justify-content-between align-items-center mb-3">
+                <Input
+                    placeholder="Search by Order ID"
+                    value={searchOrderId}
+                    onChange={handleSearchOrderId}
+                    style={{ width: 200 }}
+                />
+                <Input
+                    placeholder="Search by Topic"
+                    value={searchTopic}
+                    onChange={handleSearchTopic}
+                    style={{ width: 200 }}
+                />
             </div>
 
             {loading ? (
                 <Skeleton active />
-            ) : error ? (
-                message.error(error)
             ) : (
-                bids && bids.length > 0 ? (
+                <>
                     <table className="table table-hover table-responsive">
                         <thead>
                             <tr>
@@ -73,34 +108,37 @@ const WriterBidList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {bids.map((bid, index) => (
-                                <tr key={index}>
-                                    <td>{index + 1}.</td>
-                                    <td>{bid.order.orderId}</td>
-                                    <td>{bid.order.topic}</td>
-                                    <td>{bid.order.fullAmount}</td>
-                                    <td>{new Date(bid.order.deadline).toDateString()}</td>
-                                    <td>{bid.order.remainingTime}</td>
-                                    <td>{bid.order.status}</td>
-                                    <td>
-                                        <Tooltip title="View Details">
-                                            <Button type='primary' icon={<FaEye />} onClick={() => handleViewJob(bid)} />
-                                        </Tooltip>
-                                        <Tooltip title="Delete">
-                                            <Button type='danger' icon={<DeleteOutlined />} onClick={() => handleDeleteBid(bid)} />
-                                        </Tooltip>
-                                    </td>
+                            {filteredBids && filteredBids.length > 0 ? (
+                                filteredBids.map((bid, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}.</td>
+                                        <td>{bid.order.orderId}</td>
+                                        <td>{bid.order.topic}</td>
+                                        <td>{bid.order.fullAmount}</td>
+                                        <td>{new Date(bid.order.deadline).toDateString()}</td>
+                                        <td>{bid.order.remainingTime}</td>
+                                        <td>{bid.order.status}</td>
+                                        <td>
+                                            <Tooltip title="View Details">
+                                                <Button type='primary' icon={<FaEye />} onClick={() => handleViewJob(bid)} />
+                                            </Tooltip>
+                                            <Tooltip title="Delete">
+                                                <Button type='danger' icon={<DeleteOutlined />} onClick={() => handleDeleteBid(bid)} />
+                                            </Tooltip>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: 'center' }}>No bids found</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
-                ) : (
-                    <p>No jobs to be bid</p>
-                )
+                </>
             )}
 
             {/* View Modal */}
-
             <Modal
                 title="View Order Details"
                 visible={viewModalVisible}

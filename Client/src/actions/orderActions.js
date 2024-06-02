@@ -131,8 +131,20 @@ export const listOrders = () => async (dispatch, getState) => {
     // Dispatch action to indicate request success
     dispatch({ type: LIST_ORDERS_SUCCESS, payload: data });
   } catch (error) {
-    // Dispatch action to indicate request failure
-    dispatch({ type: LIST_ORDERS_FAIL, payload: error.message });
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: LIST_ORDERS_FAIL,
+      payload: message,
+    });
+
+    
+
   }
 };
 
